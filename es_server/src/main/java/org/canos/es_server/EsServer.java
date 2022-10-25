@@ -4,14 +4,17 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.canos.es_database.QueryExecutor;
 import org.canos.es_database.UserServiceImpl;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.sql.Connection;
 
 public class EsServer extends Application {
+    private static Connection conn = null;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -20,6 +23,10 @@ public class EsServer extends Application {
         stage.setTitle("Server login");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public static void setConnection(String user, String password) {
+        conn = QueryExecutor.openConnection(user, password);
     }
 
     public static void main(String[] args) throws RemoteException {

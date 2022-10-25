@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="es_common" />
         <module name="es_client" />
         <module name="es_server" />
+        <module name="es_common" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

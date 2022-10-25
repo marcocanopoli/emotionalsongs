@@ -5,6 +5,7 @@ import org.canos.es_common.interfaces.UserService;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<String> getUsers() {
-        return queryExecutor.getUsers();
+        return new ArrayList<>();
+//        return queryExecutor.getUsers();
     }
 }
