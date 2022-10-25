@@ -8,6 +8,7 @@ import org.canos.es_database.QueryExecutor;
 import org.canos.es_database.UserServiceImpl;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -23,10 +24,38 @@ public class EsServer extends Application {
         stage.setTitle("Server login");
         stage.setScene(scene);
         stage.show();
+
+        stage.setOnCloseRequest(event -> {
+            try {
+                shutdown();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
-    public static void setConnection(String user, String password) {
+    public static Connection setConnection(String user, String password) {
         conn = QueryExecutor.openConnection(user, password);
+        return conn;
+    }
+
+    public static void shutdown() throws RemoteException {
+        Registry registry = LocateRegistry.getRegistry();
+        try {
+            registry.unbind("UserService");
+        } catch (NotBoundException ignored) {
+
+        }
+        new Thread(() -> {
+            ServerLogger.debug("Shutting down...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+            System.exit(0);
+        }).start();
+
     }
 
     public static void main(String[] args) throws RemoteException {
@@ -36,7 +65,5 @@ public class EsServer extends Application {
         ServerLogger.info("Server initialised");
 
         launch();
-
-
     }
 }

@@ -4,10 +4,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+
+import java.sql.Connection;
 
 public class EsServerController {
     @FXML
     private TextField dbHost;
+    @FXML
+    private Pane mainPane;
+    @FXML
+    private AnchorPane connectionStatus;
+    @FXML
+    private AnchorPane loginForm;
     @FXML
     private PasswordField dbPassword;
     @FXML
@@ -15,12 +25,18 @@ public class EsServerController {
 
     @FXML
     public void initialize() {
+
         connectBtn.setOnAction(event -> {
             String host = dbHost.getText();
             String password = dbPassword.getText();
-            EsServer.setConnection(host, password);
-            dbHost.clear();
-            dbPassword.clear();
+            Connection conn = EsServer.setConnection(host, password);
+            if (conn != null) {
+                mainPane.getChildren().remove(loginForm);
+                connectionStatus.setVisible(true);
+            } else {
+                dbHost.clear();
+                dbPassword.clear();
+            }
         });
     }
 
