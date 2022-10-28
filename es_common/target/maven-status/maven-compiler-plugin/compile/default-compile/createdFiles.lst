@@ -1,0 +1,4 @@
+org/canos/es_common/UserAddress.class
+org/canos/es_common/interfaces/UserService.class
+module-info.class
+org/canos/es_common/User.class

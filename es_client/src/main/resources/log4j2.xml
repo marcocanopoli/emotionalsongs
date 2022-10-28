@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <!-- Logging Properties -->
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %p %m%n</Property>
+        <Property name="LOG_ROOT_PATH">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="debugLog" fileName="${LOG_ROOT_PATH}/client/debug.log"
+                     filePattern="${LOG_ROOT_PATH}/client/debug-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="infoLog" fileName="${LOG_ROOT_PATH}/client/info.log"
+                     filePattern="${LOG_ROOT_PATH}/client/info-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="errorLog" fileName="${LOG_ROOT_PATH}/client/error.log"
+                     filePattern="${LOG_ROOT_PATH}/client/error-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+
+        <Root level="DEBUG">
+            <AppenderRef ref="debugLog"/>
+            <AppenderRef ref="infoLog"/>
+            <AppenderRef ref="errorLog"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+
+    </Loggers>
+</Configuration>
