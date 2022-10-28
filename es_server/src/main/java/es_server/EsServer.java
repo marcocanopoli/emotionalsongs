@@ -16,6 +16,14 @@ import java.sql.Connection;
 public class EsServer extends Application {
     private static Connection conn = null;
 
+    public static Connection getConn() {
+        return conn;
+    }
+
+    public static void setConnection(Connection conn) {
+        EsServer.conn = conn;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -30,7 +38,7 @@ public class EsServer extends Application {
             try {
                 shutdown();
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                ServerLogger.debug("Shutdown exception: " + e);
             }
         });
 
@@ -40,14 +48,16 @@ public class EsServer extends Application {
         Registry registry = LocateRegistry.getRegistry();
         try {
             registry.unbind("UserService");
-        } catch (NotBoundException ignored) {
-
+        } catch (NotBoundException e) {
+            ServerLogger.debug("UserService not bound, skipping");
         }
+
         new Thread(() -> {
             ServerLogger.debug("Shutting down...");
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                ServerLogger.debug("Shutdown was interrupted: " + e);
             }
             System.exit(0);
         }).start();

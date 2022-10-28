@@ -1,6 +1,8 @@
 package gui;
 
 import es_database.DBManager;
+import es_server.EsServer;
+import es_server.ServerLogger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,13 +44,13 @@ public class EsServerController {
             DBManager dbManager = new DBManager();
             Connection conn = dbManager.openConnection(host, database, user, password);
             if (conn != null) {
+                EsServer.setConnection(conn);
+                ServerLogger.info("Connection is set");
                 mainPane.getScene().getWindow().setHeight(120);
                 mainPane.getChildren().remove(loginForm);
                 mainPane.getChildren().remove(connectBtn);
                 title.setText("Connesso al database");
                 title.setTextFill(Color.GREEN);
-
-
             }
         });
     }

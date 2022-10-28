@@ -15,10 +15,9 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(Registry registry) throws RemoteException {
         UserService userServiceStub = (UserService)
                 UnicastRemoteObject.exportObject(this, 3939);
-        registry.rebind("userService", userServiceStub);
+        registry.rebind("UserService", userServiceStub);
     }
 
-    private final DBManager queryExecutor = new DBManager();
 
     public String getUser() {
         return "pippo";
@@ -36,6 +35,6 @@ public class UserServiceImpl implements UserService {
 
     public List<String> getUsers() {
         return new ArrayList<>();
-//        return queryExecutor.getUsers();
+//        return DB_MANAGER.getUsers();
     }
 }
