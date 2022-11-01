@@ -7,8 +7,8 @@ module es_server {
     requires es_common;
 
 
-    opens es_server to javafx.fxml;
-    exports es_server;
-    opens gui to javafx.fxml;
-    exports gui;
+    opens server to javafx.fxml;
+    exports server;
+    opens server_gui to javafx.fxml;
+    exports server_gui;
 }

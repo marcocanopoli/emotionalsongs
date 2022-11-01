@@ -9,8 +9,6 @@ D
 es_server/mvnw,f/5/f5e1d302213fc4359b7d2ef10bbfb9645d148616
 B
 es_server/mvnw.cmd,6/a/6a87fd8f67341ac5d5124a161d0d156743012c08
-X
-(es_client/src/main/java/module-info.java,4/5/45b7b4fa89fb5321c740d63eb45c09c3f8b0daee
 A
 es_client/pom.xml,b/6/b6c6805b52b7370d0d9f0376805732577264c513
 A

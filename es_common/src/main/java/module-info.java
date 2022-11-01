@@ -3,6 +3,6 @@ module es_common {
     requires java.rmi;
 
 
-    exports es_common;
-    exports es_common.interfaces;
+    exports common;
+    exports common.interfaces;
 }

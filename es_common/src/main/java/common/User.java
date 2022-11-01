@@ -1,4 +1,4 @@
-package es_common;
+package common;
 
 public class User {
     private final String firstName;

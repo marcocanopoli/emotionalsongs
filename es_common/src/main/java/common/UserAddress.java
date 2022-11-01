@@ -1,4 +1,4 @@
-package es_common;
+package common;
 
 public class UserAddress {
     private final String street;

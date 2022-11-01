@@ -1,14 +1,17 @@
-package es_database;
+package database;
 
-import es_common.interfaces.UserService;
+import common.interfaces.UserService;
+import server.EsServer;
+import server.ServerLogger;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class UserServiceImpl implements UserService {
 
@@ -18,9 +21,19 @@ public class UserServiceImpl implements UserService {
         registry.rebind("UserService", userServiceStub);
     }
 
+    public void addUser() {
+        Connection conn = EsServer.getConnection();
+        String query = "INSERT INTO users (email) "
+                + "VALUES(?)";
 
-    public String getUser() {
-        return "pippo";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, "pippo@pippo.com");
+
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
     }
 
     public void shutdown() throws RemoteException {
@@ -31,10 +44,5 @@ public class UserServiceImpl implements UserService {
         }
         UnicastRemoteObject.unexportObject(this, false);
 
-    }
-
-    public List<String> getUsers() {
-        return new ArrayList<>();
-//        return DB_MANAGER.getUsers();
     }
 }

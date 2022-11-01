@@ -1,6 +1,6 @@
-package es_database;
+package database;
 
-import es_server.ServerLogger;
+import server.ServerLogger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

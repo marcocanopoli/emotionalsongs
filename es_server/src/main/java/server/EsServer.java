@@ -1,6 +1,6 @@
-package es_server;
+package server;
 
-import es_database.UserServiceImpl;
+import database.UserServiceImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,18 +16,18 @@ import java.sql.Connection;
 public class EsServer extends Application {
     private static Connection conn = null;
 
-    public static Connection getConn() {
+    public static synchronized Connection getConnection() {
         return conn;
     }
 
-    public static void setConnection(Connection conn) {
+    public static synchronized void setConnection(Connection conn) {
         EsServer.conn = conn;
     }
 
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(EsServer.class.getResource("/gui/db-login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(EsServer.class.getResource("/server_gui/db-login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 300);
         stage.setTitle("Accesso al database");
         stage.setScene(scene);
