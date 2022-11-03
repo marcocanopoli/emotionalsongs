@@ -65,7 +65,7 @@ public class EsServer extends Application {
     }
 
     public static void main(String[] args) throws RemoteException {
-
+        
         Registry registry = LocateRegistry.createRegistry(1099);
         UserServiceImpl userService = new UserServiceImpl(registry);
         ServerLogger.info("Server initialised");

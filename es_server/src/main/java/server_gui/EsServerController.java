@@ -46,6 +46,8 @@ public class EsServerController {
             if (conn != null) {
                 EsServer.setConnection(conn);
                 ServerLogger.info("Connection is set");
+                DBManager.migrate();
+                DBManager.seed();
                 mainPane.getScene().getWindow().setHeight(120);
                 mainPane.getChildren().remove(loginForm);
                 mainPane.getChildren().remove(connectBtn);
