@@ -45,9 +45,11 @@ public class EsServerController {
             Connection conn = dbManager.openConnection(host, database, user, password);
             if (conn != null) {
                 EsServer.setConnection(conn);
-                ServerLogger.info("Connection is set");
+                ServerLogger.debug("Connection set");
                 DBManager.migrate();
+                ServerLogger.debug("Migrations executed");
                 DBManager.seed();
+                ServerLogger.debug("Seeds executed");
                 mainPane.getScene().getWindow().setHeight(120);
                 mainPane.getChildren().remove(loginForm);
                 mainPane.getChildren().remove(connectBtn);
