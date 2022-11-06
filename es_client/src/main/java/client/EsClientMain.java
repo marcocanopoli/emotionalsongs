@@ -1,5 +1,6 @@
 package client;
 
+import common.interfaces.SongService;
 import common.interfaces.UserService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +15,14 @@ import java.rmi.registry.Registry;
 
 public class EsClientMain extends Application {
     static UserService userService;
+    static SongService songService;
 
     public static UserService getUserService() {
         return userService;
+    }
+
+    public static SongService getSongService() {
+        return songService;
     }
 
     @Override
@@ -28,7 +34,6 @@ public class EsClientMain extends Application {
         stage.show();
     }
 
-
     public static void main(String[] args) throws RemoteException, NotBoundException {
 
         ClientLogger.debug("Client main");
@@ -36,6 +41,8 @@ public class EsClientMain extends Application {
         Registry registry = LocateRegistry.getRegistry(host);
         userService = (UserService)
                 registry.lookup("UserService");
+        songService = (SongService)
+                registry.lookup("SongService");
 
         launch();
     }

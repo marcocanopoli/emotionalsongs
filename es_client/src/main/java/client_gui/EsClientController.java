@@ -1,7 +1,7 @@
 package client_gui;
 
 import client.EsClientMain;
-import common.interfaces.UserService;
+import common.interfaces.SongService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -13,7 +13,9 @@ public class EsClientController {
 
     @FXML
     protected void add() throws RemoteException {
-        UserService userService = EsClientMain.getUserService();
-        userService.addUser();
+//        UserService userService = EsClientMain.getUserService();
+//        userService.addUser();
+        SongService songService = EsClientMain.getSongService();
+        songService.searchByString("Jimmy");
     }
 }
