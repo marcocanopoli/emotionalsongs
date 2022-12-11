@@ -5,5 +5,5 @@ import java.rmi.RemoteException;
 
 public interface UserService extends Remote {
 
-    void addUser() throws RemoteException;
+    boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) throws RemoteException;
 }

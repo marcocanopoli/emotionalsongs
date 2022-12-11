@@ -14,7 +14,7 @@ import server.ServerLogger;
 
 import java.sql.Connection;
 
-public class EsServerController {
+public class EsServerRootController {
 
     @FXML
     private Label title;

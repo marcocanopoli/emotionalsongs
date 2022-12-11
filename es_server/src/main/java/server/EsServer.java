@@ -28,7 +28,7 @@ public class EsServer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(EsServer.class.getResource("/server_gui/db-login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(EsServer.class.getResource("/server_gui/dbLoginView.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 300);
         stage.setTitle("Accesso al database");
         stage.setScene(scene);

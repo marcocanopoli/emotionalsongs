@@ -44,14 +44,14 @@ public class DBManager {
         }
     }
 
-    public static void createTable(String query) {
-        Connection conn = EsServer.getConnection();
-        try (Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(query);
-        } catch (SQLException e) {
-            ServerLogger.error("Error: " + e);
-        }
-    }
+//    public static void createTable(String query) {
+//        Connection conn = EsServer.getConnection();
+//        try (Statement stmt = conn.createStatement()) {
+//            stmt.executeUpdate(query);
+//        } catch (SQLException e) {
+//            ServerLogger.error("Table creation error: " + e);
+//        }
+//    }
 
     public static void migrate() {
         final String id = "(id SERIAL PRIMARY KEY, ";
@@ -61,13 +61,16 @@ public class DBManager {
                         id +
                         "first_name VARCHAR(60) NOT NULL, " +
                         "last_name VARCHAR(100) NOT NULL, " +
+                        "cf VARCHAR(16) NOT NULL, " +
+                        "address VARCHAR(200), " +
+                        "username VARCHAR(20) UNIQUE NOT NULL, " +
                         "email VARCHAR(60) UNIQUE NOT NULL, " +
-                        "password VARCHAR(50) NOT NULL, " +
-                        "street_name VARCHAR(100), " +
-                        "street_number VARCHAR(15), " +
-                        "zip_code INTEGER, " +
-                        "city VARCHAR(60), " +
-                        "area VARCHAR(60))";
+                        "password VARCHAR(50) NOT NULL) ";
+//                        "street_name VARCHAR(100), " +
+//                        "street_number VARCHAR(15), " +
+//                        "zip_code INTEGER, " +
+//                        "city VARCHAR(60), " +
+//                        "area VARCHAR(60))";
 
         final String CREATE_SONGS_TABLE =
                 "CREATE TABLE IF NOT EXISTS songs " +
@@ -101,18 +104,31 @@ public class DBManager {
                         "emotion_id INTEGER REFERENCES emotions (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "CONSTRAINT song_emotion_id PRIMARY KEY (song_id, emotion_id))";
 
+        Connection conn = EsServer.getConnection();
 
-        createTable(CREATE_USERS_TABLE);
-        createTable(CREATE_SONGS_TABLE);
-        createTable(CREATE_EMOTIONS_TABLE);
-        createTable(CREATE_PLAYLISTS_TABLE);
-        createTable(CREATE_PLAYLIST_SONG_TABLE);
-        createTable(CREATE_SONG_EMOTION_TABLE);
+        try (Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(CREATE_USERS_TABLE);
+            stmt.executeUpdate(CREATE_SONGS_TABLE);
+            stmt.executeUpdate(CREATE_EMOTIONS_TABLE);
+            stmt.executeUpdate(CREATE_PLAYLISTS_TABLE);
+            stmt.executeUpdate(CREATE_PLAYLIST_SONG_TABLE);
+            stmt.executeUpdate(CREATE_SONG_EMOTION_TABLE);
+        } catch (SQLException e) {
+            ServerLogger.error("Table creation error: " + e);
+        }
+
+
+//        createTable(CREATE_USERS_TABLE);
+//        createTable(CREATE_SONGS_TABLE);
+//        createTable(CREATE_EMOTIONS_TABLE);
+//        createTable(CREATE_PLAYLISTS_TABLE);
+//        createTable(CREATE_PLAYLIST_SONG_TABLE);
+//        createTable(CREATE_SONG_EMOTION_TABLE);
     }
 
     public static void seed() {
         final String SEED_EMOTIONS_QUERY = "INSERT INTO emotions (name) VALUES (?)";
-        final String[] records = {"PIPPO", "PLUTO"};
+        final String[] records = {"Amazement", "Solemnity", "Tenderness", "Nostalgia", "Calmness", "Power", "Joy", "Tension", "Sadness"};
 
         Connection conn = EsServer.getConnection();
 
@@ -128,7 +144,7 @@ public class DBManager {
             stmt.executeBatch();
             conn.commit();
         } catch (SQLException e) {
-            ServerLogger.error("Error: " + e);
+            ServerLogger.error("Seeder error: " + e);
         }
 
     }
