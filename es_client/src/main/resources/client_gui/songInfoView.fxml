@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
-
-
-    <TitledPane animated="false" collapsible="false" prefHeight="277.0" prefWidth="797.0" text="Info canzone" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.EsClientRootController">
-        <content>
-            <AnchorPane fx:id="songInfoPane" />
-        </content>
-    </TitledPane>
+<TitledPane animated="false" collapsible="false" prefHeight="277.0" prefWidth="797.0" text="Info canzone"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="client_gui.RootController">
+    <content>
+        <AnchorPane fx:id="songInfoPane"/>
+    </content>
+</TitledPane>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="searchView" alignment="TOP_CENTER" minHeight="155.0" minWidth="295.0" prefHeight="566.0" prefWidth="668.0"
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="client_gui.SearchController">
+    <children>
+        <GridPane alignment="CENTER" prefHeight="28.0" prefWidth="628.0">
+            <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="555.0" minWidth="10.0"
+                                   prefWidth="543.0"/>
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0"
+                                   prefWidth="85.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Button fx:id="searchBtn" mnemonicParsing="false" text="Cerca" GridPane.columnIndex="1"/>
+                <TextField fx:id="searchText"/>
+            </children>
+        </GridPane>
+        <TableView fx:id="songsTable" prefHeight="562.0" prefWidth="628.0">
+            <columns>
+                <TableColumn fx:id="authorColumn" prefWidth="75.0" text="Autore"/>
+                <TableColumn fx:id="albumColumn" prefWidth="75.0" text="Album"/>
+                <TableColumn fx:id="yearColumn" prefWidth="75.0" text="Anno"/>
+                <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Titolo"/>
+                <TableColumn fx:id="genreColumn" prefWidth="75.0" text="Genere"/>
+                <TableColumn fx:id="durationColumn" prefWidth="75.0" text="Durata"/>
+            </columns>
+            <VBox.margin>
+                <Insets top="20.0"/>
+            </VBox.margin>
+        </TableView>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+</VBox>

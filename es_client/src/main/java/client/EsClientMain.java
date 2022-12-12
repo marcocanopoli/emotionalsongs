@@ -5,7 +5,6 @@ import common.interfaces.UserService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -18,8 +17,6 @@ import java.rmi.registry.Registry;
 public class EsClientMain extends Application {
 
     private static Stage window;
-    private AnchorPane topView;
-    private AnchorPane bottomView;
     static UserService userService;
     static SongService songService;
 
@@ -41,7 +38,7 @@ public class EsClientMain extends Application {
 
     public void initRootLayout() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(EsClientMain.class.getResource("/client_gui/esClientRootLayout.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(EsClientMain.class.getResource("/client_gui/rootLayout.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             EsClientMain.window.setScene(scene);
             EsClientMain.window.show();
@@ -63,14 +60,6 @@ public class EsClientMain extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void showSignupView() {
-        createStage("signupView.fxml", "Registrazione utente", true);
-    }
-
-    public static void showLoginView() {
-        createStage("signupView.fxml", "Registrazione utente", true);
     }
 
     public static void main(String[] args) throws RemoteException, NotBoundException {

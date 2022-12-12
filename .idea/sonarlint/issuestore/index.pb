@@ -15,3 +15,9 @@ A
 es_common/pom.xml,0/4/04092683b5012c975583047e7ff2b26274357895
 X
 (es_common/src/main/java/module-info.java,e/2/e21bc39c70293f2f756007f5fe3fe2c949dc3ab7
+j
+:es_common/src/main/java/common/interfaces/SongService.java,f/8/f81da58206ddb1dd373eb1218263a2394fe85974
+`
+0es_server/src/main/java/server/ServerLogger.java,c/4/c4e5328c026b2430db331f130fa7e4a16c304f9a
+j
+:es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639

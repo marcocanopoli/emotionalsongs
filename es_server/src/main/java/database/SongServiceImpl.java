@@ -1,5 +1,6 @@
 package database;
 
+import common.Song;
 import common.interfaces.SongService;
 import server.EsServer;
 import server.ServerLogger;
@@ -11,6 +12,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SongServiceImpl implements SongService {
 
@@ -20,7 +23,7 @@ public class SongServiceImpl implements SongService {
         registry.rebind("SongService", songServiceStub);
     }
 
-    public void searchByString(String searchString) {
+    public List<Song> searchByString(String searchString) {
 
         Connection conn = EsServer.getConnection();
 //        String query = "SELECT * "
@@ -40,18 +43,27 @@ public class SongServiceImpl implements SongService {
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
+            List<Song> results = new ArrayList<>();
 
             while (rs.next()) {
-                System.out.println(rs.getString("id") + "\t"
-                        + rs.getString("year") + "\t"
-                        + rs.getString("author") + "\t"
-                        + rs.getString("title"));
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int year = rs.getInt("year");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+                int duration = rs.getInt("duration");
+
+//              System.out.println(id + "\t" + year + "\t" + author + "\t" + title + "\t" + album + "\t" + genre + "\t" + duration);
+                results.add(new Song(id, title, author, year, album, genre, duration));
 
             }
+            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
+        return null;
     }
 }
