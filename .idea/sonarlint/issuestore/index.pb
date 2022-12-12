@@ -21,3 +21,13 @@ j
 0es_server/src/main/java/server/ServerLogger.java,c/4/c4e5328c026b2430db331f130fa7e4a16c304f9a
 j
 :es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639
+g
+7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
+e
+5es_server/src/main/java/database/UserServiceImpl.java,5/5/55997ed74a8884398c55f1599bf7e7af15f8a84b
+j
+:es_common/src/main/java/common/interfaces/UserService.java,6/1/61f9f388e4bf20b5603396b2ef78674eec143488
+f
+6es_server/src/main/java/server_gui/RootController.java,a/5/a5e80a55580b996d9c27d9078fdeb4729ebbe0ad
+h
+8es_client/src/main/java/client_gui/SignupController.java,5/9/5968c10f5d5166638c6541a62cffc496322624f1

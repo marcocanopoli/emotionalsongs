@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -24,13 +25,13 @@ public class SearchController {
     @FXML
     private TableColumn<Song, String> albumColumn;
     @FXML
-    private TableColumn<Song, Integer> yearColumn;
+    private TableColumn<Song, String> yearColumn;
     @FXML
     private TableColumn<Song, String> titleColumn;
     @FXML
     private TableColumn<Song, String> genreColumn;
     @FXML
-    private TableColumn<Song, Integer> durationColumn;
+    private TableColumn<Song, String> durationColumn;
 
     public void initialize() {
 
@@ -41,10 +42,16 @@ public class SearchController {
             try {
                 if (!searched.isEmpty()) {
                     List<Song> results = songService.searchByString(searched);
+                    authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+                    albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+                    yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+                    titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+                    genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
+                    durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+                    songsTable.getItems().addAll(results);
 
 
                     for (Song song : results) {
-                        songsTable.getItems().add(song);
                         System.out.println(song);
                     }
                 }

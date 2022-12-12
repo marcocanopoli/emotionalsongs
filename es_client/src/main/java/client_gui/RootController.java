@@ -4,6 +4,7 @@ import client.EsClientMain;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,19 +14,19 @@ import java.util.Objects;
 
 public class RootController {
     @FXML
-    public AnchorPane window;
+    private AnchorPane window;
     @FXML
-    public HBox topView;
+    private HBox topView;
     @FXML
-    public HBox bottomView;
+    private HBox bottomView;
     @FXML
-    public Button loginBtn;
+    private Button loginBtn;
     @FXML
-    public Button signupBtn;
+    private Button signupBtn;
     @FXML
-    public Button menuSearchBtn;
-
+    private Button menuSearchBtn;
     @FXML
+    private SplitPane mainView;
 
     public void initialize() {
 
@@ -40,8 +41,8 @@ public class RootController {
         menuSearchBtn.setOnAction(event -> {
             try {
                 VBox searchView = FXMLLoader.load(Objects.requireNonNull(RootController.class.getResource("/client_gui/searchView.fxml")));
-                topView.getChildren().clear();
-                topView.getChildren().add(searchView);
+                mainView.getItems().clear();
+                mainView.getItems().add(searchView);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

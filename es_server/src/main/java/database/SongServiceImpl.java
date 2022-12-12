@@ -52,7 +52,7 @@ public class SongServiceImpl implements SongService {
                 int year = rs.getInt("year");
                 String album = rs.getString("album");
                 String genre = rs.getString("genre");
-                int duration = rs.getInt("duration");
+                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
 
 //              System.out.println(id + "\t" + year + "\t" + author + "\t" + title + "\t" + album + "\t" + genre + "\t" + duration);
                 results.add(new Song(id, title, author, year, album, genre, duration));
