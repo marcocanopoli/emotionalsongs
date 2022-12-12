@@ -1,77 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane fx:id="window" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client_gui.EsClientRootController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="window" stylesheets="@emotionalSongs.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.EsClientRootController">
     <children>
-        <SplitPane dividerPositions="0.5">
+        <SplitPane dividerPositions="0.5" prefHeight="781.0" prefWidth="965.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="779.0"
-                            prefWidth="160.0" SplitPane.resizableWithParent="false">
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="779.0" prefWidth="160.0" SplitPane.resizableWithParent="false">
                     <children>
-                        <GridPane maxHeight="-Infinity" minWidth="-Infinity" prefHeight="159.0" prefWidth="160.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            </rowConstraints>
+                        <VBox fx:id="loginPane" alignment="CENTER" layoutY="685.0" prefHeight="87.0" prefWidth="160.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                             <children>
-                                <AnchorPane fx:id="searchBtn" prefHeight="60.0" prefWidth="268.0"
-                                            GridPane.halignment="LEFT" GridPane.valignment="CENTER">
-                                    <children>
-                                        <Label layoutX="14.0" layoutY="23.0" text="Cerca"/>
-                                        <Separator layoutY="59.0" prefHeight="0.0" prefWidth="253.0"
-                                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                   AnchorPane.topAnchor="59.0"/>
-                                    </children>
-                                    <GridPane.margin>
-                                        <Insets/>
-                                    </GridPane.margin>
-                                </AnchorPane>
-                                <AnchorPane fx:id="createPlaylistBtn" prefHeight="62.0" prefWidth="107.0"
-                                            GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
-                                    <children>
-                                        <Label layoutX="14.0" layoutY="23.0" text="Inserisci emozioni"/>
-                                        <Separator layoutY="59.0" prefHeight="0.0" prefWidth="253.0"
-                                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                   AnchorPane.topAnchor="59.0"/>
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane fx:id="insertEmoBtn" prefHeight="62.0" prefWidth="85.0"
-                                            GridPane.rowIndex="1">
-                                    <children>
-                                        <Label layoutX="14.0" layoutY="23.0" text="Crea playlist"/>
-                                        <Separator layoutY="59.0" prefHeight="0.0" prefWidth="253.0"
-                                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                   AnchorPane.topAnchor="59.0"/>
-                                    </children>
-                                </AnchorPane>
-                            </children>
-                        </GridPane>
-                        <VBox fx:id="loginPane" alignment="CENTER" layoutY="685.0" prefHeight="87.0" prefWidth="160.0"
-                              spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                              AnchorPane.rightAnchor="0.0">
-                            <children>
-                                <Button fx:id="signupBtn" mnemonicParsing="false" text="Registrati"/>
-                                <Button fx:id="loginBtn" mnemonicParsing="false" text="Accedi"/>
+                        <Button fx:id="signupBtn" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="24.0" prefWidth="168.0" styleClass="sidebar-btn" text="Registrati">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Button>
+                        <Button fx:id="loginBtn" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="24.0" prefWidth="168.0" styleClass="sidebar-btn" text="Accedi">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Button>
                             </children>
                         </VBox>
+                  <VBox prefHeight="203.0" prefWidth="160.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="24.0" prefWidth="168.0" styleClass="sidebar-btn" text="Cerca">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Button>
+                        <Button alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="24.0" prefWidth="168.0" styleClass="sidebar-btn" text="Crea playlist">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Button>
+                        <Button alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="24.0" prefWidth="168.0" styleClass="sidebar-btn" text="Inserisci emozioni">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </VBox>
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="772.0" prefWidth="797.0" SplitPane.resizableWithParent="false">
                     <children>
-                        <SplitPane dividerPositions="0.5" layoutX="78.0" layoutY="111.0" orientation="VERTICAL"
-                                   prefHeight="779.0" prefWidth="797.0" AnchorPane.bottomAnchor="0.0"
-                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5" layoutX="78.0" layoutY="111.0" orientation="VERTICAL" prefHeight="779.0" prefWidth="797.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <items>
-                                <HBox fx:id="topView" alignment="CENTER" prefHeight="100.0" prefWidth="200.0"/>
-                                <HBox fx:id="bottomView" alignment="CENTER" prefHeight="100.0" prefWidth="200.0"/>
+                                <HBox fx:id="topView" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
+                                <HBox fx:id="bottomView" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
                             </items>
                         </SplitPane>
                     </children>
