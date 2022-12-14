@@ -4,16 +4,15 @@ import client.EsClientMain;
 import common.Song;
 import common.interfaces.SongService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.rmi.RemoteException;
 import java.util.List;
 
-public class SearchController {
+public class SongsController {
+    @FXML
+    public TextField testText;
     @FXML
     private Button searchBtn;
     @FXML
@@ -48,17 +47,26 @@ public class SearchController {
                     titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
                     genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
                     durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+
+                    songsTable.setRowFactory(songs -> {
+                        TableRow<Song> row = new TableRow<>();
+                        row.setOnMouseClicked(evt -> {
+//                            ClientContext.getInstance().setSong(row.getItem());
+                            testText.setText(row.getItem().toString());
+                        });
+                        return row;
+                    });
+                    songsTable.getItems().clear();
                     songsTable.getItems().addAll(results);
 
+//                    for (Song song : results) {
+//                        System.out.println(song);
+//                    }
 
-                    for (Song song : results) {
-                        System.out.println(song);
-                    }
                 }
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
-
         });
     }
 }

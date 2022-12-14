@@ -38,7 +38,7 @@ public class SongServiceImpl implements SongService {
         String query = "SELECT * "
                 + "FROM songs "
                 + "WHERE (author, title, album)::text "
-                + "LIKE ('%"
+                + "ILIKE ('%"
                 + searchString + "%')";
 
         try (Statement stmt = conn.createStatement();

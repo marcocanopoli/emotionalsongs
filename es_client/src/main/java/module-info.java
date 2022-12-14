@@ -6,6 +6,7 @@ module es_client {
     requires java.rmi;
     requires java.sql;
     requires es_server;
+    requires java.desktop;
 
 
     opens client to javafx.fxml;

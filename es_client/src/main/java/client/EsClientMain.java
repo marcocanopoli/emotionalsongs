@@ -5,6 +5,8 @@ import common.interfaces.UserService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,6 +19,7 @@ import java.rmi.registry.Registry;
 public class EsClientMain extends Application {
 
     private static Stage window;
+    private static String currentView;
     static UserService userService;
     static SongService songService;
 
@@ -59,6 +62,22 @@ public class EsClientMain extends Application {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void showSongsView(AnchorPane view) {
+        try {
+            if (EsClientMain.currentView == null || !EsClientMain.currentView.equals("songs")) {
+
+                FXMLLoader loader = new FXMLLoader(EsClientMain.class.getResource("/client_gui/songsView.fxml"));
+                SplitPane songsView = loader.load();
+
+                view.getChildren().clear();
+                view.getChildren().add(songsView);
+                EsClientMain.currentView = "songs";
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
