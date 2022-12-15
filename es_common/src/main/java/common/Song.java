@@ -8,7 +8,7 @@ public class Song implements Serializable {
     @Serial
     private static final long serialVersionUID = 1;
 
-    private final int id;
+    public final int id;
     private final String title;
     private final String author;
     private final Integer year;

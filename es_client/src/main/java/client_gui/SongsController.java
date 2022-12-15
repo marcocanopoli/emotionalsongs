@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
 
 public class SongsController {
@@ -53,6 +54,12 @@ public class SongsController {
                         row.setOnMouseClicked(evt -> {
 //                            ClientContext.getInstance().setSong(row.getItem());
                             testText.setText(row.getItem().toString());
+                            try {
+                                HashMap<Integer, Integer> emotions = songService.getSongEmotions((row.getItem().id));
+                                System.out.println(emotions);
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
                         });
                         return row;
                     });

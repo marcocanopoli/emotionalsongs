@@ -13,18 +13,49 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SongServiceImpl implements SongService {
 
     public SongServiceImpl(Registry registry) throws RemoteException {
-        SongService songServiceStub = (SongService)
-                UnicastRemoteObject.exportObject(this, 3939);
+        SongService songServiceStub = (SongService) UnicastRemoteObject.exportObject(this, 3939);
         registry.rebind("SongService", songServiceStub);
     }
 
-    public List<Song> searchByString(String searchString) {
+    public HashMap<Integer, Integer> getSongEmotions(int songId) {
+        Connection conn = EsServer.getConnection();
 
+
+        String query = "SELECT E.id, COUNT(E.id) " +
+                "FROM song_emotion SE " +
+                "JOIN emotions E ON SE.emotion_id = E.id " +
+                "JOIN songs S ON S.id = SE.song_id " +
+                "WHERE S.id = " + songId +
+                " GROUP BY E.id";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            HashMap<Integer, Integer> results = new HashMap<>();
+
+            while (rs.next()) {
+                int emoId = rs.getInt("id");
+                int count = rs.getInt("count");
+
+                results.put(emoId, count);
+                System.out.println(emoId + " " + count);
+
+            }
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return null;
+    }
+
+    public List<Song> searchByString(String searchString) {
         Connection conn = EsServer.getConnection();
 //        String query = "SELECT * "
 //                + "FROM songs "

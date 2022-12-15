@@ -53,6 +53,20 @@ public class DBManager {
 //        }
 //    }
 
+    public ResultSet executeQuery(String query) {
+
+        Connection conn = EsServer.getConnection();
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            return rs;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return null;
+    }
+
     public static void migrate() {
         final String id = "(id SERIAL PRIMARY KEY, ";
 
@@ -148,23 +162,5 @@ public class DBManager {
         }
 
     }
-
-//    public List<String> getUsers() {
-//
-//        try (Connection conn = openConnection();
-//             Statement stmt = conn.createStatement()) {
-//            List<String> emails = new ArrayList<>();
-//
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM users");
-//            while (rs.next()) {
-//                emails.add(rs.getString("email"));
-//            }
-//            return emails;
-//
-//
-//        } catch (SQLException e) {
-//            ServerLogger.error(String.valueOf(e));
-//            return new ArrayList<>();
-//        }
-//    }
 }
+
