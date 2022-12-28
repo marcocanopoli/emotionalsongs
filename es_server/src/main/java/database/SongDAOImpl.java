@@ -1,7 +1,7 @@
 package database;
 
 import common.Song;
-import common.interfaces.SongService;
+import common.interfaces.SongDAO;
 import server.EsServer;
 import server.ServerLogger;
 
@@ -16,16 +16,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SongServiceImpl implements SongService {
+public class SongDAOImpl implements SongDAO {
 
-    public SongServiceImpl(Registry registry) throws RemoteException {
-        SongService songServiceStub = (SongService) UnicastRemoteObject.exportObject(this, 3939);
-        registry.rebind("SongService", songServiceStub);
+    public SongDAOImpl(Registry registry) throws RemoteException {
+        SongDAO songDAOStub = (SongDAO) UnicastRemoteObject.exportObject(this, 3939);
+        registry.rebind("SongService", songDAOStub);
     }
 
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
         Connection conn = EsServer.getConnection();
-
 
         String query = "SELECT E.id, COUNT(E.id) " +
                 "FROM song_emotion SE " +
@@ -53,6 +52,34 @@ public class SongServiceImpl implements SongService {
         }
 
         return null;
+    }
+
+    public int getSongEmotionsCount(int songId) {
+        Connection conn = EsServer.getConnection();
+
+        String query = "SELECT COUNT(E.id) " +
+                "FROM song_emotion SE " +
+                "JOIN emotions E ON SE.emotion_id = E.id " +
+                "JOIN songs S ON S.id = SE.song_id " +
+                "WHERE S.id = " + songId;
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            int count = 0;
+
+            while (rs.next()) {
+
+                count = rs.getInt("count");
+
+            }
+
+            return count;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return 0;
     }
 
     public List<Song> searchByString(String searchString) {

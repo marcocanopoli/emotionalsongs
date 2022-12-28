@@ -15,15 +15,13 @@ A
 0es_server/src/main/java/server/ServerLogger.java,c/4/c4e5328c026b2430db331f130fa7e4a16c304f9a
 e
 5es_server/src/main/java/database/UserServiceImpl.java,5/5/55997ed74a8884398c55f1599bf7e7af15f8a84b
-j
-:es_common/src/main/java/common/interfaces/UserService.java,6/1/61f9f388e4bf20b5603396b2ef78674eec143488
 X
 (es_common/src/main/java/common/User.java,2/1/21663498018d26701f77b8648d0d1f19016bfa1d
 g
 7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
 X
-(es_common/src/main/java/common/Song.java,9/5/95b51f618e9dc427f510571107a45f0128a454e2
-X
 (es_common/src/main/java/module-info.java,e/2/e21bc39c70293f2f756007f5fe3fe2c949dc3ab7
 A
 es_common/pom.xml,0/4/04092683b5012c975583047e7ff2b26274357895
+f
+6es_client/src/main/java/client_gui/RootController.java,f/2/f2902d8f943ac319447c8a8069f37de974809d3c

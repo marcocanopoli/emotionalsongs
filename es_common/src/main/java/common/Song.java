@@ -50,8 +50,9 @@ public class Song implements Serializable {
         return this.author;
     }
 
-    public int getYear() {
-        return this.year;
+    public String getYear() {
+        if (this.year == null) return "";
+        return this.year.toString();
     }
 
     public String getAlbum() {
@@ -62,7 +63,9 @@ public class Song implements Serializable {
         return this.genre;
     }
 
-    public Integer getDuration() {
-        return this.duration;
+    public String getDuration() {
+        Integer s = this.duration;
+        if (s == null) return "";
+        return String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
     }
 }

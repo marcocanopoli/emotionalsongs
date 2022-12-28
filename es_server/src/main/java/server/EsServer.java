@@ -1,7 +1,7 @@
 package server;
 
-import database.SongServiceImpl;
-import database.UserServiceImpl;
+import database.SongDAOImpl;
+import database.UserDAOImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -68,8 +68,8 @@ public class EsServer extends Application {
     public static void main(String[] args) throws RemoteException {
 
         Registry registry = LocateRegistry.createRegistry(1099);
-        UserServiceImpl userService = new UserServiceImpl(registry);
-        SongServiceImpl songService = new SongServiceImpl(registry);
+        UserDAOImpl userService = new UserDAOImpl(registry);
+        SongDAOImpl songService = new SongDAOImpl(registry);
         ServerLogger.info("Server initialised");
 
         launch();

@@ -1,7 +1,7 @@
 package client_gui;
 
 import client.EsClientMain;
-import common.interfaces.UserService;
+import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -33,7 +33,7 @@ public class SignupController {
     public void initialize() {
 
         confirmRegistrationBtn.setOnAction(event -> {
-            UserService userService = EsClientMain.getUserService();
+            UserDAO userDAO = EsClientMain.getUserDAO();
 
             String firstName = firstNameText.getText().trim();
             String lastName = lastNameText.getText().trim();
@@ -56,7 +56,7 @@ public class SignupController {
                                 !pwdConfirm.isEmpty()
 //                        pwd.equals(pwdConfirm)
                 ) {
-                    boolean userAdded = userService.addUser(firstName, lastName, cf, address, username, email, pwd);
+                    boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
 
                     if (userAdded) {
                         ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();

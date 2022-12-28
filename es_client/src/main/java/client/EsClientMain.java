@@ -1,7 +1,7 @@
 package client;
 
-import common.interfaces.SongService;
-import common.interfaces.UserService;
+import common.interfaces.SongDAO;
+import common.interfaces.UserDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,15 +20,15 @@ public class EsClientMain extends Application {
 
     private static Stage window;
     private static String currentView;
-    static UserService userService;
-    static SongService songService;
+    static UserDAO userDAO;
+    static SongDAO songDAO;
 
-    public static UserService getUserService() {
-        return userService;
+    public static UserDAO getUserDAO() {
+        return userDAO;
     }
 
-    public static SongService getSongService() {
-        return songService;
+    public static SongDAO getSongDAO() {
+        return songDAO;
     }
 
     @Override
@@ -86,9 +86,9 @@ public class EsClientMain extends Application {
         ClientLogger.debug("Client main");
         String host = args.length >= 1 ? args[0] : null;
         Registry registry = LocateRegistry.getRegistry(host);
-        userService = (UserService)
+        userDAO = (UserDAO)
                 registry.lookup("UserService");
-        songService = (SongService)
+        songDAO = (SongDAO)
                 registry.lookup("SongService");
 
         launch();

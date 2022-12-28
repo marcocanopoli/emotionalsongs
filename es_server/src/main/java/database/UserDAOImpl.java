@@ -1,6 +1,6 @@
 package database;
 
-import common.interfaces.UserService;
+import common.interfaces.UserDAO;
 import server.EsServer;
 import server.ServerLogger;
 
@@ -11,12 +11,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class UserServiceImpl implements UserService {
+public class UserDAOImpl implements UserDAO {
 
-    public UserServiceImpl(Registry registry) throws RemoteException {
-        UserService userServiceStub = (UserService)
+    public UserDAOImpl(Registry registry) throws RemoteException {
+        UserDAO userDAOStub = (UserDAO)
                 UnicastRemoteObject.exportObject(this, 3939);
-        registry.rebind("UserService", userServiceStub);
+        registry.rebind("UserService", userDAOStub);
     }
 
     @Override

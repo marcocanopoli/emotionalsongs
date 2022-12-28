@@ -1,7 +1,7 @@
 package client_gui;
 
 import client.EsClientMain;
-import common.interfaces.UserService;
+import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -18,7 +18,7 @@ public class LoginController {
     public void initialize() {
 
         confirmLoginBtn.setOnAction(event -> {
-            UserService userService = EsClientMain.getUserService();
+            UserDAO userDAO = EsClientMain.getUserDAO();
 //            try {
 //                userService.addUser();
 //            } catch (RemoteException e) {
