@@ -8,10 +8,7 @@ import server.ServerLogger;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +18,19 @@ public class SongDAOImpl implements SongDAO {
     public SongDAOImpl(Registry registry) throws RemoteException {
         SongDAO songDAOStub = (SongDAO) UnicastRemoteObject.exportObject(this, 3939);
         registry.rebind("SongService", songDAOStub);
+    }
+
+    public int getSongEmotionRating(int userId, int songId) {
+        Connection conn = EsServer.getConnection();
+
+        String query = "SELECT SE.rating " +
+                "FROM song_emotion SE " +
+                "JOIN emotions E ON SE.emotion_id = E.id " +
+                "JOIN songs S ON S.id = SE.song_id " +
+                "JOIN users U on U.id = SE.user_id " +
+                "WHERE S.id = " + songId + ", U.id = " + userId;
+        
+        return 0;
     }
 
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
@@ -80,6 +90,25 @@ public class SongDAOImpl implements SongDAO {
         }
 
         return 0;
+    }
+
+    public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
+        Connection conn = EsServer.getConnection();
+        String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?) " +
+                "ON CONFLICT( user_id, song_id, emotion_id) DO UPDATE " +
+                "SET rating = excluded.rating;";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            stmt.setInt(2, songId);
+            stmt.setInt(3, emotionId);
+            stmt.setInt(4, rating);
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
     }
 
     public List<Song> searchByString(String searchString) {

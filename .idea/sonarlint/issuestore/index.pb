@@ -13,8 +13,6 @@ A
 es_client/pom.xml,b/6/b6c6805b52b7370d0d9f0376805732577264c513
 `
 0es_server/src/main/java/server/ServerLogger.java,c/4/c4e5328c026b2430db331f130fa7e4a16c304f9a
-e
-5es_server/src/main/java/database/UserServiceImpl.java,5/5/55997ed74a8884398c55f1599bf7e7af15f8a84b
 X
 (es_common/src/main/java/common/User.java,2/1/21663498018d26701f77b8648d0d1f19016bfa1d
 g
@@ -25,3 +23,9 @@ A
 es_common/pom.xml,0/4/04092683b5012c975583047e7ff2b26274357895
 f
 6es_client/src/main/java/client_gui/RootController.java,f/2/f2902d8f943ac319447c8a8069f37de974809d3c
+a
+1es_client/src/main/java/client/ClientContext.java,5/2/52e714645ef87f67505850e3a9af692b6af75413
+f
+6es_common/src/main/java/common/interfaces/UserDAO.java,1/c/1c189ce05955e8cd936f99ab2d6683d03f28159d
+h
+8es_client/src/main/java/client_gui/SignupController.java,5/9/5968c10f5d5166638c6541a62cffc496322624f1

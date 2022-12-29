@@ -14,4 +14,6 @@ public interface SongDAO extends Remote {
     List<Song> searchByString(String searchString) throws RemoteException;
 
     int getSongEmotionsCount(int songId) throws RemoteException;
+
+    void setSongEmotion(int userId, int songId, int emotionId, int rating) throws RemoteException;
 }
