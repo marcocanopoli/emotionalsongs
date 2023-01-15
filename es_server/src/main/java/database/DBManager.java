@@ -1,6 +1,6 @@
 package database;
 
-import server.EsServer;
+import server.ServerApp;
 import server.ServerLogger;
 
 import java.sql.*;
@@ -55,7 +55,7 @@ public class DBManager {
 
     public ResultSet executeQuery(String query) {
 
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             return rs;
@@ -104,7 +104,7 @@ public class DBManager {
         final String CREATE_PLAYLISTS_TABLE =
                 "CREATE TABLE IF NOT EXISTS playlists " +
                         id +
-                        "user_id INTEGER REFERENCES users (id))";
+                        "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE)";
 
         final String CREATE_PLAYLIST_SONG_TABLE =
                 "CREATE TABLE IF NOT EXISTS playlist_song " +
@@ -120,7 +120,7 @@ public class DBManager {
                         "rating INTEGER NOT NULL ," +
                         "CONSTRAINT song_emotion_user_id PRIMARY KEY (song_id, emotion_id, user_id))";
 
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
 
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(CREATE_USERS_TABLE);
@@ -146,7 +146,7 @@ public class DBManager {
         final String SEED_EMOTIONS_QUERY = "INSERT INTO emotions (name) VALUES (?)";
         final String[] records = {"Amazement", "Solemnity", "Tenderness", "Nostalgia", "Calmness", "Power", "Joy", "Tension", "Sadness"};
 
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(SEED_EMOTIONS_QUERY)) {
 

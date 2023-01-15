@@ -2,7 +2,7 @@ package database;
 
 import common.Song;
 import common.interfaces.SongDAO;
-import server.EsServer;
+import server.ServerApp;
 import server.ServerLogger;
 
 import java.rmi.RemoteException;
@@ -21,7 +21,7 @@ public class SongDAOImpl implements SongDAO {
     }
 
     public int getSongEmotionRating(int userId, int songId) {
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
 
         String query = "SELECT SE.rating " +
                 "FROM song_emotion SE " +
@@ -29,12 +29,12 @@ public class SongDAOImpl implements SongDAO {
                 "JOIN songs S ON S.id = SE.song_id " +
                 "JOIN users U on U.id = SE.user_id " +
                 "WHERE S.id = " + songId + ", U.id = " + userId;
-        
+
         return 0;
     }
 
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
 
         String query = "SELECT E.id, COUNT(E.id) " +
                 "FROM song_emotion SE " +
@@ -65,7 +65,7 @@ public class SongDAOImpl implements SongDAO {
     }
 
     public int getSongEmotionsCount(int songId) {
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
 
         String query = "SELECT COUNT(E.id) " +
                 "FROM song_emotion SE " +
@@ -93,7 +93,7 @@ public class SongDAOImpl implements SongDAO {
     }
 
     public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
         String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?) " +
                 "ON CONFLICT( user_id, song_id, emotion_id) DO UPDATE " +
                 "SET rating = excluded.rating;";
@@ -112,7 +112,7 @@ public class SongDAOImpl implements SongDAO {
     }
 
     public List<Song> searchByString(String searchString) {
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
 //        String query = "SELECT * "
 //                + "FROM songs "
 //                + "WHERE author LIKE '%"

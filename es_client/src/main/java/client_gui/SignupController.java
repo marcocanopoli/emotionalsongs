@@ -1,6 +1,7 @@
 package client_gui;
 
-import client.EsClientMain;
+import client.ClientApp;
+import client.ClientLogger;
 import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -33,7 +34,7 @@ public class SignupController {
     public void initialize() {
 
         confirmRegistrationBtn.setOnAction(event -> {
-            UserDAO userDAO = EsClientMain.getUserDAO();
+            UserDAO userDAO = ClientApp.getUserDAO();
 
             String firstName = firstNameText.getText().trim();
             String lastName = lastNameText.getText().trim();
@@ -59,6 +60,10 @@ public class SignupController {
                     boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
 
                     if (userAdded) {
+                        ClientApp.user = userDAO.getUser(username, pwd);
+
+                        ClientLogger.debug("LoggedUser = " + (ClientApp.user != null ? String.valueOf(ClientApp.user) : "null"));
+
                         ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
                     }
                 }

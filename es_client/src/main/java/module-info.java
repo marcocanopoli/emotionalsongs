@@ -2,11 +2,10 @@ module es_client {
     requires javafx.controls;
     requires javafx.fxml;
     requires org.apache.logging.log4j;
-    requires es_common;
     requires java.rmi;
     requires java.sql;
-    requires es_server;
     requires java.desktop;
+    requires es_common;
 
 
     opens client to javafx.fxml;

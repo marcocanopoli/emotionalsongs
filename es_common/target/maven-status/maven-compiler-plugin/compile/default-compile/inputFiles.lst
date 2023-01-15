@@ -1,4 +1,6 @@
 /home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/module-info.java
-/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/org/canos/es_common/interfaces/UserService.java
-/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/org/canos/es_common/UserAddress.java
-/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/org/canos/es_common/User.java
+/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/common/interfaces/UserDAO.java
+/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/common/UserAddress.java
+/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/common/interfaces/SongDAO.java
+/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/common/Song.java
+/home/utente/Scrivania/IdeaProjects/emotionalsongs/es_common/src/main/java/common/User.java

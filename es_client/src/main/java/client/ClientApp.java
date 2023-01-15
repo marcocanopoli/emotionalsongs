@@ -1,5 +1,6 @@
 package client;
 
+import common.User;
 import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
 import javafx.application.Application;
@@ -16,10 +17,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class EsClientMain extends Application {
+public class ClientApp extends Application {
 
     private static Stage window;
-    private static String currentView;
+    public static String currentView;
+    public static User user = null;
     static UserDAO userDAO;
     static SongDAO songDAO;
 
@@ -33,18 +35,19 @@ public class EsClientMain extends Application {
 
     @Override
     public void start(Stage stage) {
-        EsClientMain.window = stage;
-        EsClientMain.window.setTitle("Emotional Songs");
+        ClientApp.window = stage;
+        ClientApp.window.setTitle("Emotional Songs");
 
-        initRootLayout();
+        initLayout("splashScreen");
     }
 
-    public void initRootLayout() {
+    public static void initLayout(String layout) {
+
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(EsClientMain.class.getResource("/client_gui/rootLayout.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("/client_gui/" + layout + ".fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            EsClientMain.window.setScene(scene);
-            EsClientMain.window.show();
+            ClientApp.window.setScene(scene);
+            ClientApp.window.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,10 +55,10 @@ public class EsClientMain extends Application {
 
     public static void createStage(String resourceName, String title, boolean isModal) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(EsClientMain.class.getResource("/client_gui/" + resourceName));
+            FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("/client_gui/" + resourceName));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
-            stage.initOwner(EsClientMain.window);
+            stage.initOwner(ClientApp.window);
             stage.initModality(isModal ? Modality.WINDOW_MODAL : Modality.NONE);
             stage.setTitle(title);
             stage.setScene(scene);
@@ -67,21 +70,25 @@ public class EsClientMain extends Application {
 
     public static void showSongsView(AnchorPane view) {
         try {
-            if (EsClientMain.currentView == null || !EsClientMain.currentView.equals("songs")) {
+            if (ClientApp.currentView == null || !ClientApp.currentView.equals("songs")) {
 
-                FXMLLoader loader = new FXMLLoader(EsClientMain.class.getResource("/client_gui/songsView.fxml"));
+                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsView.fxml"));
                 SplitPane songsView = loader.load();
 
                 view.getChildren().clear();
                 view.getChildren().add(songsView);
-                EsClientMain.currentView = "songs";
+                ClientApp.currentView = "songs";
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void main(String[] args) throws RemoteException, NotBoundException {
+    public static void showPlaylistsView(AnchorPane view) {
+
+    }
+
+    public static void appStart(String[] args) throws RemoteException, NotBoundException {
 
         ClientLogger.debug("Client main");
         String host = args.length >= 1 ? args[0] : null;

@@ -1,6 +1,6 @@
 package client_gui;
 
-import client.EsClientMain;
+import client.ClientApp;
 import common.Song;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
@@ -83,7 +83,7 @@ public class SongsController {
     public void initialize() {
 
         searchBtn.setOnAction(event -> {
-            SongDAO songDAO = EsClientMain.getSongDAO();
+            SongDAO songDAO = ClientApp.getSongDAO();
             String searched = searchText.getText().trim();
 
             try {

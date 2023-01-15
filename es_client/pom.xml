@@ -70,7 +70,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>client.EsClientMain</mainClass>
+                            <mainClass>client.ClientApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
@@ -88,6 +88,33 @@
                     <source>9</source>
                     <target>9</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <transformers>
+                                <transformer implementation=
+                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>client.ClientMain</mainClass>
+                                </transformer>
+                            </transformers>
+
+                            <properties>
+                                <startClass>client.ClientMain</startClass>
+                            </properties>
+                        </configuration>
+
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

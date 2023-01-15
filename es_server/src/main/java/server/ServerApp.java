@@ -14,7 +14,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.Connection;
 
-public class EsServer extends Application {
+public class ServerApp extends Application {
     private static Connection conn = null;
 
     public static synchronized Connection getConnection() {
@@ -22,13 +22,13 @@ public class EsServer extends Application {
     }
 
     public static synchronized void setConnection(Connection conn) {
-        EsServer.conn = conn;
+        ServerApp.conn = conn;
     }
 
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(EsServer.class.getResource("/server_gui/dbLoginView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ServerApp.class.getResource("/server_gui/dbLoginView.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 300);
         stage.setTitle("Accesso al database");
         stage.setScene(scene);
@@ -65,7 +65,7 @@ public class EsServer extends Application {
 
     }
 
-    public static void main(String[] args) throws RemoteException {
+    public static void appStart(String[] args) throws RemoteException {
 
         Registry registry = LocateRegistry.createRegistry(1099);
         UserDAOImpl userService = new UserDAOImpl(registry);

@@ -7,28 +7,38 @@ public class User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1;
+    private final int id;
     private final String firstName;
     private final String lastName;
-    private final UserAddress address;
+    private final String address;
+    private final String cf;
+    private final String username;
     private final String email;
-    private final String id;
-    private final String password;
+//    private final String password;
 
-    private User(String firstName,
-                 String lastName,
-                 UserAddress address,
-                 String email,
-                 String id,
-                 String password) {
+    public User(
+            int id,
+            String firstName,
+            String lastName,
+            String cf,
+            String address,
+            String email,
+            String username) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.cf = cf;
         this.address = address;
         this.email = email;
-        this.id = id;
-        this.password = password;
+        this.username = username;
     }
 
-    public String getID() {
+    @Override
+    public String toString() {
+        return (id + "\t" + firstName + "\t" + lastName + "\t" + cf + "\t" + address + "\t" + email + "\t" + username);
+    }
+
+    public int getID() {
         return this.id;
     }
 }

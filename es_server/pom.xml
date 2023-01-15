@@ -57,6 +57,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -79,7 +87,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>server.EsServer</mainClass>
+                            <mainClass>server.ServerApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
@@ -87,6 +95,33 @@
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <transformers>
+                                <transformer implementation=
+                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>server.ServerMain</mainClass>
+                                </transformer>
+                            </transformers>
+
+                            <properties>
+                                <startClass>server.ServerMain</startClass>
+                            </properties>
+                        </configuration>
+
                     </execution>
                 </executions>
             </plugin>

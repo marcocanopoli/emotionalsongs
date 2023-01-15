@@ -1,16 +1,0 @@
-
-K
-java:S1948")Make "address" transient or serializable.(œÉ²—ûÿÿÿÿ8²Ú“¾Ğ0
-C
-java:S1068
-"-Remove this unused "firstName" private field.(ı˜¼
-G
-java:S1068",Remove this unused "lastName" private field.(¨¹äüÿÿÿÿ
-F
-java:S1068"+Remove this unused "address" private field.(œÉ²—ûÿÿÿÿ
-D
-java:S1068")Remove this unused "email" private field.(ˆ££¿øÿÿÿÿ
-G
-java:S1068",Remove this unused "password" private field.(»í££ûÿÿÿÿ
-C
-java:S1144".Remove this unused private "User" constructor.(ö¢ì

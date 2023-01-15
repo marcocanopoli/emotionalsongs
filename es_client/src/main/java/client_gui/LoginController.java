@@ -1,14 +1,19 @@
 package client_gui;
 
-import client.EsClientMain;
+import client.ClientApp;
+import client.ClientLogger;
 import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.rmi.RemoteException;
 
 public class LoginController {
 
+    @FXML
     public TextField username;
     @FXML
     public PasswordField pwd;
@@ -17,14 +22,30 @@ public class LoginController {
 
     public void initialize() {
 
+//        if (ClientApp.user != null) {
+//            username.setDisable(true);
+//            pwd.setDisable(true);
+//            confirmLoginBtn.setText("Logout");
+//        }
+
         confirmLoginBtn.setOnAction(event -> {
-            UserDAO userDAO = EsClientMain.getUserDAO();
-//            try {
-//                userService.addUser();
-//            } catch (RemoteException e) {
-//                throw new RuntimeException(e);
-//            }
+
+            UserDAO userDAO = ClientApp.getUserDAO();
+
+            try {
+                ClientApp.user = userDAO.getUser(username.getText(), pwd.getText());
+
+                ClientLogger.debug("LoggedUser = " + (ClientApp.user != null ? String.valueOf(ClientApp.user) : "null"));
+
+                ((Stage) confirmLoginBtn.getScene().getWindow()).close();
+
+                ClientApp.initLayout("rootLayout");
+
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
 
         });
     }
+
 }

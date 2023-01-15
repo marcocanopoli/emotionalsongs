@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import server.EsServer;
+import server.ServerApp;
 import server.ServerLogger;
 
 import java.sql.Connection;
@@ -44,7 +44,7 @@ public class RootController {
             DBManager dbManager = new DBManager();
             Connection conn = dbManager.openConnection(host, database, user, password);
             if (conn != null) {
-                EsServer.setConnection(conn);
+                ServerApp.setConnection(conn);
                 ServerLogger.debug("Connection set");
                 DBManager.migrate();
                 ServerLogger.debug("Migrations executed");

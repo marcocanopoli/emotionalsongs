@@ -1,6 +1,6 @@
 package client_gui;
 
-import client.EsClientMain;
+import client.ClientApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -8,30 +8,35 @@ import javafx.scene.layout.AnchorPane;
 public class RootController {
 
     @FXML
+    public Button logoutBtn;
+    @FXML
+    public Button menuPlaylistsBtn;
+    @FXML
     private AnchorPane window;
-    @FXML
-    private Button loginBtn;
-    @FXML
-    private Button signupBtn;
     @FXML
     private Button menuSearchBtn;
     @FXML
     private AnchorPane mainView;
 
     public void initialize() {
-        EsClientMain.showSongsView(mainView);
+        
+        menuPlaylistsBtn.setDisable(ClientApp.user == null);
 
-        signupBtn.setOnAction(event ->
-                EsClientMain.createStage("signupView.fxml", "Registrazione utente", true)
-        );
-
-        loginBtn.setOnAction(event ->
-                EsClientMain.createStage("loginView.fxml", "Login", true)
-        );
+        ClientApp.showSongsView(mainView);
 
         menuSearchBtn.setOnAction(event ->
-                EsClientMain.showSongsView(mainView)
+                ClientApp.showSongsView(mainView)
         );
+
+        menuPlaylistsBtn.setOnAction(event ->
+                ClientApp.showPlaylistsView(mainView)
+        );
+
+        logoutBtn.setOnAction(event -> {
+            ClientApp.user = null;
+            ClientApp.currentView = null;
+            ClientApp.initLayout("splashScreen");
+        });
 
     }
 }

@@ -1,15 +1,14 @@
 package database;
 
+import common.User;
 import common.interfaces.UserDAO;
-import server.EsServer;
+import server.ServerApp;
 import server.ServerLogger;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -21,7 +20,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
-        Connection conn = EsServer.getConnection();
+        Connection conn = ServerApp.getConnection();
         String query = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
                 + "VALUES(?,?,?,?,?,?,?)";
 
@@ -36,14 +35,56 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(7, password);
 
             stmt.executeUpdate();
-//            int rows = stmt.executeUpdate();
-//            ServerLogger.debug(String.valueOf(rows));
+
             ServerLogger.debug("USER " + email + " ADDED");
+//            User newUser = getUser(username, password);
+//            ServerLogger.debug("NEW USER" + newUser);
             return true;
         } catch (SQLException ex) {
             ServerLogger.error("USER NOT ADDED: " + ex);
             return false;
         }
+    }
+
+    @Override
+    public User getUser(String username, String pwd) {
+        Connection conn = ServerApp.getConnection();
+
+        String query = "SELECT * "
+                + "FROM users "
+                + "WHERE username = '" + username + "' LIMIT 1";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            User user = null;
+
+            while (rs.next()) {
+
+                int id = rs.getInt("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String cf = rs.getString("cf");
+                String address = rs.getString("address");
+                String email = rs.getString("email");
+//                String password = rs.getString("password");
+
+                user = new User(id, firstName, lastName, cf, address, email, username);
+
+            }
+            if (user != null) {
+                ServerLogger.debug("User: " + user);
+                return user;
+            } else {
+                ServerLogger.debug("Null user");
+                return null;
+            }
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+            return null;
+        }
+
     }
 
 //    public void shutdown() throws RemoteException {
