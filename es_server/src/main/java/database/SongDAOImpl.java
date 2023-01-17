@@ -20,17 +20,38 @@ public class SongDAOImpl implements SongDAO {
         registry.rebind("SongService", songDAOStub);
     }
 
-    public int getSongEmotionRating(int userId, int songId) {
+    public HashMap<Integer, Integer> getSongEmotionsRating(int userId, int songId) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT SE.rating " +
+        String query = "SELECT SE.emotion_id, SE.rating  " +
                 "FROM song_emotion SE " +
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
                 "JOIN users U on U.id = SE.user_id " +
-                "WHERE S.id = " + songId + ", U.id = " + userId;
+                "WHERE S.id = " + songId +
+                "AND U.id = " + userId;
 
-        return 0;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            HashMap<Integer, Integer> results = new HashMap<>();
+
+            while (rs.next()) {
+                int emoId = rs.getInt("emotion_id");
+                int rating = rs.getInt("rating");
+
+                results.put(emoId, rating);
+//                ServerLogger.error("EmoId: " + emoId + " , Rating: " + rating);
+
+            }
+
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+
+        }
+
+        return new HashMap<>();
     }
 
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
@@ -52,7 +73,7 @@ public class SongDAOImpl implements SongDAO {
                 int count = rs.getInt("count");
 
                 results.put(emoId, count);
-                System.out.println(emoId + " " + count);
+//                System.out.println(emoId + " " + count);
 
             }
             return results;
@@ -61,7 +82,7 @@ public class SongDAOImpl implements SongDAO {
             ServerLogger.error("Error: " + ex);
         }
 
-        return null;
+        return new HashMap<>();
     }
 
     public int getSongEmotionsCount(int songId) {
@@ -95,8 +116,8 @@ public class SongDAOImpl implements SongDAO {
     public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
         Connection conn = ServerApp.getConnection();
         String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?) " +
-                "ON CONFLICT( user_id, song_id, emotion_id) DO UPDATE " +
-                "SET rating = excluded.rating;";
+                "ON CONFLICT ON CONSTRAINT song_emotion_user_id DO UPDATE " +
+                "SET rating = excluded.rating ";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -106,9 +127,33 @@ public class SongDAOImpl implements SongDAO {
             stmt.setInt(4, rating);
             stmt.execute();
 
+//            ServerLogger.debug("User: " + userId + " , Song: " + songId + " , Emotion: " + emotionId + " , Rating: " + rating);
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
+    }
+
+    public int deleteSongEmotion(int userId, int songId, int emotionId) {
+        Connection conn = ServerApp.getConnection();
+        String query = "DELETE FROM song_emotion " +
+                "WHERE user_id = ?" +
+                "AND song_id = ?" +
+                "AND emotion_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, songId);
+            stmt.setInt(3, emotionId);
+
+            int deletedRows = stmt.executeUpdate();
+            System.out.println("DELETED SE: " + deletedRows);
+            return deletedRows;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return 0;
     }
 
     public List<Song> searchByString(String searchString) {

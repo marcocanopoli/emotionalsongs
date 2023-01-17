@@ -1,26 +1,0 @@
-
-q
-java:S1192"VDefine a constant instead of duplicating this literal "FROM song_emotion SE " 3 times.(ì¸Â­ûÿÿÿÿ
-
-java:S1192"iDefine a constant instead of duplicating this literal "JOIN emotions E ON SE.emotion_id = E.id " 3 times.(½ôúƒ
-c
-java:S1192="HDefine a constant instead of duplicating this literal "Error: " 4 times.(Ù¸—ûÿÿÿÿ
-d
-java:S1192"NDefine a constant instead of duplicating this literal "WHERE S.id = " 3 times.(üıº
-~
-java:S1192"cDefine a constant instead of duplicating this literal "JOIN songs S ON S.id = SE.song_id " 3 times.(ØÏÀóøÿÿÿÿ
-O
-java:S1854"9Remove this useless assignment to local variable "query".(ø›±ò
-S
-java:S1854"8Remove this useless assignment to local variable "conn".(Ï®Ø¦üÿÿÿÿ
-D
-java:S1481")Remove this unused "conn" local variable.(Ï®Ø¦üÿÿÿÿ
-@
-java:S1481"*Remove this unused "query" local variable.(ø›±ò
-S	java:S1067"9Replace this use of System.out or System.err by a logger.(üÿ¯ªşÿÿÿÿ
-:
-java:S1168@"$Return an empty map instead of null.(¥¹ï
-Q	java:S125{"<This block of commented-out lines of code should be removed.(Ü®±
-W	java:S125"<This block of commented-out lines of code should be removed.(‹×Šˆıÿÿÿÿ
-B
-java:S1168š"+Return an empty collection instead of null.(¥¹ï

@@ -60,7 +60,7 @@
         </AnchorPane>
         <AnchorPane prefHeight="200.0" prefWidth="200.0">
             <children>
-                <SplitPane dividerPositions="0.32357043235704325" layoutX="98.0" layoutY="36.0" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <SplitPane dividerPositions="0.33751743375174337" layoutX="98.0" layoutY="36.0" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="192.0">
                             <children>
@@ -149,6 +149,7 @@
                                         <ProgressBar fx:id="sadnessProg" prefWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                         <GridPane prefHeight="43.0" prefWidth="122.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -160,20 +161,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="22.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="amazementGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$amazementGrp" userData="5" GridPane.columnIndex="5" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Button fx:id="amazementReset" mnemonicParsing="false" text="Button" />
                                             </children>
                                             <padding>
                                                 <Insets left="20.0" />
@@ -181,6 +183,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -192,20 +195,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="solemnityGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$solemnityGrp" userData="5" GridPane.columnIndex="5" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Button fx:id="solemnityReset" mnemonicParsing="false" text="Button" />
                                             </children>
                                             <GridPane.margin>
                                                 <Insets left="20.0" />
@@ -213,6 +217,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="2">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -224,20 +229,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="tendernessGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tendernessGrp" userData="5" GridPane.columnIndex="5" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Button fx:id="tendernessReset" mnemonicParsing="false" text="Button" />
                                             </children>
                                             <padding>
                                                 <Insets left="20.0" />
@@ -245,6 +251,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="3">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -256,20 +263,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="nostalgiaGrp" />
                                        </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$nostalgiaGrp" userData="5" GridPane.columnIndex="5" />
+                                    <Button fx:id="nostalgiaReset" mnemonicParsing="false" text="Button" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                             </children>
                                             <GridPane.margin>
                                                 <Insets left="20.0" />
@@ -277,6 +285,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -288,20 +297,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="calmnessGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$calmnessGrp" userData="5" GridPane.columnIndex="5" />
+                                    <Button fx:id="calmnessReset" mnemonicParsing="false" text="Button" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                             </children>
                                             <GridPane.margin>
                                                 <Insets left="20.0" />
@@ -309,31 +319,34 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="5">
                                             <columnConstraints>
+                                    <ColumnConstraints />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                                 <RowConstraints maxHeight="22.0" minHeight="10.0" prefHeight="22.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="22.0" minHeight="10.0" prefHeight="22.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="powerGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$powerGrp" userData="5" GridPane.columnIndex="5" />
+                                    <Button fx:id="powerReset" mnemonicParsing="false" text="Button" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                                             </children>
                                             <GridPane.margin>
                                                 <Insets left="20.0" />
@@ -341,6 +354,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="6">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -352,20 +366,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="joyGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$joyGrp" userData="5" GridPane.columnIndex="5" />
+                                    <Button fx:id="joyReset" mnemonicParsing="false" text="Button" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                             </children>
                                             <padding>
                                                 <Insets left="20.0" />
@@ -373,6 +388,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="7">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -384,20 +400,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="tensionGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$tensionGrp" userData="5" GridPane.columnIndex="5" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Button fx:id="tensionReset" mnemonicParsing="false" text="Button" />
                                             </children>
                                             <padding>
                                                 <Insets left="20.0" />
@@ -405,6 +422,7 @@
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="8">
                                             <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -416,20 +434,21 @@
                                                 <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1">
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" userData="1" GridPane.columnIndex="1">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="sadnessGrp" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="2" GridPane.columnIndex="1" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="3" GridPane.columnIndex="2" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="4" GridPane.columnIndex="3" />
-                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="5" GridPane.columnIndex="4" />
-                                                <Label text="1" GridPane.rowIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label text="4" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label text="5" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="2" GridPane.columnIndex="2" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="3" GridPane.columnIndex="3" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="4" GridPane.columnIndex="4" />
+                                                <RadioButton contentDisplay="RIGHT" mnemonicParsing="false" textAlignment="CENTER" toggleGroup="$sadnessGrp" userData="5" GridPane.columnIndex="5" />
+                                                <Label text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label text="2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label text="3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                <Label text="4" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                <Label text="5" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Button fx:id="sadnessReset" mnemonicParsing="false" text="Button" />
                                             </children>
                                             <GridPane.margin>
                                                 <Insets left="20.0" />
