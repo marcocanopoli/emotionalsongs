@@ -176,7 +176,9 @@ public class SongsController {
 
     private void displaySongStats(SongDAO songDAO) {
         displayProgress(songDAO);
-        ratingController.displayRatings(songDAO);
+        if (ClientApp.user != null) {
+            ratingController.displayRatings(songDAO);
+        }
     }
 
     public void setRatingController(RatingController controller) {
