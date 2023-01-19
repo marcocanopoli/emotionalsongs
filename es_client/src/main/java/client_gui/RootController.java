@@ -19,13 +19,13 @@ public class RootController {
     private AnchorPane mainView;
 
     public void initialize() {
-        
+
         menuPlaylistsBtn.setDisable(ClientApp.user == null);
 
-        ClientApp.showSongsView(mainView);
+        setSongsView();
 
         menuSearchBtn.setOnAction(event ->
-                ClientApp.showSongsView(mainView)
+                setSongsView()
         );
 
         menuPlaylistsBtn.setOnAction(event ->
@@ -38,5 +38,16 @@ public class RootController {
             ClientApp.initLayout("splashScreen");
         });
 
+    }
+
+    public void setSongsView() {
+        ClientApp.showSongsView(mainView);
+        if (ClientApp.user != null) {
+            ClientApp.songsController.showRatingPane();
+        }
+        ClientApp.songsController.setRatingController(ClientApp.ratingController);
+        if (ClientApp.user != null) {
+            ClientApp.ratingController.setSongsController(ClientApp.songsController);
+        }
     }
 }

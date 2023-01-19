@@ -1,5 +1,7 @@
 package client;
 
+import client_gui.RatingController;
+import client_gui.SongsController;
 import common.User;
 import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
@@ -20,6 +22,10 @@ import java.rmi.registry.Registry;
 public class ClientApp extends Application {
 
     private static Stage window;
+    //    public static Song currentSong;
+
+    public static SongsController songsController;
+    public static RatingController ratingController;
     public static String currentView;
     public static User user = null;
     static UserDAO userDAO;
@@ -36,6 +42,8 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage stage) {
         ClientApp.window = stage;
+        ClientApp.window.setMinHeight(850);
+        ClientApp.window.setMinWidth(1064);
         ClientApp.window.setTitle("Emotional Songs");
 
         initLayout("splashScreen");
@@ -74,6 +82,7 @@ public class ClientApp extends Application {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsView.fxml"));
                 SplitPane songsView = loader.load();
+                songsController = loader.getController();
 
                 view.getChildren().clear();
                 view.getChildren().add(songsView);
@@ -83,6 +92,7 @@ public class ClientApp extends Application {
             throw new RuntimeException(e);
         }
     }
+
 
     public static void showPlaylistsView(AnchorPane view) {
 

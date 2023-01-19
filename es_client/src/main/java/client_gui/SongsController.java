@@ -4,13 +4,15 @@ import client.ClientApp;
 import common.Song;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SongsController {
     @FXML
@@ -44,23 +46,7 @@ public class SongsController {
     @FXML
     public ProgressBar sadnessProg;
     @FXML
-    public ToggleGroup amazementGrp;
-    @FXML
-    public ToggleGroup solemnityGrp;
-    @FXML
-    public ToggleGroup tendernessGrp;
-    @FXML
-    public ToggleGroup nostalgiaGrp;
-    @FXML
-    public ToggleGroup calmnessGrp;
-    @FXML
-    public ToggleGroup powerGrp;
-    @FXML
-    public ToggleGroup joyGrp;
-    @FXML
-    public ToggleGroup tensionGrp;
-    @FXML
-    public ToggleGroup sadnessGrp;
+    public SplitPane bottomPane;
     @FXML
     private Button searchBtn;
     @FXML
@@ -79,13 +65,25 @@ public class SongsController {
     private TableColumn<Song, String> genreColumn;
     @FXML
     private TableColumn<Song, String> durationColumn;
-    private HashMap<Integer, ToggleGroup> toggleGroups = new HashMap<>();
 
-    private Song currentSong;
+    @FXML
+    private RatingController ratingController;
 
+    public static Song currentSong;
 
-    public void initialize() {
+    public void initialize() throws IOException {
+
+//        ratingController = loader.getController();
+
         SongDAO songDAO = ClientApp.getSongDAO();
+
+//        if (ClientApp.user != null) {
+////            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client_gui/ratingPane.fxml"));
+////            AnchorPane ratingPane = loader.load();
+////            bottomPane.getItems().add(ratingPane);
+//
+//            ClientApp.showRatingPane(bottomPane);
+//        }
 
         searchBtn.setOnAction(event -> {
             String searched = searchText.getText().trim();
@@ -117,51 +115,6 @@ public class SongsController {
                 throw new RuntimeException(e);
             }
         });
-
-        setRatingListeners(songDAO);
-    }
-
-    private void setRatingListeners(SongDAO songDAO) {
-
-        toggleGroups.put(1, amazementGrp);
-        toggleGroups.put(2, solemnityGrp);
-        toggleGroups.put(3, tendernessGrp);
-        toggleGroups.put(4, nostalgiaGrp);
-        toggleGroups.put(5, calmnessGrp);
-        toggleGroups.put(6, powerGrp);
-        toggleGroups.put(7, joyGrp);
-        toggleGroups.put(8, tensionGrp);
-        toggleGroups.put(9, sadnessGrp);
-
-//        Collections.addAll(toggleGroups, amazementGrp, solemnityGrp, tendernessGrp, nostalgiaGrp, calmnessGrp, powerGrp, joyGrp, tensionGrp, sadnessGrp);
-        for (Map.Entry<Integer, ToggleGroup> group :
-                toggleGroups.entrySet()) {
-
-            group.getValue().selectedToggleProperty().addListener((observable, oldVal, newVal) ->
-                    {
-
-                        if (newVal != null && currentSong != null) {
-
-                            int emotionId = group.getKey();
-                            int newRating = Integer.parseInt((String) newVal.getUserData());
-
-                            try {
-
-//                                if (oldVal != null && oldRating == newRating) {
-//                                    group.getValue().selectToggle(null);
-//                                    songDAO.deleteSongEmotion(1, currentSong.id, emotionId);
-//                                } else {
-                                songDAO.setSongEmotion(1, currentSong.id, emotionId, newRating);
-//                                }
-                                displayProgress(songDAO);
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-            );
-
-        }
     }
 
     public void setCurrentSong(SongDAO songDAO, Song song) {
@@ -178,7 +131,7 @@ public class SongsController {
 
     }
 
-    private void displayProgress(SongDAO songDAO) {
+    void displayProgress(SongDAO songDAO) {
         try {
             HashMap<Integer, Integer> emotions = songDAO.getSongEmotions(currentSong.id);
 
@@ -221,33 +174,24 @@ public class SongsController {
         }
     }
 
-    private void displayRatings(SongDAO songDAO) {
-        try {
-            HashMap<Integer, Integer> ratings = songDAO.getSongEmotionsRating(1, currentSong.id);
-
-            for (Map.Entry<Integer, ToggleGroup> group :
-                    toggleGroups.entrySet()) {
-
-                int emotionId = group.getKey();
-                boolean emotionIsRated = ratings.containsKey(emotionId);
-
-                if (emotionIsRated) {
-                    int rating = ratings.get(emotionId) - 1;
-                    Toggle currentToggle = group.getValue().getToggles().get(rating);
-                    group.getValue().selectToggle(currentToggle);
-                } else {
-                    group.getValue().selectToggle(null);
-                }
-
-            }
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void displaySongStats(SongDAO songDAO) {
         displayProgress(songDAO);
-        displayRatings(songDAO);
+        ratingController.displayRatings(songDAO);
+    }
+
+    public void setRatingController(RatingController controller) {
+        ratingController = controller;
+    }
+
+    public void showRatingPane() {
+        try {
+            FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/ratingPane.fxml"));
+            AnchorPane ratingPane = loader.load();
+            ClientApp.ratingController = loader.getController();
+            bottomPane.getItems().add(ratingPane);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

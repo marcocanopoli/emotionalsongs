@@ -7,8 +7,6 @@ D
 es_server/mvnw,f/5/f5e1d302213fc4359b7d2ef10bbfb9645d148616
 B
 es_server/mvnw.cmd,6/a/6a87fd8f67341ac5d5124a161d0d156743012c08
-a
-1es_client/src/main/java/client/ClientContext.java,5/2/52e714645ef87f67505850e3a9af692b6af75413
 `
 0es_server/src/main/java/server/ServerLogger.java,c/4/c4e5328c026b2430db331f130fa7e4a16c304f9a
 X
@@ -37,5 +35,5 @@ X
 (es_common/src/main/java/common/Song.java,9/5/95b51f618e9dc427f510571107a45f0128a454e2
 a
 1es_server/src/main/java/database/UserDAOImpl.java,8/8/886bed884123c66f83ae9affc31aceba9021c841
-h
-8es_client/src/main/java/client_gui/SignupController.java,5/9/5968c10f5d5166638c6541a62cffc496322624f1
+n
+>es_client/src/main/java/client_gui/SplashScreenController.java,e/d/ed47ae8f82426bde9d3a5f49eb5bdcc9fc610c86
