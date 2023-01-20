@@ -92,7 +92,7 @@ public class ClientApp extends Application {
                     ClientApp.songsController.showRatingPane();
                     ClientApp.ratingController.setSongsController(ClientApp.songsController);
                 }
-                
+
                 ClientApp.songsController.setRatingController(ClientApp.ratingController);
             }
         } catch (IOException e) {
@@ -101,7 +101,20 @@ public class ClientApp extends Application {
     }
 
     public static void showPlaylistsView(AnchorPane view) {
+        try {
+            if (ClientApp.currentView == null || !ClientApp.currentView.equals("playlists")) {
 
+                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/playlistsView.fxml"));
+                AnchorPane playlistsView = loader.load();
+//                playlistsController = loader.getController();
+
+                view.getChildren().clear();
+                view.getChildren().add(playlistsView);
+                ClientApp.currentView = "playlists";
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void appStart(String[] args) throws RemoteException, NotBoundException {
