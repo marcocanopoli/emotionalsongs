@@ -87,12 +87,18 @@ public class ClientApp extends Application {
                 view.getChildren().clear();
                 view.getChildren().add(songsView);
                 ClientApp.currentView = "songs";
+
+                if (ClientApp.user != null) {
+                    ClientApp.songsController.showRatingPane();
+                    ClientApp.ratingController.setSongsController(ClientApp.songsController);
+                }
+                
+                ClientApp.songsController.setRatingController(ClientApp.ratingController);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public static void showPlaylistsView(AnchorPane view) {
 

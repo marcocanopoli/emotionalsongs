@@ -67,6 +67,10 @@ public class RatingController {
         setRatingResetsListeners(songDAO);
         setRatingListeners(songDAO);
     }
+    
+    public void setSongsController(SongsController controller) {
+        songsController = controller;
+    }
 
     private void setRatingListeners(SongDAO songDAO) {
 
@@ -92,13 +96,7 @@ public class RatingController {
                             int newRating = Integer.parseInt((String) newVal.getUserData());
 
                             try {
-
-//                                if (oldVal != null && oldRating == newRating) {
-//                                    group.getValue().selectToggle(null);
-//                                    songDAO.deleteSongEmotion(1, currentSong.id, emotionId);
-//                                } else {
                                 songDAO.setSongEmotion(1, currentSong.id, emotionId, newRating);
-//                                }
                                 songsController.displayProgress(songDAO);
                             } catch (RemoteException e) {
                                 throw new RuntimeException(e);
@@ -169,8 +167,5 @@ public class RatingController {
         }
     }
 
-    public void setSongsController(SongsController controller) {
-        songsController = controller;
-    }
 
 }

@@ -22,10 +22,10 @@ public class RootController {
 
         menuPlaylistsBtn.setDisable(ClientApp.user == null);
 
-        setSongsView();
+        ClientApp.showSongsView(mainView);
 
         menuSearchBtn.setOnAction(event ->
-                setSongsView()
+                ClientApp.showSongsView(mainView)
         );
 
         menuPlaylistsBtn.setOnAction(event ->
@@ -40,14 +40,5 @@ public class RootController {
 
     }
 
-    public void setSongsView() {
-        ClientApp.showSongsView(mainView);
-        if (ClientApp.user != null) {
-            ClientApp.songsController.showRatingPane();
-        }
-        ClientApp.songsController.setRatingController(ClientApp.ratingController);
-        if (ClientApp.user != null) {
-            ClientApp.ratingController.setSongsController(ClientApp.songsController);
-        }
-    }
+
 }
