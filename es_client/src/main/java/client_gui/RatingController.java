@@ -3,6 +3,7 @@ package client_gui;
 import client.ClientApp;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 
@@ -15,24 +16,43 @@ import static client_gui.SongsController.currentSong;
 
 public class RatingController {
     @FXML
-    public ToggleGroup amazementGrp;
+    private ToggleGroup amazementGrp;
     @FXML
-    public ToggleGroup solemnityGrp;
+    private ToggleGroup solemnityGrp;
     @FXML
-    public ToggleGroup tendernessGrp;
+    private ToggleGroup tendernessGrp;
     @FXML
-    public ToggleGroup nostalgiaGrp;
+    private ToggleGroup nostalgiaGrp;
     @FXML
-    public ToggleGroup calmnessGrp;
+    private ToggleGroup calmnessGrp;
     @FXML
-    public ToggleGroup powerGrp;
+    private ToggleGroup powerGrp;
     @FXML
-    public ToggleGroup joyGrp;
+    private ToggleGroup joyGrp;
     @FXML
-    public ToggleGroup tensionGrp;
+    private ToggleGroup tensionGrp;
     @FXML
-    public ToggleGroup sadnessGrp;
+    private ToggleGroup sadnessGrp;
+    @FXML
+    private Button amazementReset;
+    @FXML
+    private Button solemnityReset;
+    @FXML
+    private Button tendernessReset;
+    @FXML
+    private Button nostalgiaReset;
+    @FXML
+    private Button calmnessReset;
+    @FXML
+    private Button powerReset;
+    @FXML
+    private Button joyReset;
+    @FXML
+    private Button tensionReset;
+    @FXML
+    private Button sadnessReset;
     private final HashMap<Integer, ToggleGroup> toggleGroups = new HashMap<>();
+    private final HashMap<Integer, Button> resets = new HashMap<>();
 
     private SongsController songsController;
 
@@ -44,6 +64,7 @@ public class RatingController {
 
         SongDAO songDAO = ClientApp.getSongDAO();
 
+        setRatingResetsListeners(songDAO);
         setRatingListeners(songDAO);
     }
 
@@ -85,6 +106,41 @@ public class RatingController {
                         }
                     }
             );
+
+        }
+    }
+
+    private void setRatingResetsListeners(SongDAO songDAO) {
+
+        resets.put(1, amazementReset);
+        resets.put(2, solemnityReset);
+        resets.put(3, tendernessReset);
+        resets.put(4, nostalgiaReset);
+        resets.put(5, calmnessReset);
+        resets.put(6, powerReset);
+        resets.put(7, joyReset);
+        resets.put(8, tensionReset);
+        resets.put(9, sadnessReset);
+
+        for (Map.Entry<Integer, Button> group :
+                resets.entrySet()) {
+
+            group.getValue().setOnAction(event -> {
+                if (currentSong != null) {
+
+                    int emotionId = group.getKey();
+
+                    try {
+//                        group.getValue().selectToggle(null);
+                        songDAO.deleteSongEmotion(1, currentSong.id, emotionId);
+                        songsController.displayProgress(songDAO);
+                        displayRatings(songDAO);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            });
 
         }
     }

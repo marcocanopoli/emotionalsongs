@@ -1,0 +1,19 @@
+
+q
+java:S1192"VDefine a constant instead of duplicating this literal "FROM song_emotion SE " 3 times.(ì¸Â­ûÿÿÿÿ
+
+java:S1192"iDefine a constant instead of duplicating this literal "JOIN emotions E ON SE.emotion_id = E.id " 3 times.(½ôúƒ
+c
+java:S11922"HDefine a constant instead of duplicating this literal "Error: " 6 times.(Ù¸—ûÿÿÿÿ
+d
+java:S1192"NDefine a constant instead of duplicating this literal "WHERE S.id = " 3 times.(Í¹¥¡
+~
+java:S1192"cDefine a constant instead of duplicating this literal "JOIN songs S ON S.id = SE.song_id " 3 times.(ØÏÀóøÿÿÿÿ
+V	java:S125+"<This block of commented-out lines of code should be removed.(«Öã˜şÿÿÿÿ
+Q	java:S125L"<This block of commented-out lines of code should be removed.(¡Ï«®
+^	java:S125‚"<This block of commented-out lines of code should be removed.(òŸØ“üÿÿÿÿ8‚¾èÛ0
+V	java:S106•"9Replace this use of System.out or System.err by a logger.(Í–› 8‹´èÛ0
+R	java:S125¨"<This block of commented-out lines of code should be removed.(Ü®±
+W	java:S125½"<This block of commented-out lines of code should be removed.(‹×Šˆıÿÿÿÿ
+B
+java:S1168Ç"+Return an empty collection instead of null.(¥¹ï

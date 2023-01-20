@@ -37,3 +37,13 @@ a
 1es_server/src/main/java/database/UserDAOImpl.java,8/8/886bed884123c66f83ae9affc31aceba9021c841
 n
 >es_client/src/main/java/client_gui/SplashScreenController.java,e/d/ed47ae8f82426bde9d3a5f49eb5bdcc9fc610c86
+a
+1es_server/src/main/java/database/SongDAOImpl.java,c/8/c8bad5435f14ba794999c5dbdcab31bbd0424321
+_
+/es_server/src/main/java/database/DBManager.java,1/8/188f93222d20c1cf0d601ecdc6f9b6b57c340d83
+f
+6es_common/src/main/java/common/interfaces/SongDAO.java,6/1/61b161102bbca51ca31145b68bfa7d256a656314
+a
+1es_client/src/main/java/client/ClientContext.java,5/2/52e714645ef87f67505850e3a9af692b6af75413
+g
+7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
