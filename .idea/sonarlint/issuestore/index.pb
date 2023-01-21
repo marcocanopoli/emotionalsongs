@@ -47,3 +47,5 @@ a
 1es_client/src/main/java/client/ClientContext.java,5/2/52e714645ef87f67505850e3a9af692b6af75413
 g
 7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
+h
+8es_client/src/main/java/client_gui/SignupController.java,5/9/5968c10f5d5166638c6541a62cffc496322624f1
