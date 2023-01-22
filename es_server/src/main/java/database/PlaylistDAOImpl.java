@@ -9,10 +9,7 @@ import server.ServerLogger;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,22 +21,34 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
-    public Playlist createNewPlaylist(int userId, String name) throws RemoteException {
+    public Playlist createNewPlaylist(Playlist playlist) throws RemoteException {
         Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO playlists (user_id, name) VALUES (?, ?)";
+        String query = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, userId);
-            stmt.setString(2, name);
+            stmt.setInt(1, playlist.getUserId());
+            stmt.setString(2, playlist.getName());
 
-            stmt.executeUpdate();
+            int affectedRows = stmt.executeUpdate();
 
-            return getPlaylistByName(name);
+            if (affectedRows == 0) {
+                throw new SQLException("Creating playlist failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    playlist.setId(generatedKeys.getInt(1));
+                    return playlist;
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
 
         } catch (SQLException ex) {
             ServerLogger.error("PLAYLIST NOT FOUND: " + ex);
             return null;
+
         }
     }
 
@@ -60,9 +69,10 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
             if (rs.next()) {
                 int id = rs.getInt("id");
+                int userId = rs.getInt("user_id");
                 String name = rs.getString("name");
 
-                playlist = new Playlist(id, name);
+                playlist = new Playlist(id, userId, name);
             }
 
             return playlist;
@@ -92,8 +102,9 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
             if (rs.next()) {
                 int id = rs.getInt("id");
+                int userId = rs.getInt("user_id");
 
-                playlist = new Playlist(id, name);
+                playlist = new Playlist(id, userId, name);
             }
 
             return playlist;
@@ -162,7 +173,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
 
-                results.add(new Playlist(id, name));
+                results.add(new Playlist(id, userId, name));
             }
             return results;
 

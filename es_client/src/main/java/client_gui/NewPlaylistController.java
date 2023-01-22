@@ -48,7 +48,7 @@ public class NewPlaylistController {
     private void createNewPlaylist(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
         User user = context.getUser();
 
-        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getID(), newPlaylistPrompt.getText());
+        Playlist newPlaylist = playlistDAO.createNewPlaylist(new Playlist(user.getID(), newPlaylistPrompt.getText()));
 
         if (newPlaylist != null) {
             context.addUserPlaylist(newPlaylist);

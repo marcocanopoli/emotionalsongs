@@ -49,7 +49,6 @@ public class PlaylistsController {
     private void setCurrentPlaylist(PlaylistDAO playlistDAO, Playlist playlist) throws RemoteException {
 
         List<Song> songs = playlistDAO.getPlaylistSongs(playlist.getId());
-
         Integer duration = 0;
 
         for (Song song : songs) {
@@ -66,6 +65,8 @@ public class PlaylistsController {
 
         playlistSongsTable.getItems().clear();
         playlistSongsTable.getItems().addAll(songs);
+
+
     }
 
     private void initSongsTable() {
@@ -99,15 +100,19 @@ public class PlaylistsController {
             }
         });
 
-        playlistsList.setOnMouseClicked(playlist -> {
-            try {
-                setCurrentPlaylist(playlistDAO, playlistsList.getSelectionModel().getSelectedItem());
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        });
 
         playlistsList.setItems(FXCollections.observableArrayList(userPlaylists));
+
+        playlistsList.setOnMouseClicked(playlist -> {
+            if (playlistsList.getSelectionModel().getSelectedItem() != null) {
+
+                try {
+                    setCurrentPlaylist(playlistDAO, playlistsList.getSelectionModel().getSelectedItem());
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }
 

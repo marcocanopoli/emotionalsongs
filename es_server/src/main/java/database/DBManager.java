@@ -176,6 +176,7 @@ public class DBManager {
 
             stmt.executeBatch();
             conn.commit();
+            conn.setAutoCommit(true);
         } catch (SQLException e) {
             ServerLogger.error("Seeder error: " + e);
         }

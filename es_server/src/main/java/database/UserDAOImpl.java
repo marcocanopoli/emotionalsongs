@@ -34,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(6, email);
             stmt.setString(7, password);
 
-            stmt.executeUpdate();
+            stmt.execute();
 
             ServerLogger.debug("USER " + email + " ADDED");
 //            User newUser = getUser(username, password);
