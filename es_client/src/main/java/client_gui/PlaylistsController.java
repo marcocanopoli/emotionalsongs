@@ -61,7 +61,7 @@ public class PlaylistsController {
         playlistSongs.setText(String.valueOf(songs.size()));
         playlistDuration.setText(durationString);
 
-        currentPlaylistPane.setExpanded(true);
+//        currentPlaylistPane.setExpanded(true);
 
         playlistSongsTable.getItems().clear();
         playlistSongsTable.getItems().addAll(songs);

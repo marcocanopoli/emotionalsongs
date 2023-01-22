@@ -21,14 +21,14 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
-    public Playlist createNewPlaylist(Playlist playlist) throws RemoteException {
+    public Playlist createNewPlaylist(int userId, String name) throws RemoteException {
         Connection conn = ServerApp.getConnection();
         String query = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, playlist.getUserId());
-            stmt.setString(2, playlist.getName());
+            stmt.setInt(1, userId);
+            stmt.setString(2, name);
 
             int affectedRows = stmt.executeUpdate();
 
@@ -38,8 +38,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    playlist.setId(generatedKeys.getInt(1));
-                    return playlist;
+                    return new Playlist(generatedKeys.getInt(1), userId, name);
                 } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
@@ -48,7 +47,6 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         } catch (SQLException ex) {
             ServerLogger.error("PLAYLIST NOT FOUND: " + ex);
             return null;
-
         }
     }
 

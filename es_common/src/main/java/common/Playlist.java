@@ -11,11 +11,6 @@ public class Playlist implements Serializable {
     private int userId;
     private String name;
 
-    public Playlist(int userId, String name) {
-        this.setUserId(userId);
-        this.setName(name);
-    }
-
     public Playlist(int id, int userId, String name) {
         this.setId(id);
         this.setUserId(userId);

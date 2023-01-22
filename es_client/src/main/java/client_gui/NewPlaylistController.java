@@ -26,7 +26,6 @@ public class NewPlaylistController {
 
     public void initialize() {
         ClientContext context = ClientContext.getInstance();
-        User user = context.getUser();
         PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
 
         newPlaylistPrompt.setTextFormatter(new TextFormatter<>(change ->
@@ -48,7 +47,7 @@ public class NewPlaylistController {
     private void createNewPlaylist(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
         User user = context.getUser();
 
-        Playlist newPlaylist = playlistDAO.createNewPlaylist(new Playlist(user.getID(), newPlaylistPrompt.getText()));
+        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getID(), newPlaylistPrompt.getText());
 
         if (newPlaylist != null) {
             context.addUserPlaylist(newPlaylist);
