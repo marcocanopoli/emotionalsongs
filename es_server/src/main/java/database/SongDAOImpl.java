@@ -40,7 +40,6 @@ public class SongDAOImpl implements SongDAO {
                 int rating = rs.getInt("rating");
 
                 results.put(emoId, rating);
-//                ServerLogger.error("EmoId: " + emoId + " , Rating: " + rating);
 
             }
 
@@ -52,6 +51,32 @@ public class SongDAOImpl implements SongDAO {
         }
 
         return new HashMap<>();
+    }
+
+    public List<String> getSongEmotionNotes(int userId, int songId, int emotionId) {
+        Connection conn = ServerApp.getConnection();
+
+        String query = "SELECT SE.notes  " +
+                "FROM song_emotion SE " +
+                "WHERE SE.song_id  = " + songId +
+                "AND SE.user_id  = " + userId +
+                "AND SE.emotion_id = " + emotionId;
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            List<String> results = new ArrayList<>();
+
+            while (rs.next()) {
+                String notes = rs.getString("notes");
+                results.add(notes);
+            }
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+            return new ArrayList<>();
+        }
+
     }
 
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
@@ -73,7 +98,6 @@ public class SongDAOImpl implements SongDAO {
                 int count = rs.getInt("count");
 
                 results.put(emoId, count);
-//                System.out.println(emoId + " " + count);
 
             }
             return results;
@@ -127,7 +151,6 @@ public class SongDAOImpl implements SongDAO {
             stmt.setInt(4, rating);
             stmt.execute();
 
-//            ServerLogger.debug("User: " + userId + " , Song: " + songId + " , Emotion: " + emotionId + " , Rating: " + rating);
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
@@ -145,9 +168,7 @@ public class SongDAOImpl implements SongDAO {
             stmt.setInt(2, songId);
             stmt.setInt(3, emotionId);
 
-            int deletedRows = stmt.executeUpdate();
-            System.out.println("DELETED SE: " + deletedRows);
-            return deletedRows;
+            return stmt.executeUpdate();
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
@@ -186,7 +207,6 @@ public class SongDAOImpl implements SongDAO {
                 String genre = rs.getString("genre");
                 Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
 
-//              System.out.println(id + "\t" + year + "\t" + author + "\t" + title + "\t" + album + "\t" + genre + "\t" + duration);
                 results.add(new Song(id, title, author, year, album, genre, duration));
 
             }

@@ -1,6 +1,7 @@
 package client_gui;
 
 import client.ClientApp;
+import client.ClientContext;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -20,7 +21,9 @@ public class RootController {
 
     public void initialize() {
 
-        menuPlaylistsBtn.setDisable(ClientApp.user == null);
+        ClientContext context = ClientContext.getInstance();
+
+        menuPlaylistsBtn.setDisable(context.getUser() == null);
 
         ClientApp.showSongsView(mainView);
 
@@ -33,7 +36,7 @@ public class RootController {
         );
 
         logoutBtn.setOnAction(event -> {
-            ClientApp.user = null;
+            context.setUser(null);
             ClientApp.currentView = null;
             ClientApp.initLayout("splashScreen");
         });

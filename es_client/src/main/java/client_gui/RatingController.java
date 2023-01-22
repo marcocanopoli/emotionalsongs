@@ -1,6 +1,9 @@
 package client_gui;
 
 import client.ClientApp;
+import client.ClientContext;
+import common.Song;
+import common.User;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,9 +15,25 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static client_gui.SongsController.currentSong;
-
 public class RatingController {
+    @FXML
+    public Button sadnessComment;
+    @FXML
+    public Button tensionComment;
+    @FXML
+    public Button joyComment;
+    @FXML
+    public Button powerComment;
+    @FXML
+    public Button calmnessComment;
+    @FXML
+    public Button nostalgiaComment;
+    @FXML
+    public Button tendernessComment;
+    @FXML
+    public Button solemnityComment;
+    @FXML
+    public Button amazementComment;
     @FXML
     private ToggleGroup amazementGrp;
     @FXML
@@ -52,28 +71,33 @@ public class RatingController {
     @FXML
     private Button sadnessReset;
     private final HashMap<Integer, ToggleGroup> toggleGroups = new HashMap<>();
-    private final HashMap<Integer, Button> resets = new HashMap<>();
+    private final HashMap<Integer, Button> resetBtns = new HashMap<>();
+    private final HashMap<Integer, Button> commentBtns = new HashMap<>();
 
     private SongsController songsController;
 
 
     public void initialize() throws IOException {
+        ClientContext context = ClientContext.getInstance();
+        Song song = context.getCurrentSong();
+        User user = context.getUser();
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client_gui/songsView.fxml"));
 //        SplitPane songsView = loader.load();
 //        songsController = loader.getController();
 
         SongDAO songDAO = ClientApp.getSongDAO();
 
-        setRatingResetsListeners(songDAO);
-        setRatingListeners(songDAO);
-    }
-    
-    public void setSongsController(SongsController controller) {
-        songsController = controller;
+        setRatingResetsListeners(songDAO, song, user.getID());
+        setRatingListeners(songDAO, song, user.getID());
+        setEmotionsCommentsListeners();
+        displayRatings(songDAO, song, user.getID());
     }
 
-    private void setRatingListeners(SongDAO songDAO) {
+//    public void setSongsController(SongsController controller) {
+//        songsController = controller;
+//    }
 
+    private void setRatingListeners(SongDAO songDAO, Song song, int userId) {
         toggleGroups.put(1, amazementGrp);
         toggleGroups.put(2, solemnityGrp);
         toggleGroups.put(3, tendernessGrp);
@@ -90,14 +114,15 @@ public class RatingController {
             group.getValue().selectedToggleProperty().addListener((observable, oldVal, newVal) ->
                     {
 
-                        if (newVal != null && currentSong != null) {
+                        if (newVal != null && song != null) {
 
                             int emotionId = group.getKey();
                             int newRating = Integer.parseInt((String) newVal.getUserData());
 
                             try {
-                                songDAO.setSongEmotion(1, currentSong.id, emotionId, newRating);
-                                songsController.displayProgress(songDAO);
+                                songDAO.setSongEmotion(userId, song.id, emotionId, newRating);
+//                                songsController.displayProgress(songDAO);
+                                displayRatings(songDAO, song, userId);
                             } catch (RemoteException e) {
                                 throw new RuntimeException(e);
                             }
@@ -108,31 +133,31 @@ public class RatingController {
         }
     }
 
-    private void setRatingResetsListeners(SongDAO songDAO) {
+    private void setRatingResetsListeners(SongDAO songDAO, Song song, int userId) {
 
-        resets.put(1, amazementReset);
-        resets.put(2, solemnityReset);
-        resets.put(3, tendernessReset);
-        resets.put(4, nostalgiaReset);
-        resets.put(5, calmnessReset);
-        resets.put(6, powerReset);
-        resets.put(7, joyReset);
-        resets.put(8, tensionReset);
-        resets.put(9, sadnessReset);
+        resetBtns.put(1, amazementReset);
+        resetBtns.put(2, solemnityReset);
+        resetBtns.put(3, tendernessReset);
+        resetBtns.put(4, nostalgiaReset);
+        resetBtns.put(5, calmnessReset);
+        resetBtns.put(6, powerReset);
+        resetBtns.put(7, joyReset);
+        resetBtns.put(8, tensionReset);
+        resetBtns.put(9, sadnessReset);
 
         for (Map.Entry<Integer, Button> group :
-                resets.entrySet()) {
+                resetBtns.entrySet()) {
 
             group.getValue().setOnAction(event -> {
-                if (currentSong != null) {
+                if (song != null) {
 
                     int emotionId = group.getKey();
 
                     try {
 //                        group.getValue().selectToggle(null);
-                        songDAO.deleteSongEmotion(1, currentSong.id, emotionId);
-                        songsController.displayProgress(songDAO);
-                        displayRatings(songDAO);
+                        songDAO.deleteSongEmotion(userId, song.id, emotionId);
+//                        songsController.displayProgress(songDAO);
+                        displayRatings(songDAO, song, userId);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -143,9 +168,31 @@ public class RatingController {
         }
     }
 
-    void displayRatings(SongDAO songDAO) {
+    private void setEmotionsCommentsListeners() {
+
+        commentBtns.put(1, amazementComment);
+        commentBtns.put(2, solemnityComment);
+        commentBtns.put(3, tendernessComment);
+        commentBtns.put(4, nostalgiaComment);
+        commentBtns.put(5, calmnessComment);
+        commentBtns.put(6, powerComment);
+        commentBtns.put(7, joyComment);
+        commentBtns.put(8, tensionComment);
+        commentBtns.put(9, sadnessComment);
+
+        for (Map.Entry<Integer, Button> group :
+                commentBtns.entrySet()) {
+
+            group.getValue().setOnAction(event -> {
+                System.out.println("Comment");
+            });
+
+        }
+    }
+
+    void displayRatings(SongDAO songDAO, Song song, int userId) {
         try {
-            HashMap<Integer, Integer> ratings = songDAO.getSongEmotionsRating(1, currentSong.id);
+            HashMap<Integer, Integer> ratings = songDAO.getSongEmotionsRating(userId, song.id);
 
             for (Map.Entry<Integer, ToggleGroup> group :
                     toggleGroups.entrySet()) {
@@ -166,6 +213,4 @@ public class RatingController {
             throw new RuntimeException(e);
         }
     }
-
-
 }

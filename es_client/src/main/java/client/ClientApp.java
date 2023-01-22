@@ -3,12 +3,12 @@ package client;
 import client_gui.RatingController;
 import client_gui.SongsController;
 import common.User;
+import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,16 +28,23 @@ public class ClientApp extends Application {
     public static RatingController ratingController;
     public static String currentView;
     public static User user = null;
-    static UserDAO userDAO;
+    static PlaylistDAO playlistDAO;
     static SongDAO songDAO;
+    static UserDAO userDAO;
+
+
+    public static SongDAO getSongDAO() {
+        return songDAO;
+    }
+
+    public static PlaylistDAO getPlaylistDAO() {
+        return playlistDAO;
+    }
 
     public static UserDAO getUserDAO() {
         return userDAO;
     }
 
-    public static SongDAO getSongDAO() {
-        return songDAO;
-    }
 
     @Override
     public void start(Stage stage) {
@@ -61,18 +68,21 @@ public class ClientApp extends Application {
         }
     }
 
-    public static void createStage(String resourceName, String title, boolean isModal) {
+    public static Stage createStage(String resourceName, String title, boolean isModal) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("/client_gui/" + resourceName));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
+
             stage.initOwner(ClientApp.window);
             stage.initModality(isModal ? Modality.WINDOW_MODAL : Modality.NONE);
             stage.setTitle(title);
             stage.setScene(scene);
             stage.show();
+            return stage;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -81,19 +91,19 @@ public class ClientApp extends Application {
             if (ClientApp.currentView == null || !ClientApp.currentView.equals("songs")) {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsView.fxml"));
-                SplitPane songsView = loader.load();
+                AnchorPane songsView = loader.load();
                 songsController = loader.getController();
 
                 view.getChildren().clear();
                 view.getChildren().add(songsView);
                 ClientApp.currentView = "songs";
 
-                if (ClientApp.user != null) {
-                    ClientApp.songsController.showRatingPane();
-                    ClientApp.ratingController.setSongsController(ClientApp.songsController);
-                }
-
-                ClientApp.songsController.setRatingController(ClientApp.ratingController);
+//                if (ClientContext.getUser() != null) {
+//                    ClientApp.songsController.showRatingPane();
+//                    ClientApp.ratingController.setSongsController(ClientApp.songsController);
+//                }
+//
+//                ClientApp.songsController.setRatingController(ClientApp.ratingController);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -122,10 +132,13 @@ public class ClientApp extends Application {
         ClientLogger.debug("Client main");
         String host = args.length >= 1 ? args[0] : null;
         Registry registry = LocateRegistry.getRegistry(host);
-        userDAO = (UserDAO)
-                registry.lookup("UserService");
+
+        playlistDAO = (PlaylistDAO)
+                registry.lookup("PlaylistService");
         songDAO = (SongDAO)
                 registry.lookup("SongService");
+        userDAO = (UserDAO)
+                registry.lookup("UserService");
 
         launch();
     }

@@ -1,9 +1,7 @@
 package client_gui;
 
 import client.ClientApp;
-import client.ClientContext;
 import common.Song;
-import common.User;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -12,10 +10,44 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public class SongsController {
+public class SongsControllerOld {
+    @FXML
+    public Label songAuthor;
+    @FXML
+    public Label songAlbum;
+    @FXML
+    public Label songTitle;
+    @FXML
+    public Label songYear;
+    @FXML
+    public Label songGenre;
+    @FXML
+    public Label songDuration;
+    @FXML
+    public ProgressBar amazementProg;
+    @FXML
+    public ProgressBar solemnityProg;
+    @FXML
+    public ProgressBar tendernessProg;
+    @FXML
+    public ProgressBar nostalgiaProg;
+    @FXML
+    public ProgressBar calmnessProg;
+    @FXML
+    public ProgressBar powerProg;
+    @FXML
+    public ProgressBar joyProg;
+    @FXML
+    public ProgressBar tensionProg;
+    @FXML
+    public ProgressBar sadnessProg;
+    @FXML
+    public SplitPane bottomPane;
+
     @FXML
     private Button searchBtn;
     @FXML
@@ -36,11 +68,24 @@ public class SongsController {
     private TableColumn<Song, String> durationColumn;
     @FXML
     private TableColumn<Song, Void> emotionViewColumn;
+    @FXML
+    private RatingController ratingController;
 
+    public static Song currentSong;
 
-    public void initialize() {
+    public void initialize() throws IOException {
+
+//        ratingController = loader.getController();
 
         SongDAO songDAO = ClientApp.getSongDAO();
+
+//        if (ClientApp.user != null) {
+////            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client_gui/ratingPane.fxml"));
+////            AnchorPane ratingPane = loader.load();
+////            bottomPane.getItems().add(ratingPane);
+//
+//            ClientApp.showRatingPane(bottomPane);
+//        }
 
         searchBtn.setOnAction(event -> {
             String searched = searchText.getText().trim();
@@ -57,6 +102,15 @@ public class SongsController {
 
                     addEmotionsBtns();
 
+                    //Actions on single table row click
+//                    songsTable.setRowFactory(songs -> {
+//                        TableRow<Song> row = new TableRow<>();
+//                        row.setOnMouseClicked(evt -> {
+//                            Song current = row.getItem();
+//                            setCurrentSong(songDAO, current);
+//                        });
+//                        return row;
+//                    });
                     songsTable.getItems().clear();
                     songsTable.getItems().addAll(results);
 
@@ -68,8 +122,6 @@ public class SongsController {
     }
 
     private void addEmotionsBtns() {
-        ClientContext context = ClientContext.getInstance();
-
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
                 new TableCell<>() {
                     final HBox btnContainer;
@@ -80,19 +132,15 @@ public class SongsController {
                     {
                         viewBtn.setOnAction(event1 -> {
                             Song song = getTableView().getItems().get(getIndex());
-                            context.setCurrentSong(song);
-                            ClientApp.createStage("songInfoView.fxml", "Info canzone", true);
+                            System.out.println(song);
                         });
 
                         insertBtn.setOnAction(event1 -> {
                             Song song = getTableView().getItems().get(getIndex());
-                            context.setCurrentSong(song);
-                            ClientApp.createStage("songInfoView.fxml", "Info canzone", true);
+                            System.out.println(song);
                         });
 
-                        User user = context.getUser();
-
-                        if (user != null) {
+                        if (ClientApp.user != null) {
                             btnContainer = new HBox(10, viewBtn, insertBtn);
                         } else {
                             btnContainer = new HBox(viewBtn);
@@ -114,5 +162,34 @@ public class SongsController {
 
         emotionViewColumn.setCellFactory(cellFactory);
     }
+
+//    public void setCurrentSong(SongDAO songDAO, Song song) {
+//        currentSong = song;
+//
+//        songAuthor.setText(currentSong.getAuthor());
+//        songAlbum.setText(currentSong.getAlbum());
+//        songTitle.setText(currentSong.getTitle());
+//        songYear.setText(currentSong.getYear());
+//        songGenre.setText(currentSong.getGenre());
+//        songDuration.setText(currentSong.getDuration());
+//
+//        displaySongStats(songDAO);
+//
+//    }
+
+//    public void setRatingController(RatingController controller) {
+//        ratingController = controller;
+//    }
+
+//    public void showRatingPane() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/ratingPane.fxml"));
+//            AnchorPane ratingPane = loader.load();
+//            ClientApp.ratingController = loader.getController();
+//            bottomPane.getItems().add(ratingPane);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }

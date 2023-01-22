@@ -1,5 +1,6 @@
 package server;
 
+import database.PlaylistDAOImpl;
 import database.SongDAOImpl;
 import database.UserDAOImpl;
 import javafx.application.Application;
@@ -68,8 +69,9 @@ public class ServerApp extends Application {
     public static void appStart(String[] args) throws RemoteException {
 
         Registry registry = LocateRegistry.createRegistry(1099);
-        UserDAOImpl userService = new UserDAOImpl(registry);
+        PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);
         SongDAOImpl songService = new SongDAOImpl(registry);
+        UserDAOImpl userService = new UserDAOImpl(registry);
         ServerLogger.info("Server initialised");
 
         launch();
