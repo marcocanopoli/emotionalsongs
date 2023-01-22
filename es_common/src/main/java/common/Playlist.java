@@ -7,11 +7,11 @@ public class Playlist implements Serializable {
     @Serial
     private static final long serialVersionUID = 1;
 
-    public final int id;
+    private final int id;
     private final String name;
 
     public Playlist() {
-        this.id = 0;
+        this.id = -1;
         this.name = "";
     }
 
@@ -20,14 +20,16 @@ public class Playlist implements Serializable {
         this.name = name;
     }
 
+    public final int getId() {
+        return id;
+    }
+
+    public final String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return (id + "\t" + name + "\t");
     }
-
-    public String getName() {
-
-        return this.name;
-    }
-
 }

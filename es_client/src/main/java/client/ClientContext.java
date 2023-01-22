@@ -1,7 +1,12 @@
 package client;
 
+import common.Playlist;
 import common.Song;
 import common.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.List;
 
 public final class ClientContext {
 
@@ -9,6 +14,8 @@ public final class ClientContext {
     private User user;
 
     private Song currentSong;
+
+    ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
 
     private ClientContext() {
     }
@@ -31,5 +38,17 @@ public final class ClientContext {
 
     public Song getCurrentSong() {
         return this.currentSong;
+    }
+
+    public void setUserPlaylists(List<Playlist> playlists) {
+        this.userPlaylists.addAll(playlists);
+    }
+
+    public void addUserPlaylist(Playlist playlist) {
+        this.userPlaylists.add(playlist);
+    }
+
+    public ObservableList<Playlist> getUserPlaylists() {
+        return this.userPlaylists;
     }
 }
