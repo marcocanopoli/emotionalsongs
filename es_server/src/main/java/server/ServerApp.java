@@ -1,5 +1,6 @@
 package server;
 
+import database.EmotionDAOImpl;
 import database.PlaylistDAOImpl;
 import database.SongDAOImpl;
 import database.UserDAOImpl;
@@ -70,6 +71,7 @@ public class ServerApp extends Application {
 
         Registry registry = LocateRegistry.createRegistry(1099);
         PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);
+        EmotionDAOImpl emotionService = new EmotionDAOImpl(registry);
         SongDAOImpl songService = new SongDAOImpl(registry);
         UserDAOImpl userService = new UserDAOImpl(registry);
         ServerLogger.info("Server initialised");

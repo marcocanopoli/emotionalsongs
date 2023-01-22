@@ -4,6 +4,7 @@ import client.ClientApp;
 import client.ClientContext;
 import common.Song;
 import common.User;
+import common.interfaces.EmotionDAO;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,7 +16,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RatingController {
+public class RatingViewController {
     @FXML
     public Button sadnessComment;
     @FXML
@@ -74,28 +75,20 @@ public class RatingController {
     private final HashMap<Integer, Button> resetBtns = new HashMap<>();
     private final HashMap<Integer, Button> commentBtns = new HashMap<>();
 
-    private SongsListController songsListController;
-
-
     public void initialize() throws IOException {
         ClientContext context = ClientContext.getInstance();
         Song song = context.getCurrentSong();
         User user = context.getUser();
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client_gui/songsListView.fxml"));
-//        SplitPane songsView = loader.load();
-//        songsController = loader.getController();
 
         SongDAO songDAO = ClientApp.getSongDAO();
 
-        setRatingResetsListeners(songDAO, song, user.getID());
-        setRatingListeners(songDAO, song, user.getID());
-        setEmotionsCommentsListeners();
-        displayRatings(songDAO, song, user.getID());
-    }
+        EmotionDAO emotionDAO = ClientApp.getEmotionDAO();
 
-//    public void setSongsController(SongsController controller) {
-//        songsController = controller;
-//    }
+//        setRatingResetsListeners(songDAO, song, user.getID());
+//        setRatingListeners(songDAO, song, user.getID());
+//        setEmotionsCommentsListeners();
+//        displayRatings(songDAO, song, user.getID());
+    }
 
     private void setRatingListeners(SongDAO songDAO, Song song, int userId) {
         toggleGroups.put(1, amazementGrp);

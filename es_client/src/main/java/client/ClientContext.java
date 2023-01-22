@@ -41,6 +41,7 @@ public final class ClientContext {
     }
 
     public void setUserPlaylists(List<Playlist> playlists) {
+        this.userPlaylists.clear();
         this.userPlaylists.addAll(playlists);
     }
 

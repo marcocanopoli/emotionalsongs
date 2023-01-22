@@ -192,7 +192,8 @@ public class SongDAOImpl implements SongDAO {
                 + "FROM songs "
                 + "WHERE (author, title, album)::text "
                 + "ILIKE ('%"
-                + searchString + "%')";
+                + searchString + "%')"
+                + "ORDER BY author ASC";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {

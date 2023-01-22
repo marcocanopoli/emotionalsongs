@@ -10,8 +10,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -27,8 +29,8 @@ public class PlaylistsController {
     public Label playlistDuration;
     @FXML
     private TableView<Song> playlistSongsTable;
-    @FXML
-    private TitledPane currentPlaylistPane;
+    //    @FXML
+//    private TitledPane currentPlaylistPane;
     @FXML
     private ListView<Playlist> playlistsList;
     @FXML
@@ -38,7 +40,9 @@ public class PlaylistsController {
         PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
         ClientContext context = ClientContext.getInstance();
 
-        initSongsTable();
+        addTableEmotionAddBtn(context);
+
+//        initSongsTable();
         initPlaylistList(playlistDAO, context);
 
         newPlaylistBtn.setOnAction(event -> {
@@ -69,16 +73,6 @@ public class PlaylistsController {
 
     }
 
-    private void initSongsTable() {
-        String[] columns = {"author", "title", "album", "year", "genre", "duration"};
-
-        for (String column : columns) {
-            TableColumn<Song, String> tableCol = new TableColumn<>(column);
-            tableCol.setCellValueFactory(new PropertyValueFactory<>(column));
-            tableCol.setMinWidth(100);
-            playlistSongsTable.getColumns().add(tableCol);
-        }
-    }
 
     private void initPlaylistList(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
         User user = context.getUser();
@@ -101,6 +95,7 @@ public class PlaylistsController {
         });
 
 
+//        playlistsList.getItems().clear();
         playlistsList.setItems(FXCollections.observableArrayList(userPlaylists));
 
         playlistsList.setOnMouseClicked(playlist -> {
@@ -113,6 +108,44 @@ public class PlaylistsController {
                 }
             }
         });
+    }
+
+    private void addTableEmotionAddBtn(ClientContext context) {
+
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
+                new TableCell<>() {
+
+                    final HBox btnBox = new HBox();
+                    private final Button emotionsAddBtn = new Button("Inserisci emozioni");
+
+                    {
+                        emotionsAddBtn.setOnAction(event1 -> {
+                            Song song = getTableView().getItems().get(getIndex());
+                            context.setCurrentSong(song);
+                            ClientApp.createStage("ratingView.fxml", "Inserisci emozioni", true);
+                        });
+
+                        btnBox.getChildren().add(emotionsAddBtn);
+                        btnBox.setAlignment(Pos.CENTER);
+                    }
+
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btnBox);
+                        }
+                    }
+                };
+
+
+        TableColumn<Song, Void> emotionColumn = new TableColumn<>("Emozioni");
+        emotionColumn.setMinWidth(150);
+        emotionColumn.setCellFactory(cellFactory);
+        playlistSongsTable.getColumns().add(emotionColumn);
     }
 }
 

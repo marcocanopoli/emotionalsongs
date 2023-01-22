@@ -1,8 +1,6 @@
 package client;
 
-import client_gui.RatingController;
-import client_gui.SongsListController;
-import common.User;
+import common.interfaces.EmotionDAO;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
@@ -22,19 +20,19 @@ import java.rmi.registry.Registry;
 public class ClientApp extends Application {
 
     private static Stage window;
-    //    public static Song currentSong;
-
-    public static SongsListController songsListController;
-    public static RatingController ratingController;
     public static String currentView;
-    public static User user = null;
     static PlaylistDAO playlistDAO;
+    static EmotionDAO emotionDAO;
     static SongDAO songDAO;
     static UserDAO userDAO;
 
 
     public static SongDAO getSongDAO() {
         return songDAO;
+    }
+
+    public static EmotionDAO getEmotionDAO() {
+        return emotionDAO;
     }
 
     public static PlaylistDAO getPlaylistDAO() {
@@ -92,18 +90,11 @@ public class ClientApp extends Application {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsListView.fxml"));
                 AnchorPane songsView = loader.load();
-                songsListController = loader.getController();
+//                songsListController = loader.getController();
 
                 view.getChildren().clear();
                 view.getChildren().add(songsView);
                 ClientApp.currentView = "songs";
-
-//                if (ClientContext.getUser() != null) {
-//                    ClientApp.songsController.showRatingPane();
-//                    ClientApp.ratingController.setSongsController(ClientApp.songsController);
-//                }
-//
-//                ClientApp.songsController.setRatingController(ClientApp.ratingController);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -133,12 +124,10 @@ public class ClientApp extends Application {
         String host = args.length >= 1 ? args[0] : null;
         Registry registry = LocateRegistry.getRegistry(host);
 
-        playlistDAO = (PlaylistDAO)
-                registry.lookup("PlaylistService");
-        songDAO = (SongDAO)
-                registry.lookup("SongService");
-        userDAO = (UserDAO)
-                registry.lookup("UserService");
+        playlistDAO = (PlaylistDAO) registry.lookup("PlaylistService");
+        emotionDAO = (EmotionDAO) registry.lookup("EmotionService");
+        songDAO = (SongDAO) registry.lookup("SongService");
+        userDAO = (UserDAO) registry.lookup("UserService");
 
         launch();
     }

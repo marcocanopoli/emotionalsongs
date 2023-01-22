@@ -2,7 +2,6 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
-import client.ClientLogger;
 import common.User;
 import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
@@ -57,8 +56,8 @@ public class SignupController {
                                 !username.isEmpty() &&
                                 !email.isEmpty() &&
                                 !pwd.isEmpty() &&
-                                !pwdConfirm.isEmpty()
-//                        pwd.equals(pwdConfirm)
+                                !pwdConfirm.isEmpty() &&
+                                pwd.trim().equals(pwdConfirm.trim())
                 ) {
                     boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
 
@@ -66,8 +65,6 @@ public class SignupController {
                         User user = userDAO.getUser(username, pwd);
                         ClientContext context = ClientContext.getInstance();
                         context.setUser(user);
-
-                        ClientLogger.debug("LoggedUser = " + (user != null ? String.valueOf(user) : "null"));
 
                         ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
                     }
