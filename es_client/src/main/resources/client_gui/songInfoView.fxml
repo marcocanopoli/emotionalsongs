@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.SongInfoController">
+    <children>
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <TitledPane animated="false" minHeight="-Infinity" minWidth="-Infinity" text="Info canzone">
+                    <content>
+                        <VBox>
+                            <children>
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="70.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Titolo:">
+                                            <font>
+                                                <Font name="System Bold" size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="songTitle" GridPane.columnIndex="1">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label text="Autore:" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                            <font>
+                                                <Font name="System Bold" size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="songAuthor" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label text="Album:" GridPane.rowIndex="2">
+                                            <font>
+                                                <Font name="System Bold" size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="songAlbum" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Label>
+                                        <Label minHeight="21.0" text="Anno:" GridPane.rowIndex="3">
+                                            <font>
+                                                <Font name="System Bold" size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="songYear" minHeight="21.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        <Label minHeight="21.0" text="Genere:" GridPane.rowIndex="4">
+                                            <font>
+                                                <Font name="System Bold" size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="songGenre" minHeight="21.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                        <Label minHeight="21.0" text="Durata:" GridPane.rowIndex="5">
+                                            <font>
+                                                <Font name="System Bold" size="13.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="songDuration" minHeight="21.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    </children>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </GridPane>
+                            </children>
+                        </VBox>
+                    </content>
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </TitledPane>
+                  <TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="BOTTOM" text="Emozioni registrate">
+                      <content>
+                  <HBox fillHeight="false" spacing="20.0">
+                     <children>
+                                <VBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <Label prefHeight="16.0" prefWidth="88.0" text="Amazement" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                                    <ProgressBar fx:id="amazementProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button fx:id="amazementComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <Label text="Solemnity" GridPane.rowIndex="1" />
+                                    <ProgressBar fx:id="solemnityProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button fx:id="solemnityComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="tendernessProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Tenderness" GridPane.rowIndex="1" />
+                                    <Button fx:id="tendernessComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="nostalgiaProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Nostalgia" GridPane.rowIndex="1" />
+                                    <Button fx:id="nostalgiaComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="calmnessProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Calmness" GridPane.rowIndex="1" />
+                                    <Button fx:id="calmnessComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="powerProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Power" GridPane.rowIndex="1" />
+                                    <Button fx:id="powerComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="-Infinity" prefWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="joyProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Joy" GridPane.rowIndex="1" />
+                                    <Button fx:id="joyComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="tensionProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Tension" GridPane.rowIndex="1" />
+                                    <Button fx:id="tensionComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                              <GridPane minWidth="210.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="210.0" />
+                                    <ColumnConstraints halignment="LEFT" minWidth="120.0" />
+                                 </columnConstraints>
+                                 <children>
+                                    <ProgressBar fx:id="sadnessProg" minWidth="200.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Sadness" GridPane.rowIndex="1" />
+                                    <Button fx:id="sadnessComments" mnemonicParsing="false" text="Vedi commenti" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="30.0" />
+                                 </rowConstraints>
+                              </GridPane>
+                           </children>
+                                </VBox>
+                        <VBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0">
+                           <children>
+                              <ListView fx:id="commentsList" />
+                              <TextArea fx:id="currentComment" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" wrapText="true">
+                                 <VBox.margin>
+                                    <Insets top="20.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Italic" size="13.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                      </content>
+                  </TitledPane>
+            </children>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+</AnchorPane>

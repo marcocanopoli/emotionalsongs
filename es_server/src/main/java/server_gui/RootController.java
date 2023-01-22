@@ -48,8 +48,8 @@ public class RootController {
                 ServerLogger.debug("Connection set");
                 DBManager.migrate();
                 ServerLogger.debug("Migrations executed");
-//                DBManager.seed();
-//                ServerLogger.debug("Seeds executed");
+                DBManager.seed();
+                ServerLogger.debug("Seeds executed");
                 mainPane.getScene().getWindow().setHeight(120);
                 mainPane.getChildren().remove(loginForm);
                 mainPane.getChildren().remove(connectBtn);

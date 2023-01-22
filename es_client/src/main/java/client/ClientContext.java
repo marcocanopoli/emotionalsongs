@@ -1,39 +1,35 @@
 package client;
 
 import common.Song;
+import common.User;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+public final class ClientContext {
 
-public class ClientContext implements PropertyChangeListener {
-    private static final ClientContext instance = new ClientContext();
+    private static final ClientContext INSTANCE = new ClientContext();
+    private User user;
 
-    private Song song = new Song();
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private Song currentSong;
 
-    public ClientContext() {
-        pcs.addPropertyChangeListener(this);
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-//        System.out.println(evt.getNewValue());
-//        SongInfoController.setSong((Song) evt.getNewValue());
+    private ClientContext() {
     }
 
     public static ClientContext getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
-    public Song getSong() {
-        return song;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setSong(Song newSong) {
-        Song oldSong = song;
-        song = newSong;
-        pcs.firePropertyChange("song", oldSong, newSong);
+    public User getUser() {
+        return this.user;
     }
 
+    public void setCurrentSong(Song song) {
+        this.currentSong = song;
+    }
 
+    public Song getCurrentSong() {
+        return this.currentSong;
+    }
 }

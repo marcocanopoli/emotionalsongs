@@ -79,7 +79,7 @@ public class DBManager {
                         "address VARCHAR(200), " +
                         "username VARCHAR(20) UNIQUE NOT NULL, " +
                         "email VARCHAR(60) UNIQUE NOT NULL, " +
-                        "password VARCHAR(50) NOT NULL) ";
+                        "password VARCHAR(50) NOT NULL)";
 //                        "street_name VARCHAR(100), " +
 //                        "street_number VARCHAR(15), " +
 //                        "zip_code INTEGER, " +
@@ -99,12 +99,14 @@ public class DBManager {
         final String CREATE_EMOTIONS_TABLE =
                 "CREATE TABLE IF NOT EXISTS emotions " +
                         id +
-                        "name VARCHAR(20) NOT NULL)";
+                        "name VARCHAR(20) UNIQUE NOT NULL ," +
+                        "description VARCHAR)";
 
         final String CREATE_PLAYLISTS_TABLE =
                 "CREATE TABLE IF NOT EXISTS playlists " +
                         id +
-                        "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE)";
+                        "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
+                        "name VARCHAR(256) UNIQUE NOT NULL)";
 
         final String CREATE_PLAYLIST_SONG_TABLE =
                 "CREATE TABLE IF NOT EXISTS playlist_song " +
@@ -118,6 +120,7 @@ public class DBManager {
                         "emotion_id INTEGER REFERENCES emotions (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "rating INTEGER NOT NULL ," +
+                        "notes VARCHAR(256) ," +
                         "CONSTRAINT song_emotion_user_id PRIMARY KEY (song_id, emotion_id, user_id))";
 
         Connection conn = ServerApp.getConnection();
@@ -143,8 +146,21 @@ public class DBManager {
     }
 
     public static void seed() {
-        final String SEED_EMOTIONS_QUERY = "INSERT INTO emotions (name) VALUES (?)";
-        final String[] records = {"Amazement", "Solemnity", "Tenderness", "Nostalgia", "Calmness", "Power", "Joy", "Tension", "Sadness"};
+        final String SEED_EMOTIONS_QUERY =
+                "INSERT INTO emotions (name, description) VALUES (?, ?) " +
+                        "ON CONFLICT (name) DO UPDATE " +
+                        "SET description = EXCLUDED.description";
+        final String[][] records = {
+                {"Amazement", "Feeling of wonder or happiness."},
+                {"Solemnity", "Feeling of transcendence, inspiration. Thrills."},
+                {"Tenderness", "Sensuality, affect, feeling of love."},
+                {"Nostalgia", "Dreamy, melancholic, sentimental feelings."},
+                {"Calmness", "Relaxation, serenity, meditativeness."},
+                {"Power", "Feeling strong, heroic, triumphant, energetic."},
+                {"Joy", "Feels like dancing, bouncy feeling, animated, amused."},
+                {"Tension", "Feeling nervous, impatient, irritated."},
+                {"Sadness", "Feeling depressed, sorrowful."}
+        };
 
         Connection conn = ServerApp.getConnection();
 
@@ -152,8 +168,9 @@ public class DBManager {
 
             conn.setAutoCommit(false);
 
-            for (String emotion : records) {
-                stmt.setString(1, emotion);
+            for (String[] emotion : records) {
+                stmt.setString(1, emotion[0]);
+                stmt.setString(2, emotion[1]);
                 stmt.addBatch();
             }
 

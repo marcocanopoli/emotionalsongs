@@ -59,8 +59,7 @@ public class UserDAOImpl implements UserDAO {
 
             User user = null;
 
-            while (rs.next()) {
-
+            if (rs.next()) {
                 int id = rs.getInt("id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
@@ -70,15 +69,11 @@ public class UserDAOImpl implements UserDAO {
 //                String password = rs.getString("password");
 
                 user = new User(id, firstName, lastName, cf, address, email, username);
-
-            }
-            if (user != null) {
-                ServerLogger.debug("User: " + user);
-                return user;
             } else {
                 ServerLogger.debug("Null user");
-                return null;
             }
+
+            return user;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
