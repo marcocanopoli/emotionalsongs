@@ -2,8 +2,10 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
+import common.Playlist;
 import common.Song;
 import common.User;
+import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -15,7 +17,7 @@ import javafx.util.Callback;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public class SongsController {
+public class SongsListController {
     @FXML
     private Button searchBtn;
     @FXML
@@ -39,6 +41,8 @@ public class SongsController {
 
 
     public void initialize() {
+        ClientContext context = ClientContext.getInstance();
+        User user = context.getUser();
 
         SongDAO songDAO = ClientApp.getSongDAO();
 
@@ -56,6 +60,10 @@ public class SongsController {
                     durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
                     addEmotionsBtns();
+
+                    if (user != null) {
+                        addPlaylistDropdown(user.getID());
+                    }
 
                     songsTable.getItems().clear();
                     songsTable.getItems().addAll(results);
@@ -113,6 +121,51 @@ public class SongsController {
                 };
 
         emotionViewColumn.setCellFactory(cellFactory);
+    }
+
+    private void addPlaylistDropdown(int userId) throws RemoteException {
+        TableColumn<Song, Void> playlistColumn = new TableColumn<>("Aggiungi alla playlist");
+        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+        List<Playlist> playlists = playlistDAO.getUserPlaylists(userId);
+
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
+                new TableCell<>() {
+
+                    private final MenuButton playlistChoice = new MenuButton("Aggiungi a:");
+
+                    {
+//                        Song song = getTableView().getItems().get(getIndex());
+                        for (Playlist p : playlists) {
+                            MenuItem item = new MenuItem(p.getName());
+                            item.setOnAction(event -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Conferma");
+                                alert.setHeaderText(null);
+                                alert.setContentText("La canzone è stata aggiunta alla playlist '" + p.getName() + "'!");
+
+                                alert.showAndWait();
+                            });
+                            playlistChoice.getItems().add(item);
+                        }
+
+                        playlistChoice.setAlignment(Pos.CENTER);
+
+                    }
+
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(playlistChoice);
+                        }
+                    }
+                };
+
+        playlistColumn.setCellFactory(cellFactory);
+        songsTable.getColumns().add(playlistColumn);
     }
 
 }

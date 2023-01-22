@@ -1,7 +1,7 @@
 package client;
 
 import client_gui.RatingController;
-import client_gui.SongsController;
+import client_gui.SongsListController;
 import common.User;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
@@ -24,7 +24,7 @@ public class ClientApp extends Application {
     private static Stage window;
     //    public static Song currentSong;
 
-    public static SongsController songsController;
+    public static SongsListController songsListController;
     public static RatingController ratingController;
     public static String currentView;
     public static User user = null;
@@ -90,9 +90,9 @@ public class ClientApp extends Application {
         try {
             if (ClientApp.currentView == null || !ClientApp.currentView.equals("songs")) {
 
-                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsView.fxml"));
+                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsListView.fxml"));
                 AnchorPane songsView = loader.load();
-                songsController = loader.getController();
+                songsListController = loader.getController();
 
                 view.getChildren().clear();
                 view.getChildren().add(songsView);

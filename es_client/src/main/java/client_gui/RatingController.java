@@ -74,14 +74,14 @@ public class RatingController {
     private final HashMap<Integer, Button> resetBtns = new HashMap<>();
     private final HashMap<Integer, Button> commentBtns = new HashMap<>();
 
-    private SongsController songsController;
+    private SongsListController songsListController;
 
 
     public void initialize() throws IOException {
         ClientContext context = ClientContext.getInstance();
         Song song = context.getCurrentSong();
         User user = context.getUser();
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client_gui/songsView.fxml"));
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client_gui/songsListView.fxml"));
 //        SplitPane songsView = loader.load();
 //        songsController = loader.getController();
 

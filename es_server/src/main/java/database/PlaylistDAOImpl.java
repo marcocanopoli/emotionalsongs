@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistDAOImpl implements PlaylistDAO {
 
@@ -21,7 +23,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
-    public Playlist getPlaylist(int playlistId) throws RemoteException {
+    public Playlist getPlaylistById(int playlistId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
         String query = "SELECT * "
@@ -43,6 +45,38 @@ public class PlaylistDAOImpl implements PlaylistDAO {
             }
 
             return playlist;
+
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Playlist> getUserPlaylists(int userId) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+
+        String query = "SELECT * "
+                + "FROM playlists P "
+                + "WHERE  P.user_id = ?";
+
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            List<Playlist> results = new ArrayList<>();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+
+                results.add(new Playlist(id, name));
+            }
+            System.out.println("get playlists");
+            return results;
 
 
         } catch (SQLException ex) {
