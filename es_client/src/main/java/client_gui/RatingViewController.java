@@ -2,18 +2,22 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
+import common.Emotion;
 import common.Song;
 import common.User;
-import common.interfaces.EmotionDAO;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RatingViewController {
@@ -35,6 +39,8 @@ public class RatingViewController {
     public Button solemnityComment;
     @FXML
     public Button amazementComment;
+    @FXML
+    public VBox emotionsBox;
     @FXML
     private ToggleGroup amazementGrp;
     @FXML
@@ -82,12 +88,59 @@ public class RatingViewController {
 
         SongDAO songDAO = ClientApp.getSongDAO();
 
-        EmotionDAO emotionDAO = ClientApp.getEmotionDAO();
+        List<Emotion> emotions = context.getEmotions();
 
-//        setRatingResetsListeners(songDAO, song, user.getID());
-//        setRatingListeners(songDAO, song, user.getID());
-//        setEmotionsCommentsListeners();
-//        displayRatings(songDAO, song, user.getID());
+
+        setRatingResetsListeners(songDAO, song, user.getID());
+        setRatingListeners(songDAO, song, user.getID());
+        setEmotionsCommentsListeners();
+        displayRatings(songDAO, song, user.getID());
+    }
+
+    private void initEmotions(List<Emotion> emotions, SongDAO songDAO, Song song, int userId) {
+
+//        HBox labels = new HBox();
+//        labels.setSpacing(24);
+//        labels.setPadding(new Insets(0, 0, 0, 75));
+
+        if (song != null) {
+
+
+            for (Emotion emo : emotions) {
+                HBox emoBox = new HBox();
+                emoBox.setSpacing(15);
+
+                Button resetBtn = new Button("Reset");
+
+                resetBtn.setOnAction(event -> {
+                    try {
+//                        group.getValue().selectToggle(null);
+                        songDAO.deleteSongEmotion(userId, song.id, emo.getId());
+                        displayRatings(songDAO, song, userId);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                emoBox.getChildren().add(resetBtn);
+
+                for (int i = 1; i < 5; i++) {
+                    RadioButton radio = new RadioButton();
+                    radio.setUserData(i);
+                    radio.setToggleGroup(new ToggleGroup());
+                    emoBox.getChildren().add(radio);
+                }
+
+                Button notesBtn = new Button("Commenta");
+
+                notesBtn.setOnAction(event -> {
+                    System.out.println("Comment");
+                });
+
+                emoBox.getChildren().add(notesBtn);
+
+            }
+        }
     }
 
     private void setRatingListeners(SongDAO songDAO, Song song, int userId) {

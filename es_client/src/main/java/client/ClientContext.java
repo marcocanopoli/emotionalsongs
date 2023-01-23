@@ -1,5 +1,6 @@
 package client;
 
+import common.Emotion;
 import common.Playlist;
 import common.Song;
 import common.User;
@@ -11,9 +12,9 @@ import java.util.List;
 public final class ClientContext {
 
     private static final ClientContext INSTANCE = new ClientContext();
-    private User user;
-
+    private List<Emotion> emotions;
     private Song currentSong;
+    private User user;
 
     ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
 
@@ -24,12 +25,12 @@ public final class ClientContext {
         return INSTANCE;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setEmotions(List<Emotion> emotions) {
+        this.emotions = emotions;
     }
 
-    public User getUser() {
-        return this.user;
+    public List<Emotion> getEmotions() {
+        return this.emotions;
     }
 
     public void setCurrentSong(Song song) {
@@ -38,6 +39,14 @@ public final class ClientContext {
 
     public Song getCurrentSong() {
         return this.currentSong;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return this.user;
     }
 
     public void setUserPlaylists(List<Playlist> playlists) {

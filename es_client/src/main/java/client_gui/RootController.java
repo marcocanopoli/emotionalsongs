@@ -2,8 +2,10 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
+import common.Emotion;
 import common.Playlist;
 import common.User;
+import common.interfaces.EmotionDAO;
 import common.interfaces.PlaylistDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,6 +27,10 @@ public class RootController {
     public void initialize() throws RemoteException {
         ClientContext context = ClientContext.getInstance();
         User user = context.getUser();
+
+        EmotionDAO emotionDAO = ClientApp.getEmotionDAO();
+        List<Emotion> emotions = emotionDAO.getEmotions();
+        context.setEmotions(emotions);
 
         if (user != null) {
             PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();

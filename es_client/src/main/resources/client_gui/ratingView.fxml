@@ -7,7 +7,7 @@
 <TitledPane animated="false" collapsible="false" text="Rating" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.RatingViewController">
     <content>
-        <VBox spacing="10.0">
+        <VBox fx:id="emotionsBox" spacing="10.0">
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="24.0">
                     <children>
