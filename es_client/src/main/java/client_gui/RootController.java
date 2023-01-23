@@ -34,7 +34,7 @@ public class RootController {
 
         if (user != null) {
             PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
-            List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getID());
+            List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
             context.setUserPlaylists(playlists);
         }
 

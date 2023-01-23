@@ -38,7 +38,7 @@ public class User implements Serializable {
         return (id + "\t" + firstName + "\t" + lastName + "\t" + cf + "\t" + address + "\t" + email + "\t" + username);
     }
 
-    public int getID() {
+    public int getId() {
         return this.id;
     }
 }

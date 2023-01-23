@@ -76,7 +76,7 @@ public class PlaylistsController {
 
     private void initPlaylistList(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
         User user = context.getUser();
-        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getID());
+        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
 
         context.setUserPlaylists(playlists);
 

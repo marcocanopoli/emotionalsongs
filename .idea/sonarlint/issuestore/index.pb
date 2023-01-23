@@ -21,10 +21,6 @@ A
 es_server/pom.xml,a/5/a553adb53d9f0bb560e8daf1fd353d831bd6d106
 A
 es_common/pom.xml,0/4/04092683b5012c975583047e7ff2b26274357895
-A
-es_client/pom.xml,b/6/b6c6805b52b7370d0d9f0376805732577264c513
-7
-pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
 n
 >es_client/src/main/java/client_gui/SplashScreenController.java,e/d/ed47ae8f82426bde9d3a5f49eb5bdcc9fc610c86
 g

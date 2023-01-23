@@ -114,7 +114,7 @@ public class SongInfoController {
                 int emotionId = group.getKey();
 
                 try {
-                    List<String> notes = songDAO.getSongEmotionNotes(user.getID(), song.id, emotionId);
+                    List<String> notes = songDAO.getSongEmotionNotes(user.getId(), song.id, emotionId);
                     ObservableList<String> notesList = FXCollections.observableArrayList(notes);
 
                     commentsList.setItems(notesList);

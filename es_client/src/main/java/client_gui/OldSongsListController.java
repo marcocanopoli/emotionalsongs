@@ -62,7 +62,7 @@ public class OldSongsListController {
                     addEmotionsBtns();
 
                     if (user != null) {
-                        addPlaylistDropdown(user.getID());
+                        addPlaylistDropdown(user.getId());
                     }
 
                     songsTable.getItems().clear();

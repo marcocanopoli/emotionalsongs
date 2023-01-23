@@ -1,6 +1,7 @@
 package common.interfaces;
 
 import common.Song;
+import common.SongEmotion;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,7 +16,7 @@ public interface SongDAO extends Remote {
 
     int getSongEmotionsCount(int songId) throws RemoteException;
 
-    HashMap<Integer, Integer> getSongEmotionsRating(int userId, int songId) throws RemoteException;
+    List<SongEmotion> getSongEmotionsRating(int userId, int songId) throws RemoteException;
 
     List<String> getSongEmotionNotes(int userId, int songId, int emotionId) throws RemoteException;
 
