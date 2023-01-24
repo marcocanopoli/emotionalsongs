@@ -39,6 +39,14 @@ public class User implements Serializable {
     }
 
     public int getId() {
-        return this.id;
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
     }
 }

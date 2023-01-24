@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.SongInfoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="655.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.SongInfoController">
     <children>
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <TitledPane animated="false" minHeight="-Infinity" minWidth="-Infinity" text="Info canzone">
+                <TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TOP" minHeight="-Infinity" minWidth="-Infinity" text="Info canzone" VBox.vgrow="ALWAYS">
                     <content>
                         <VBox>
                             <children>
@@ -100,11 +100,11 @@
                         <Insets bottom="20.0" />
                     </VBox.margin>
                 </TitledPane>
-                  <TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="BOTTOM" text="Emozioni registrate">
+                  <TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Emozioni registrate" VBox.vgrow="ALWAYS">
                       <content>
-                  <HBox fillHeight="false" spacing="20.0">
+                  <HBox fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0">
                      <children>
-                                <VBox alignment="CENTER" spacing="10.0">
+                                <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="NEVER">
                            <children>
                               <GridPane>
                                  <columnConstraints>
@@ -252,9 +252,9 @@
                               </GridPane>
                            </children>
                                 </VBox>
-                        <VBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0">
+                        <VBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="350.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <ListView fx:id="commentsList" />
+                              <ListView fx:id="commentsList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                               <TextArea fx:id="currentComment" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" wrapText="true">
                                  <VBox.margin>
                                     <Insets top="20.0" />

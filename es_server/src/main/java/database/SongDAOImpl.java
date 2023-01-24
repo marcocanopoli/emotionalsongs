@@ -21,6 +21,7 @@ public class SongDAOImpl implements SongDAO {
         registry.rebind("SongService", songDAOStub);
     }
 
+    @Override
     public List<SongEmotion> getSongEmotionsRating(int userId, int songId) {
         Connection conn = ServerApp.getConnection();
 
@@ -55,6 +56,7 @@ public class SongDAOImpl implements SongDAO {
         }
     }
 
+    @Override
     public List<String> getSongEmotionNotes(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
 
@@ -81,6 +83,7 @@ public class SongDAOImpl implements SongDAO {
 
     }
 
+    @Override
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
         Connection conn = ServerApp.getConnection();
 
@@ -111,6 +114,7 @@ public class SongDAOImpl implements SongDAO {
         return new HashMap<>();
     }
 
+    @Override
     public int getSongEmotionsCount(int songId) {
         Connection conn = ServerApp.getConnection();
 
@@ -139,6 +143,7 @@ public class SongDAOImpl implements SongDAO {
         return 0;
     }
 
+    @Override
     public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
         Connection conn = ServerApp.getConnection();
         String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?) " +
@@ -158,6 +163,27 @@ public class SongDAOImpl implements SongDAO {
         }
     }
 
+    @Override
+    public void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) {
+        Connection conn = ServerApp.getConnection();
+        String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, notes) VALUES (?,?,?,?) " +
+                "ON CONFLICT ON CONSTRAINT song_emotion_user_id DO UPDATE " +
+                "SET notes = excluded.notes ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            stmt.setInt(2, songId);
+            stmt.setInt(3, emotionId);
+            stmt.setString(4, notes);
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+    }
+
+    @Override
     public int deleteSongEmotion(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
         String query = "DELETE FROM song_emotion " +
@@ -179,6 +205,7 @@ public class SongDAOImpl implements SongDAO {
         return 0;
     }
 
+    @Override
     public List<Song> searchByString(String searchString) {
         Connection conn = ServerApp.getConnection();
 //        String query = "SELECT * "

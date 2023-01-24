@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface PlaylistDAO extends Remote {
 
+    Integer addSongToPlaylist(int playlistId, int songId) throws RemoteException;
+
     Playlist createNewPlaylist(int userId, String name) throws RemoteException;
 
     Playlist getPlaylistById(int playlistId) throws RemoteException;

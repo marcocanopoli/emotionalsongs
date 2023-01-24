@@ -69,13 +69,13 @@ public class RatingViewController {
 
             addResetBtn(group, emoBox, emo.id());
             addToggles(group, emoBox, emo.id(), rating);
-            addCommentSection(emoBox, notes);
+            addCommentSection(emoBox, emo.id(), notes);
 
 //            emotionsBox.getChildren().add(emoName);
-            TitledPane emoPane = new TitledPane();
-            emoPane.setText(emo.name());
-            emoPane.setContent(emoBox);
-            emotionsBox.getChildren().add(emoPane);
+//            TitledPane emoPane = new TitledPane();
+//            emoPane.setText(emo.name());
+//            emoPane.setContent(emoBox);
+            emotionsBox.getChildren().add(emoBox);
 
         }
 
@@ -116,6 +116,7 @@ public class RatingViewController {
             );
 
             RadioButton radio = new RadioButton();
+            radio.setText(String.valueOf(i));
             radio.setUserData(i);
             radio.setToggleGroup(group);
             radio.setSelected(rating == i);
@@ -124,14 +125,10 @@ public class RatingViewController {
         }
     }
 
-    private void addCommentSection(HBox emoBox, String notes) {
+    private void addCommentSection(HBox emoBox, int emotionId, String notes) {
 
         Button commentBtn = new Button("Commenta");
         commentBtn.setDisable(true);
-
-        commentBtn.setOnAction(event -> {
-            System.out.println("Comment");
-        });
 
         TextArea comment = new TextArea();
         comment.setText(notes);
@@ -142,6 +139,16 @@ public class RatingViewController {
 
         comment.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().length() <= 256 ? change : null));
+
+
+        commentBtn.setOnAction(event -> {
+            try {
+                songDAO.setSongEmotionNotes(user.getId(), song.id, emotionId, comment.getText());
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
 
         comment.textProperty().addListener((observable, oldValue, newValue) ->
                 commentBtn.setDisable(newValue.isEmpty()));

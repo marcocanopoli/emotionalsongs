@@ -29,8 +29,8 @@ public class PlaylistsController {
     public Label playlistDuration;
     @FXML
     private TableView<Song> playlistSongsTable;
-    //    @FXML
-//    private TitledPane currentPlaylistPane;
+    @FXML
+    private TitledPane currentPlaylistPane;
     @FXML
     private ListView<Playlist> playlistsList;
     @FXML
@@ -65,7 +65,7 @@ public class PlaylistsController {
         playlistSongs.setText(String.valueOf(songs.size()));
         playlistDuration.setText(durationString);
 
-//        currentPlaylistPane.setExpanded(true);
+        currentPlaylistPane.setExpanded(true);
 
         playlistSongsTable.getItems().clear();
         playlistSongsTable.getItems().addAll(songs);

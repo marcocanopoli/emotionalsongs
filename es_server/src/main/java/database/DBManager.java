@@ -119,7 +119,7 @@ public class DBManager {
                         "(song_id INTEGER REFERENCES songs (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "emotion_id INTEGER REFERENCES emotions (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
-                        "rating INTEGER NOT NULL ," +
+                        "rating INTEGER ," +
                         "notes VARCHAR(256) ," +
                         "CONSTRAINT song_emotion_user_id PRIMARY KEY (song_id, emotion_id, user_id))";
 
