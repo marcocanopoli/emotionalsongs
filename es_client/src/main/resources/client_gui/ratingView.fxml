@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<TitledPane animated="false" collapsible="false" text="Rating" xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.RatingViewController">
+    <content>
+        <VBox fx:id="emotionsBox" spacing="10.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="24.0">
+                    <children>
+                        <Label text="1"/>
+                        <Label text="2"/>
+                        <Label text="3"/>
+                        <Label text="4"/>
+                        <Label text="5"/>
+                    </children>
+                    <padding>
+                        <Insets left="75.0"/>
+                    </padding>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+        </VBox>
+    </content>
+</TitledPane>

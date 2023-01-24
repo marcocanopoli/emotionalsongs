@@ -1,0 +1,7 @@
+.sidebar-btn {
+  -fx-background-color: none;
+}
+
+.sidebar-btn:hover {
+  -fx-background-color: peachpuff;
+}

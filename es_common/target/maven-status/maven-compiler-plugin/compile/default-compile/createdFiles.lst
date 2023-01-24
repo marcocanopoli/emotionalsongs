@@ -1,4 +1,6 @@
-org/canos/es_common/UserAddress.class
-org/canos/es_common/interfaces/UserService.class
+common/UserAddress.class
+common/Song.class
+common/interfaces/SongDAO.class
+common/interfaces/UserDAO.class
 module-info.class
-org/canos/es_common/User.class
+common/User.class

@@ -1,8 +1,9 @@
 module es_common {
     requires org.apache.logging.log4j;
     requires java.rmi;
+    requires javafx.base;
 
 
-    exports es_common;
-    exports es_common.interfaces;
+    exports common;
+    exports common.interfaces;
 }
