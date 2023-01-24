@@ -5,6 +5,7 @@ import client.ClientContext;
 import common.Playlist;
 import common.Song;
 import common.User;
+import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
 
 public class SongsListController {
@@ -24,10 +26,26 @@ public class SongsListController {
     @FXML
     private TextField searchText;
 
+    private HashMap<Integer, String> columns;
+
 
     public void initialize() {
         ClientContext context = ClientContext.getInstance();
         User user = context.getUser();
+
+        context.addPropertyChangeListener(e -> {
+            if (e.getPropertyName().equals("user")) {
+
+                User newUser = (User) e.getNewValue();
+
+                if (newUser != null) {
+                    addPlaylistDropdown(context);
+                } else {
+                    int tableSize = searchSongsTable.getColumns().size();
+                    searchSongsTable.getColumns().remove(tableSize - 1);
+                }
+            }
+        });
 
         SongDAO songDAO = ClientApp.getSongDAO();
 
@@ -91,6 +109,7 @@ public class SongsListController {
     }
 
     private void addPlaylistDropdown(ClientContext context) {
+        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
         ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
 
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
@@ -98,17 +117,34 @@ public class SongsListController {
                     final HBox btnBox = new HBox();
                     private final MenuButton playlistChoice = new MenuButton("Aggiungi a:");
 
+
                     {
-//                        Song song = getTableView().getItems().get(getIndex());
                         for (Playlist p : userPlaylists) {
                             MenuItem item = new MenuItem(p.getName());
                             item.setOnAction(event -> {
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Conferma");
-                                alert.setHeaderText(null);
-                                alert.setContentText("La canzone è stata aggiunta alla playlist '" + p.getName() + "'!");
+                                Song song = getTableView().getItems().get(getIndex());
 
-                                alert.showAndWait();
+                                try {
+                                    int rows = playlistDAO.addSongToPlaylist(p.getId(), song.id);
+                                    if (rows > 0) {
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setTitle("Conferma");
+//                                        alert.setHeaderText(null);
+                                        alert.setContentText("'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'!");
+
+                                        alert.showAndWait();
+                                    } else {
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setTitle("Info");
+//                                        alert.setHeaderText(null);
+                                        alert.setContentText("'" + song.getTitle() + "' è già presente in '" + p.getName() + "'!");
+
+                                        alert.showAndWait();
+                                    }
+                                } catch (RemoteException e) {
+                                    throw new RuntimeException(e);
+                                }
+
                             });
                             playlistChoice.getItems().add(item);
                         }
@@ -132,6 +168,7 @@ public class SongsListController {
         TableColumn<Song, Void> playlistColumn = new TableColumn<>("Playlist");
         playlistColumn.setMinWidth(130);
         playlistColumn.setCellFactory(cellFactory);
+
         searchSongsTable.getColumns().add(playlistColumn);
     }
 

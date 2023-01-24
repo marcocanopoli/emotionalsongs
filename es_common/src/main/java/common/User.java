@@ -38,7 +38,15 @@ public class User implements Serializable {
         return (id + "\t" + firstName + "\t" + lastName + "\t" + cf + "\t" + address + "\t" + email + "\t" + username);
     }
 
-    public int getID() {
-        return this.id;
+    public int getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
     }
 }

@@ -21,6 +21,25 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
+    public Integer addSongToPlaylist(int playlistId, int songId) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+        String query = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?,?)" +
+                "ON CONFLICT ON CONSTRAINT playlist_song_id DO NOTHING";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, playlistId);
+            stmt.setInt(2, songId);
+
+            return stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("ERROR: " + ex);
+            return null;
+        }
+    }
+
+    @Override
     public Playlist createNewPlaylist(int userId, String name) throws RemoteException {
         Connection conn = ServerApp.getConnection();
         String query = "INSERT INTO playlists (user_id, name) VALUES (?,?)";

@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -47,11 +48,11 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage stage) {
         ClientApp.window = stage;
-        ClientApp.window.setMinHeight(850);
-        ClientApp.window.setMinWidth(1064);
+//        ClientApp.window.setMinHeight(850);
+//        ClientApp.window.setMinWidth(1064);
         ClientApp.window.setTitle("Emotional Songs");
 
-        initLayout("splashScreen");
+        initLayout("rootLayout");
     }
 
     public static void initLayout(String layout) {
@@ -61,6 +62,7 @@ public class ClientApp extends Application {
             Scene scene = new Scene(fxmlLoader.load());
             ClientApp.window.setScene(scene);
             ClientApp.window.show();
+            ClientApp.window.centerOnScreen();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,6 +78,7 @@ public class ClientApp extends Application {
             stage.initModality(isModal ? Modality.WINDOW_MODAL : Modality.NONE);
             stage.setTitle(title);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
             return stage;
         } catch (IOException e) {
@@ -89,7 +92,7 @@ public class ClientApp extends Application {
             if (ClientApp.currentView == null || !ClientApp.currentView.equals("songs")) {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsListView.fxml"));
-                AnchorPane songsView = loader.load();
+                VBox songsView = loader.load();
 //                songsListController = loader.getController();
 
                 view.getChildren().clear();
@@ -106,7 +109,7 @@ public class ClientApp extends Application {
             if (ClientApp.currentView == null || !ClientApp.currentView.equals("playlists")) {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/playlistsView.fxml"));
-                AnchorPane playlistsView = loader.load();
+                VBox playlistsView = loader.load();
 //                playlistsController = loader.getController();
 
                 view.getChildren().clear();

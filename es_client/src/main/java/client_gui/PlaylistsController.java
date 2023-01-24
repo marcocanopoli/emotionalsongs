@@ -29,8 +29,8 @@ public class PlaylistsController {
     public Label playlistDuration;
     @FXML
     private TableView<Song> playlistSongsTable;
-    //    @FXML
-//    private TitledPane currentPlaylistPane;
+    @FXML
+    private TitledPane currentPlaylistPane;
     @FXML
     private ListView<Playlist> playlistsList;
     @FXML
@@ -65,7 +65,7 @@ public class PlaylistsController {
         playlistSongs.setText(String.valueOf(songs.size()));
         playlistDuration.setText(durationString);
 
-//        currentPlaylistPane.setExpanded(true);
+        currentPlaylistPane.setExpanded(true);
 
         playlistSongsTable.getItems().clear();
         playlistSongsTable.getItems().addAll(songs);
@@ -76,7 +76,7 @@ public class PlaylistsController {
 
     private void initPlaylistList(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
         User user = context.getUser();
-        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getID());
+        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
 
         context.setUserPlaylists(playlists);
 
