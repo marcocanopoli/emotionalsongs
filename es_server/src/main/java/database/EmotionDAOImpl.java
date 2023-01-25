@@ -26,12 +26,12 @@ public class EmotionDAOImpl implements EmotionDAO {
     public List<Emotion> getEmotions() throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM emotions "
                 + "ORDER BY id ASC";
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
             List<Emotion> results = new ArrayList<>();
 
             while (rs.next()) {

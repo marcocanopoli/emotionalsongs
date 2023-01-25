@@ -25,8 +25,8 @@ public class SongDAOImpl implements SongDAO {
     public List<SongEmotion> getSongEmotionsRating(int userId, int songId) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT *  " +
-                "FROM song_emotion SE " +
+        final String QUERY = "SELECT *  " +
+                "FROM song_emotions SE " +
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
                 "JOIN users U on U.id = SE.user_id " +
@@ -34,7 +34,7 @@ public class SongDAOImpl implements SongDAO {
                 "AND U.id = " + userId;
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
 
             List<SongEmotion> results = new ArrayList<>();
 
@@ -60,14 +60,14 @@ public class SongDAOImpl implements SongDAO {
     public List<String> getSongEmotionNotes(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT SE.notes  " +
-                "FROM song_emotion SE " +
+        final String QUERY = "SELECT SE.notes  " +
+                "FROM song_emotions SE " +
                 "WHERE SE.song_id  = " + songId +
                 "AND SE.user_id  = " + userId +
                 "AND SE.emotion_id = " + emotionId;
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
             List<String> results = new ArrayList<>();
 
             while (rs.next()) {
@@ -87,15 +87,15 @@ public class SongDAOImpl implements SongDAO {
     public HashMap<Integer, Integer> getSongEmotions(int songId) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT E.id, COUNT(E.id) " +
-                "FROM song_emotion SE " +
+        final String QUERY = "SELECT E.id, COUNT(E.id) " +
+                "FROM song_emotions SE " +
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
                 "WHERE S.id = " + songId +
                 " GROUP BY E.id";
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
             HashMap<Integer, Integer> results = new HashMap<>();
 
             while (rs.next()) {
@@ -118,14 +118,14 @@ public class SongDAOImpl implements SongDAO {
     public int getSongEmotionsCount(int songId) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT COUNT(E.id) " +
-                "FROM song_emotion SE " +
+        final String QUERY = "SELECT COUNT(E.id) " +
+                "FROM song_emotions SE " +
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
                 "WHERE S.id = " + songId;
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
             int count = 0;
 
             while (rs.next()) {
@@ -146,11 +146,11 @@ public class SongDAOImpl implements SongDAO {
     @Override
     public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
         Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?) " +
-                "ON CONFLICT ON CONSTRAINT song_emotion_user_id DO UPDATE " +
+        final String QUERY = "INSERT INTO song_emotions (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?) " +
+                "ON CONFLICT ON CONSTRAINT user_song_emotion DO UPDATE " +
                 "SET rating = excluded.rating ";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
 
             stmt.setInt(1, userId);
             stmt.setInt(2, songId);
@@ -166,11 +166,11 @@ public class SongDAOImpl implements SongDAO {
     @Override
     public void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) {
         Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO song_emotion (user_id, song_id, emotion_id, notes) VALUES (?,?,?,?) " +
-                "ON CONFLICT ON CONSTRAINT song_emotion_user_id DO UPDATE " +
+        final String QUERY = "INSERT INTO song_emotions (user_id, song_id, emotion_id, notes) VALUES (?,?,?,?) " +
+                "ON CONFLICT ON CONSTRAINT user_song_emotion DO UPDATE " +
                 "SET notes = excluded.notes ";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
 
             stmt.setInt(1, userId);
             stmt.setInt(2, songId);
@@ -186,12 +186,12 @@ public class SongDAOImpl implements SongDAO {
     @Override
     public int deleteSongEmotion(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
-        String query = "DELETE FROM song_emotion " +
+        final String QUERY = "DELETE FROM song_emotions " +
                 "WHERE user_id = ?" +
                 "AND song_id = ?" +
                 "AND emotion_id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
             stmt.setInt(1, userId);
             stmt.setInt(2, songId);
             stmt.setInt(3, emotionId);
@@ -208,7 +208,7 @@ public class SongDAOImpl implements SongDAO {
     @Override
     public List<Song> searchByString(String searchString) {
         Connection conn = ServerApp.getConnection();
-//        String query = "SELECT * "
+//       final String QUERY = "SELECT * "
 //                + "FROM songs "
 //                + "WHERE author LIKE '%"
 //                + searchString + "%'"
@@ -217,7 +217,7 @@ public class SongDAOImpl implements SongDAO {
 //                + "OR album LIKE '%"
 //                + searchString + "%'";
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM songs "
                 + "WHERE (author, title, album)::text "
                 + "ILIKE ('%"
@@ -225,7 +225,7 @@ public class SongDAOImpl implements SongDAO {
                 + "ORDER BY author ASC";
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
             List<Song> results = new ArrayList<>();
 
             while (rs.next()) {

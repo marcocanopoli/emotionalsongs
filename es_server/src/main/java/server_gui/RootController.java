@@ -13,6 +13,7 @@ import server.ServerApp;
 import server.ServerLogger;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class RootController {
 
@@ -48,7 +49,11 @@ public class RootController {
                 ServerLogger.debug("Connection set");
                 DBManager.migrate();
                 ServerLogger.debug("Migrations executed");
-                DBManager.seed();
+                try {
+                    DBManager.seed();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 ServerLogger.debug("Seeds executed");
                 mainPane.getScene().getWindow().setHeight(120);
                 mainPane.getChildren().remove(loginForm);

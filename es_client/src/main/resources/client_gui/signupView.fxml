@@ -24,14 +24,14 @@
                 <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Label text="Nome"/>
-                <Label text="Cognome" GridPane.rowIndex="1"/>
-                <Label text="Codice fiscale" GridPane.rowIndex="2"/>
+                <Label text="Nome*"/>
+                <Label text="Cognome*" GridPane.rowIndex="1"/>
+                <Label text="Codice fiscale*" GridPane.rowIndex="2"/>
                 <Label text="Indirizzo" GridPane.rowIndex="3"/>
-                <Label text="Username" GridPane.rowIndex="4"/>
-                <Label text="Email" GridPane.rowIndex="5"/>
-                <Label text="Password" GridPane.rowIndex="6"/>
-                <Label text="Conferma password" GridPane.rowIndex="7"/>
+                <Label text="Username*" GridPane.rowIndex="4"/>
+                <Label text="Email*" GridPane.rowIndex="5"/>
+                <Label text="Password*" GridPane.rowIndex="6"/>
+                <Label text="Conferma password*" GridPane.rowIndex="7"/>
                 <TextField fx:id="firstNameText" GridPane.columnIndex="1"/>
                 <TextField fx:id="lastNameText" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <TextField fx:id="cfText" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
@@ -42,7 +42,7 @@
                 <PasswordField fx:id="pwdConfirmText" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
             </children>
         </GridPane>
-        <Button fx:id="confirmRegistrationBtn" mnemonicParsing="false" text="Conferma">
+        <Button fx:id="confirmRegistrationBtn" mnemonicParsing="false" text="Conferma" disable="true">
             <VBox.margin>
                 <Insets top="20.0"/>
             </VBox.margin>

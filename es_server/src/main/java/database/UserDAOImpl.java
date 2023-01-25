@@ -21,10 +21,10 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
         Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
+        final String QUERY = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
                 + "VALUES(?,?,?,?,?,?,?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
 
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
@@ -50,12 +50,12 @@ public class UserDAOImpl implements UserDAO {
     public User getUser(String username, String pwd) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM users "
                 + "WHERE username = '" + username + "' LIMIT 1";
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
 
             User user = null;
 

@@ -64,14 +64,14 @@ public class RatingViewController {
                 }
             }
 
-//            Label emoName = new Label(emo.name());
-//            emoBox.getChildren().add(emoName);
+            Label emoName = new Label(emo.name());
+            emoBox.getChildren().add(emoName);
 
             addResetBtn(group, emoBox, emo.id());
             addToggles(group, emoBox, emo.id(), rating);
             addCommentSection(emoBox, emo.id(), notes);
 
-//            emotionsBox.getChildren().add(emoName);
+            emotionsBox.getChildren().add(emoName);
 //            TitledPane emoPane = new TitledPane();
 //            emoPane.setText(emo.name());
 //            emoPane.setContent(emoBox);
@@ -127,7 +127,15 @@ public class RatingViewController {
 
     private void addCommentSection(HBox emoBox, int emotionId, String notes) {
 
-        Button commentBtn = new Button("Commenta");
+        VBox notesBox = new VBox();
+        notesBox.setSpacing(10);
+
+        ButtonBar btnBar = new ButtonBar();
+
+        Button commentBtn = new Button("Salva commento");
+        commentBtn.setDisable(true);
+
+        Button resetCommentBtn = new Button("Reset commento");
         commentBtn.setDisable(true);
 
         TextArea comment = new TextArea();

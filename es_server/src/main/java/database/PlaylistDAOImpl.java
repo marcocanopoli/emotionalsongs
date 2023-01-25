@@ -23,10 +23,10 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     @Override
     public Integer addSongToPlaylist(int playlistId, int songId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?,?)" +
-                "ON CONFLICT ON CONSTRAINT playlist_song_id DO NOTHING";
+        final String QUERY = "INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?,?)" +
+                "ON CONFLICT ON CONSTRAINT playlist_songs_id DO NOTHING";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
 
             stmt.setInt(1, playlistId);
             stmt.setInt(2, songId);
@@ -42,9 +42,9 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     @Override
     public Playlist createNewPlaylist(int userId, String name) throws RemoteException {
         Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
+        final String QUERY = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, userId);
             stmt.setString(2, name);
@@ -73,12 +73,12 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public Playlist getPlaylistById(int playlistId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM playlists P "
                 + "WHERE  P.id = ? LIMIT 1";
 
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY);) {
             stmt.setInt(1, playlistId);
             ResultSet rs = stmt.executeQuery();
 
@@ -106,13 +106,13 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public Playlist getPlaylistByName(String name) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM playlists "
                 + "WHERE (name) "
                 + "ILIKE ('%"
                 + name + "%') LIMIT 1";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY);) {
             ResultSet rs = stmt.executeQuery();
 
             Playlist playlist = null;
@@ -138,12 +138,12 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public List<Song> getPlaylistSongs(int playlistId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * " +
+        final String QUERY = "SELECT * " +
                 "FROM songs S " +
-                "JOIN playlist_song PS ON PS.song_id = S.id " +
+                "JOIN playlist_songs PS ON PS.song_id = S.id " +
                 "WHERE PS.playlist_id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
             stmt.setInt(1, playlistId);
             ResultSet rs = stmt.executeQuery();
 
@@ -175,12 +175,12 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public List<Playlist> getUserPlaylists(int userId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM playlists P "
                 + "WHERE  P.user_id = ?";
 
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
 
