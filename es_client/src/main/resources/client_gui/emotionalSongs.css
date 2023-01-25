@@ -5,3 +5,11 @@
 .sidebar-btn:hover {
   -fx-background-color: peachpuff;
 }
+
+.border-error {
+	-fx-background-color: #B22222, #FFB6C1;
+	-fx-background-insets: 0, 0 0 1 0;
+}
+.border-error:focused {
+	-fx-background-color: #B22222, white;
+}

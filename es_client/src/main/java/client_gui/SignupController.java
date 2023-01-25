@@ -2,20 +2,14 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
-import client.ClientLogger;
 import common.User;
 import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,19 +33,48 @@ public class SignupController {
     public PasswordField pwdText;
     @FXML
     public PasswordField pwdConfirmText;
+    @FXML
+    public Label errorLabel;
 
     public void initialize() {
 
-        TextField[] fieldsToValidate = {firstNameText, lastNameText, cfText, usernameText, emailText, pwdText, pwdConfirmText};
+        TextField[] requiredFields = {firstNameText, lastNameText, cfText, usernameText, emailText, pwdText, pwdConfirmText};
 
-        for (TextField field : fieldsToValidate) {
+        for (TextField field : requiredFields) {
             field.textProperty().addListener((obs, oldValue, newValue) ->
             {
 
-                List<String> validationErrors = validateInputs();
-                if (newValue.isEmpty()) validationErrors.add("blank_required");
+                Map<String, TextField> validationErrors = validateInputs();
+                if (newValue.isEmpty()) validationErrors.put("blank_required", field);
 
-                if (!validationErrors.isEmpty()) ClientLogger.error(validationErrors.toString());
+                if (!validationErrors.isEmpty()) {
+//                    ClientLogger.debug(validationErrors.toString());
+//                    Map.Entry<String, TextField> firstEntry = validationErrors.entrySet().iterator().next();
+//                    String error = firstEntry.getKey();
+//                    TextField invalidField = firstEntry.getValue();
+
+                    if (validationErrors.containsValue(field)) {
+                        if (!field.getStyleClass().contains("border-error")) {
+                            field.getStyleClass().add("border-error");
+                        }
+
+
+                        for (Map.Entry<String, TextField> fieldError :
+                                validationErrors.entrySet()) {
+
+                            if (field == fieldError.getValue()) {
+                                errorLabel.setText(fieldError.getKey());
+                                break;
+                            }
+                        }
+                    } else {
+                        field.getStyleClass().removeIf(style -> style.equals("border-error"));
+                    }
+
+                } else {
+                    field.getStyleClass().removeIf(style -> style.equals("border-error"));
+                }
+
 
                 confirmRegistrationBtn.setDisable(!validationErrors.isEmpty() || newValue.isEmpty());
 
@@ -127,36 +150,37 @@ public class SignupController {
         return !m.find();
     }
 
-    private List<String> validateInputs() {
+    private Map<String, TextField> validateInputs() {
 
-        Map<String, TextField> inputs = new HashMap<>();
+        Map<String, TextField> inputs = new LinkedHashMap<>();
         inputs.put("first_name", firstNameText);
-        inputs.put("cf", cfText);
         inputs.put("last_name", lastNameText);
+        inputs.put("cf", cfText);
         inputs.put("username", usernameText);
         inputs.put("email", emailText);
         inputs.put("password", pwdText);
         inputs.put("password_confirm", pwdConfirmText);
 
-        List<String> errors = new ArrayList<>();
+        Map<String, TextField> errors = new LinkedHashMap<>();
 
         for (Map.Entry<String, TextField> entry :
                 inputs.entrySet()) {
-            String text = entry.getValue().getText();
+            TextField field = entry.getValue();
+            String text = field.getText();
             String key = entry.getKey();
 
             if (text.isBlank()) {
-                errors.add("blank_" + key);
+                errors.put("blank_" + key, field);
             } else {
 
                 switch (key) {
                     case "cf" -> {
                         if (invalidRegExMatch("^[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]$", text))
-                            errors.add(key);
+                            errors.put(key, field);
                     }
                     case "email" -> {
                         if (invalidRegExMatch("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", text))
-                            errors.add(key);
+                            errors.put(key, field);
                     }
                     case "password" -> {
 //                    At least one upper case English letter, (?=.*?[A-Z])
@@ -165,13 +189,13 @@ public class SignupController {
 //                        At least one special character, (?=.*?[#?!@$%^&*-])
 //                        Minimum eight in length .{8,} (with the anchors)
                         if (invalidRegExMatch("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", text))
-                            errors.add(key);
+                            errors.put(key, field);
 
                         String pwd = pwdText.getText().trim();
                         String pwdConfirm = pwdConfirmText.getText().trim();
 
                         if (!pwd.equals(pwdConfirm)) {
-                            errors.add(key + "_confirm");
+                            errors.put(key + "_confirm", pwdConfirmText);
                         }
 
                     }
