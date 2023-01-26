@@ -28,7 +28,7 @@
                   <PasswordField fx:id="pwd" text="admin" GridPane.columnIndex="1" GridPane.rowIndex="1" />
               </children>
           </GridPane>
-          <Button fx:id="confirmLoginBtn" mnemonicParsing="false" text="Login">
+          <Button fx:id="confirmLoginBtn" mnemonicParsing="false" onAction="#login" text="Login">
               <VBox.margin>
                   <Insets top="20.0" />
               </VBox.margin>

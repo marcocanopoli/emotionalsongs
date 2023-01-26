@@ -206,27 +206,21 @@ public class SongDAOImpl implements SongDAO {
     }
 
     @Override
-    public List<Song> searchByString(String searchString) {
+    public List<Song> searchByTitle(String titleText) {
         Connection conn = ServerApp.getConnection();
-//       final String QUERY = "SELECT * "
-//                + "FROM songs "
-//                + "WHERE author LIKE '%"
-//                + searchString + "%'"
-//                + "OR title LIKE '%"
-//                + searchString + "%'"
-//                + "OR album LIKE '%"
-//                + searchString + "%'";
-
         final String QUERY = "SELECT * "
                 + "FROM songs "
-                + "WHERE (author, title, album)::text "
-                + "ILIKE ('%"
-                + searchString + "%')"
-                + "ORDER BY author ASC";
+                + "WHERE title "
+                + "ILIKE ? "
+                + "ORDER BY title ASC";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(QUERY)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
+
+            stmt.setString(1, "%" + titleText + "%");
+
             List<Song> results = new ArrayList<>();
+
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -246,6 +240,49 @@ public class SongDAOImpl implements SongDAO {
             ServerLogger.error("Error: " + ex);
         }
 
-        return null;
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Song> searchByAuthorYear(String authorText, Integer yearText) {
+        Connection conn = ServerApp.getConnection();
+        System.out.println(authorText + yearText);
+        String YEAR_QUERY = yearText != null ? "AND year = ? " : "";
+
+        String QUERY = "SELECT * "
+                + "FROM songs "
+                + "WHERE author "
+                + "ILIKE ? "
+                + YEAR_QUERY
+                + "ORDER BY author ASC";
+
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
+
+            stmt.setString(1, "%" + authorText + "%");
+            if (yearText != null) stmt.setInt(2, yearText);
+
+            List<Song> results = new ArrayList<>();
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int year = rs.getInt("year");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
+
+                results.add(new Song(id, title, author, year, album, genre, duration));
+
+            }
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return new ArrayList<>();
     }
 }

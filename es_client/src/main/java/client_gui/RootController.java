@@ -62,10 +62,10 @@ public class RootController {
         });
 
 
-        ClientApp.showSongsView(mainView);
+        ClientApp.showSearchView(mainView);
 
         menuSearchBtn.setOnAction(event ->
-                ClientApp.showSongsView(mainView)
+                ClientApp.showSearchView(mainView)
         );
 
         menuPlaylistsBtn.setOnAction(event ->

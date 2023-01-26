@@ -14,63 +14,91 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.beans.PropertyChangeEvent;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.List;
 
-public class SongsListController {
+public class SearchViewController {
+    @FXML
+    public TextField authorInput;
+    @FXML
+    public TextField titleInput;
+    @FXML
+    public TextField yearInput;
+    @FXML
+    public Button byTitleBtn;
+    @FXML
+    public Button byAuthorYearBtn;
     @FXML
     private TableView<Song> searchSongsTable;
-    @FXML
-    private Button searchBtn;
-    @FXML
-    private TextField searchText;
-
-    private HashMap<Integer, String> columns;
-
+    private ClientContext context;
+    private PlaylistDAO playlistDAO;
+    private SongDAO songDAO;
 
     public void initialize() {
-        ClientContext context = ClientContext.getInstance();
+        playlistDAO = ClientApp.getPlaylistDAO();
+        songDAO = ClientApp.getSongDAO();
+        context = ClientContext.getInstance();
+
         User user = context.getUser();
 
-        context.addPropertyChangeListener(e -> {
-            if (e.getPropertyName().equals("user")) {
+        context.addPropertyChangeListener(this::userChangeListener);
 
-                User newUser = (User) e.getNewValue();
 
-                if (newUser != null) {
-                    addPlaylistDropdown(context);
-                } else {
-                    int tableSize = searchSongsTable.getColumns().size();
-                    searchSongsTable.getColumns().remove(tableSize - 1);
-                }
-            }
+        titleInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            byAuthorYearBtn.setDefaultButton(false);
+            byTitleBtn.setDefaultButton(true);
+            byTitleBtn.setDisable(newValue.isEmpty());
         });
 
-        SongDAO songDAO = ClientApp.getSongDAO();
+        authorInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            String year = yearInput.getText();
+            byTitleBtn.setDefaultButton(false);
+            byAuthorYearBtn.setDefaultButton(true);
+            byAuthorYearBtn.setDisable(newValue.isEmpty() || !year.isBlank() && year.length() != 4);
+        });
 
-        addEmotionsBtns(context);
+        yearInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            byTitleBtn.setDefaultButton(false);
+            byAuthorYearBtn.setDefaultButton(true);
+            byAuthorYearBtn.setDisable(newValue.length() != 4 && titleInput.getText().isBlank());
+        });
+
+        yearInput.setTextFormatter(new TextFormatter<>(change ->
+        {
+            if (change.getControlNewText().matches("[0-9]*") &&
+                    change.getControlNewText().length() <= 4) {
+
+                return change;
+            } else {
+
+                return null;
+            }
+        }));
+
+        addEmotionsBtns();
 
         if (user != null) {
-            addPlaylistDropdown(context);
+            addPlaylistDropdown();
         }
 
-        searchBtn.setOnAction(event -> {
-            String searched = searchText.getText().trim();
-
-            try {
-                if (!searched.isEmpty()) {
-                    List<Song> results = songDAO.searchByString(searched);
-                    searchSongsTable.getItems().clear();
-                    searchSongsTable.getItems().addAll(results);
-                }
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 
-    private void addEmotionsBtns(ClientContext context) {
+    private void userChangeListener(PropertyChangeEvent e) {
+        if (e.getPropertyName().equals("user")) {
+
+            User newUser = (User) e.getNewValue();
+
+            if (newUser != null) {
+                addPlaylistDropdown();
+            } else {
+                int tableSize = searchSongsTable.getColumns().size();
+                searchSongsTable.getColumns().remove(tableSize - 1);
+            }
+        }
+    }
+
+    private void addEmotionsBtns() {
 
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
                 new TableCell<>() {
@@ -108,8 +136,8 @@ public class SongsListController {
         searchSongsTable.getColumns().add(emotionColumn);
     }
 
-    private void addPlaylistDropdown(ClientContext context) {
-        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+    private void addPlaylistDropdown() {
+
         ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
 
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
@@ -129,14 +157,14 @@ public class SongsListController {
                                     if (rows > 0) {
                                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                         alert.setTitle("Conferma");
-//                                        alert.setHeaderText(null);
+                                        alert.setHeaderText(null);
                                         alert.setContentText("'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'!");
 
                                         alert.showAndWait();
                                     } else {
                                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                         alert.setTitle("Info");
-//                                        alert.setHeaderText(null);
+                                        alert.setHeaderText(null);
                                         alert.setContentText("'" + song.getTitle() + "' è già presente in '" + p.getName() + "'!");
 
                                         alert.showAndWait();
@@ -171,5 +199,36 @@ public class SongsListController {
 
         searchSongsTable.getColumns().add(playlistColumn);
     }
+
+    @FXML
+    private void searchByTitle() {
+        String title = titleInput.getText().trim();
+
+        try {
+            List<Song> results = songDAO.searchByTitle(title);
+            searchSongsTable.getItems().clear();
+            searchSongsTable.getItems().addAll(results);
+            titleInput.clear();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    public void searchByAuthorYear() {
+        String author = authorInput.getText().trim();
+        Integer year = yearInput.getText().isBlank() ? null : Integer.parseInt(yearInput.getText());
+
+        try {
+            List<Song> results = songDAO.searchByAuthorYear(author, year);
+            searchSongsTable.getItems().clear();
+            searchSongsTable.getItems().addAll(results);
+            authorInput.clear();
+            yearInput.clear();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

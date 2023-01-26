@@ -12,8 +12,6 @@ public interface SongDAO extends Remote {
 
     HashMap<Integer, Integer> getSongEmotions(int songId) throws RemoteException;
 
-    List<Song> searchByString(String searchString) throws RemoteException;
-
     int getSongEmotionsCount(int songId) throws RemoteException;
 
     List<SongEmotion> getSongEmotionsRating(int userId, int songId) throws RemoteException;
@@ -25,4 +23,8 @@ public interface SongDAO extends Remote {
     void setSongEmotion(int userId, int songId, int emotionId, int rating) throws RemoteException;
 
     void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) throws RemoteException;
+
+    List<Song> searchByAuthorYear(String authorText, Integer yearText) throws RemoteException;
+
+    List<Song> searchByTitle(String searchString) throws RemoteException;
 }

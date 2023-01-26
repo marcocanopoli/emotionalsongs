@@ -87,11 +87,11 @@ public class ClientApp extends Application {
         }
     }
 
-    public static void showSongsView(AnchorPane view) {
+    public static void showSearchView(AnchorPane view) {
         try {
             if (ClientApp.currentView == null || !ClientApp.currentView.equals("songs")) {
 
-                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/songsListView.fxml"));
+                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/searchView.fxml"));
                 VBox songsView = loader.load();
 //                songsListController = loader.getController();
 
