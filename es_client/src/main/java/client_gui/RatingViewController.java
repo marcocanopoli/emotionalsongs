@@ -9,9 +9,9 @@ import common.User;
 import common.interfaces.SongDAO;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -19,7 +19,19 @@ import java.util.List;
 
 public class RatingViewController {
     @FXML
-    public VBox emotionsBox;
+    private FlowPane emoContainer;
+    @FXML
+    public Label songAuthor;
+    @FXML
+    public Label songAlbum;
+    @FXML
+    public Label songTitle;
+    @FXML
+    public Label songYear;
+    @FXML
+    public Label songGenre;
+    @FXML
+    public Label songDuration;
 
     List<SongEmotion> songEmotions;
 
@@ -36,6 +48,13 @@ public class RatingViewController {
         songDAO = ClientApp.getSongDAO();
         songEmotions = songDAO.getSongEmotionsRating(user.getId(), song.id);
 
+        songAuthor.setText(song.getAuthor());
+        songAlbum.setText(song.getAlbum());
+        songTitle.setText(song.getTitle());
+        songYear.setText(song.getYear());
+        songGenre.setText(song.getGenre());
+        songDuration.setText(song.getDuration());
+
         List<Emotion> emotions = context.getEmotions();
 
         initEmotions(emotions);
@@ -43,46 +62,63 @@ public class RatingViewController {
 
     private void initEmotions(List<Emotion> emotions) {
 
-//        HBox labels = new HBox();
-//        labels.setSpacing(24);
-//        labels.setPadding(new Insets(0, 0, 0, 75));
+        for (int i = 0; i < emotions.size(); i++) {
 
-        for (Emotion emo : emotions) {
-            HBox emoBox = new HBox();
-            emoBox.setSpacing(15);
-            emoBox.setAlignment(Pos.CENTER_LEFT);
+            Emotion emo = emotions.get(i);
 
-            ToggleGroup group = new ToggleGroup();
+            GridPane emoBox = new GridPane();
+            emoBox.setHgap(20);
+            emoBox.setVgap(20);
+
+            ColumnConstraints column1 = new ColumnConstraints();
+            column1.setFillWidth(true);
+
+            ColumnConstraints column2 = new ColumnConstraints();
+            column2.setFillWidth(true);
+            column2.setHgrow(Priority.ALWAYS);
+            column2.setMinWidth(150);
+
+            RowConstraints secondRow = new RowConstraints();
+            secondRow.setValignment(VPos.CENTER);
+
+            RowConstraints firstRow = new RowConstraints();
+            firstRow.setValignment(VPos.CENTER);
+
+            emoBox.getColumnConstraints().add(column1);
+            emoBox.getColumnConstraints().add(column2);
+            emoBox.getRowConstraints().add(secondRow);
+            emoBox.getRowConstraints().add(firstRow);
 
             int rating = 0;
-            String notes = null;
+            String notes = "";
 
             for (SongEmotion se : songEmotions) {
                 if (se.emotionId() == (emo.id())) {
                     rating = se.rating();
-                    notes = se.notes();
+                    notes = se.notes() == null ? "" : se.notes();
                 }
             }
 
-            Label emoName = new Label(emo.name());
-            emoBox.getChildren().add(emoName);
+            ToggleGroup group = new ToggleGroup();
 
-            addResetBtn(group, emoBox, emo.id());
-            addToggles(group, emoBox, emo.id(), rating);
+            addRatingSection(group, emoBox, emo.id(), rating);
             addCommentSection(emoBox, emo.id(), notes);
 
-            emotionsBox.getChildren().add(emoName);
-//            TitledPane emoPane = new TitledPane();
-//            emoPane.setText(emo.name());
-//            emoPane.setContent(emoBox);
-            emotionsBox.getChildren().add(emoBox);
+            TitledPane emoPane = new TitledPane(emo.name(), emoBox);
+            emoPane.setMinWidth(400);
+            emoPane.setMaxWidth(400);
+            emoPane.setCollapsible(false);
+
+
+            emoContainer.getChildren().add(emoPane);
 
         }
 
     }
 
-    private void addResetBtn(ToggleGroup group, HBox emoBox, int emotionId) {
-        Button resetBtn = new Button("Reset");
+    private void addRatingSection(ToggleGroup group, GridPane emoBox, int emotionId, int rating) {
+        Button resetBtn = new Button("Reset rating");
+        resetBtn.setMaxWidth(Double.MAX_VALUE);
 
         resetBtn.setOnAction(event -> {
             try {
@@ -92,11 +128,14 @@ public class RatingViewController {
                 throw new RuntimeException(e);
             }
         });
+        resetBtn.setDisable(rating == 0);
 
-        emoBox.getChildren().add(resetBtn);
-    }
+        emoBox.add(resetBtn, 1, 0);
 
-    private void addToggles(ToggleGroup group, HBox emoBox, int emotionId, int rating) {
+        HBox radioGroup = new HBox();
+        radioGroup.setSpacing(10);
+        radioGroup.setAlignment(Pos.CENTER_LEFT);
+
         for (int i = 1; i < 6; i++) {
 
             group.selectedToggleProperty().addListener((observable, oldVal, newVal) ->
@@ -121,32 +160,31 @@ public class RatingViewController {
             radio.setToggleGroup(group);
             radio.setSelected(rating == i);
 
-            emoBox.getChildren().add(radio);
+            radioGroup.getChildren().add(radio);
         }
+        group.selectedToggleProperty().addListener((obs, oldVal, newVal) ->
+                resetBtn.setDisable(group.getSelectedToggle() == null));
+
+        emoBox.add(radioGroup, 0, 0);
     }
 
-    private void addCommentSection(HBox emoBox, int emotionId, String notes) {
+    private void addCommentSection(GridPane emoBox, int emotionId, String notes) {
 
-        VBox notesBox = new VBox();
-        notesBox.setSpacing(10);
-
-        ButtonBar btnBar = new ButtonBar();
-
-        Button commentBtn = new Button("Salva commento");
-        commentBtn.setDisable(true);
-
-        Button resetCommentBtn = new Button("Reset commento");
-        commentBtn.setDisable(true);
+        Button commentBtn = new Button();
+        commentBtn.setMaxWidth(Double.MAX_VALUE);
+        commentBtn.setText(notes.isBlank() ? "Reset commento" : "Inserisci commento");
 
         TextArea comment = new TextArea();
         comment.setText(notes);
         comment.setWrapText(true);
-        comment.setPromptText("Inserisci commento");
+        comment.setPromptText("Inserisci note riguardo l'emozione");
         comment.setPrefWidth(200);
         comment.setPrefHeight(50);
 
-        comment.setTextFormatter(new TextFormatter<>(change ->
-                change.getControlNewText().length() <= 256 ? change : null));
+        comment.setTextFormatter(new TextFormatter<>(change -> {
+            commentBtn.setText(change.getControlNewText().isBlank() ? "Reset commento" : "Inserisci commento");
+            return change.getControlNewText().length() <= 256 ? change : null;
+        }));
 
 
         commentBtn.setOnAction(event -> {
@@ -157,11 +195,7 @@ public class RatingViewController {
             }
         });
 
-
-        comment.textProperty().addListener((observable, oldValue, newValue) ->
-                commentBtn.setDisable(newValue.isEmpty()));
-
-        emoBox.getChildren().add(commentBtn);
-        emoBox.getChildren().add(comment);
+        emoBox.add(commentBtn, 1, 1);
+        emoBox.add(comment, 0, 1);
     }
 }

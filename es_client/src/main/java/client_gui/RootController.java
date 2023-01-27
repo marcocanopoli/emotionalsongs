@@ -25,6 +25,8 @@ public class RootController {
     @FXML
     public Label userLabel;
     @FXML
+    public AnchorPane window;
+    @FXML
     private Button menuSearchBtn;
     @FXML
     public Button menuPlaylistsBtn;
@@ -32,6 +34,7 @@ public class RootController {
     private AnchorPane mainView;
 
     public void initialize() throws RemoteException {
+        ClientApp.setMainView(mainView);
         ClientContext context = ClientContext.getInstance();
 
         PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
@@ -62,14 +65,14 @@ public class RootController {
         });
 
 
-        ClientApp.showSearchView(mainView);
+        ClientApp.showSearchView();
 
         menuSearchBtn.setOnAction(event ->
-                ClientApp.showSearchView(mainView)
+                ClientApp.showSearchView()
         );
 
         menuPlaylistsBtn.setOnAction(event ->
-                ClientApp.showPlaylistsView(mainView)
+                ClientApp.showPlaylistsView()
         );
 
         signupBtn.setOnAction(event ->

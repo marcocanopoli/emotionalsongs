@@ -61,7 +61,7 @@ public class SearchViewController {
         yearInput.textProperty().addListener((observable, oldValue, newValue) -> {
             byTitleBtn.setDefaultButton(false);
             byAuthorYearBtn.setDefaultButton(true);
-            byAuthorYearBtn.setDisable(newValue.length() != 4 && titleInput.getText().isBlank());
+            byAuthorYearBtn.setDisable((newValue.length() > 0 && newValue.length() < 4) || authorInput.getText().isBlank());
         });
 
         yearInput.setTextFormatter(new TextFormatter<>(change ->
@@ -100,37 +100,35 @@ public class SearchViewController {
 
     private void addEmotionsBtns() {
 
-        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
-                new TableCell<>() {
-
-                    final HBox btnBox = new HBox();
-                    private final Button viewBtn = new Button("Vedi dettagli");
-
-                    {
-                        viewBtn.setOnAction(event1 -> {
-                            Song song = getTableView().getItems().get(getIndex());
-                            context.setCurrentSong(song);
-                            ClientApp.createStage("songInfoView.fxml", "Info canzone", true);
-                        });
-
-                        btnBox.getChildren().add(viewBtn);
-                        btnBox.setAlignment(Pos.CENTER);
-                    }
-
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btnBox);
-                        }
-                    }
-                };
-
-
         TableColumn<Song, Void> emotionColumn = new TableColumn<>("Emozioni");
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
+            final HBox btnBox = new HBox();
+
+            final Button viewBtn = new Button("Vedi dettagli");
+
+            {
+                viewBtn.setOnAction(event1 -> {
+                    Song song = searchSongsTable.getItems().get(getIndex());
+                    context.setCurrentSong(song);
+                    ClientApp.createStage("songInfoView.fxml", "Info canzone", true);
+                });
+
+                btnBox.getChildren().add(viewBtn);
+                btnBox.setAlignment(Pos.CENTER);
+            }
+
+            @Override
+            public void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnBox);
+                }
+            }
+        };
+
+
         emotionColumn.setMinWidth(120);
         emotionColumn.setCellFactory(cellFactory);
         searchSongsTable.getColumns().add(emotionColumn);
@@ -208,7 +206,7 @@ public class SearchViewController {
             List<Song> results = songDAO.searchByTitle(title);
             searchSongsTable.getItems().clear();
             searchSongsTable.getItems().addAll(results);
-            titleInput.clear();
+            if (!results.isEmpty()) titleInput.clear();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -223,8 +221,8 @@ public class SearchViewController {
             List<Song> results = songDAO.searchByAuthorYear(author, year);
             searchSongsTable.getItems().clear();
             searchSongsTable.getItems().addAll(results);
-            authorInput.clear();
-            yearInput.clear();
+            if (!results.isEmpty()) authorInput.clear();
+            if (!results.isEmpty()) yearInput.clear();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

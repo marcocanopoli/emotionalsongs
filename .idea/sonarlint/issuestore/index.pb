@@ -23,8 +23,6 @@ _
 /es_common/src/main/java/common/SongEmotion.java,a/f/af380b466804acaafc31328dde40f3706a6a91d7
 A
 es_client/pom.xml,b/6/b6c6805b52b7370d0d9f0376805732577264c513
-f
-6es_client/src/main/java/client_gui/RootController.java,f/2/f2902d8f943ac319447c8a8069f37de974809d3c
 X
 (es_client/src/main/java/module-info.java,4/5/45b7b4fa89fb5321c740d63eb45c09c3f8b0daee
 `
@@ -33,8 +31,6 @@ X
 (es_common/src/main/java/common/User.java,2/1/21663498018d26701f77b8648d0d1f19016bfa1d
 f
 6es_server/src/main/java/server_gui/RootController.java,a/5/a5e80a55580b996d9c27d9078fdeb4729ebbe0ad
-l
-<es_client/src/main/java/client_gui/RatingViewController.java,f/9/f942fcb0a72ae853fa97e5c58c3a413bcc985a3c
 A
 es_server/pom.xml,a/5/a553adb53d9f0bb560e8daf1fd353d831bd6d106
 7
@@ -43,3 +39,19 @@ A
 -es_server/src/main/java/server/ServerApp.java,e/1/e1294e8c054a4d0813a5c06026a27fe37c807e74
 A
 es_common/pom.xml,0/4/04092683b5012c975583047e7ff2b26274357895
+_
+/es_server/src/main/java/database/DBManager.java,1/8/188f93222d20c1cf0d601ecdc6f9b6b57c340d83
+>
+es_client/mvnw,c/b/cb6c668552a478b93429644ffb47aa1cf9beb5f5
+B
+es_client/mvnw.cmd,f/6/f6366ee2bdbc64c8080fd42410f1b58ee1988066
+m
+=es_client/src/main/java/client_gui/NewPlaylistController.java,9/4/94533054ed457b8e1b23da47a9fd41dcb8185744
+g
+7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
+e
+5es_server/src/main/java/database/PlaylistDAOImpl.java,b/d/bd9a62767b6d195a9d7c2d00b859c194f8f3811b
+a
+1es_server/src/main/java/database/UserDAOImpl.java,8/8/886bed884123c66f83ae9affc31aceba9021c841
+^
+.es_server/src/main/java/server/ServerMain.java,1/c/1cef74c066033dc8bcaa16f096629770ee19348e

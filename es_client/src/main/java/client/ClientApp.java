@@ -22,6 +22,7 @@ public class ClientApp extends Application {
 
     private static Stage window;
     public static String currentView;
+    private static AnchorPane mainView;
     static PlaylistDAO playlistDAO;
     static EmotionDAO emotionDAO;
     static SongDAO songDAO;
@@ -44,12 +45,14 @@ public class ClientApp extends Application {
         return userDAO;
     }
 
+    public static void setMainView(AnchorPane view) {
+        mainView = view;
+    }
+
 
     @Override
     public void start(Stage stage) {
         ClientApp.window = stage;
-//        ClientApp.window.setMinHeight(850);
-//        ClientApp.window.setMinWidth(1064);
         ClientApp.window.setTitle("Emotional Songs");
 
         initLayout("rootLayout");
@@ -87,34 +90,33 @@ public class ClientApp extends Application {
         }
     }
 
-    public static void showSearchView(AnchorPane view) {
+    public static void showSearchView() {
         try {
-            if (ClientApp.currentView == null || !ClientApp.currentView.equals("songs")) {
+            if (currentView == null || !currentView.equals("songs")) {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/searchView.fxml"));
                 VBox songsView = loader.load();
 //                songsListController = loader.getController();
 
-                view.getChildren().clear();
-                view.getChildren().add(songsView);
-                ClientApp.currentView = "songs";
+                mainView.getChildren().clear();
+                mainView.getChildren().add(songsView);
+                currentView = "songs";
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void showPlaylistsView(AnchorPane view) {
+    public static void showPlaylistsView() {
         try {
-            if (ClientApp.currentView == null || !ClientApp.currentView.equals("playlists")) {
+            if (currentView == null || !currentView.equals("playlists")) {
 
                 FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/playlistsView.fxml"));
                 VBox playlistsView = loader.load();
-//                playlistsController = loader.getController();
 
-                view.getChildren().clear();
-                view.getChildren().add(playlistsView);
-                ClientApp.currentView = "playlists";
+                mainView.getChildren();
+                mainView.getChildren().add(playlistsView);
+                currentView = "playlists";
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

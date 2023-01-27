@@ -1,3 +1,7 @@
+* {
+  -fx-default-button: peachpuff;
+  }
+
 .sidebar-btn {
   -fx-background-color: none;
 }
@@ -7,9 +11,11 @@
 }
 
 .border-error {
-	-fx-background-color: #B22222, #FFB6C1;
-	-fx-background-insets: 0, 0 0 1 0;
+  -fx-background-color: #B22222, #FFB6C1;
+  -fx-background-insets: 0, 0 0 1 0;
 }
+
 .border-error:focused {
-	-fx-background-color: #B22222, white;
+  -fx-background-color: #B22222, white;
 }
+
