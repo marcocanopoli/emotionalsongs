@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -36,14 +35,26 @@ public class PlaylistsController {
     @FXML
     private Button newPlaylistBtn;
 
-    public void initialize() throws IOException {
-        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+    public void initialize() {
         ClientContext context = ClientContext.getInstance();
 
-        addTableEmotionAddBtn(context);
+        context.addPropertyChangeListener(e -> {
+            if (e.getPropertyName().equals("user")) {
 
-//        initSongsTable();
-        initPlaylistList(playlistDAO, context);
+                User newUser = (User) e.getNewValue();
+                PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+
+                if (newUser != null) {
+                    try {
+                        initPlaylistList(playlistDAO, context);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        addTableEmotionAddBtn(context);
 
         newPlaylistBtn.setOnAction(event -> {
             ClientApp.createStage("newPlaylistView.fxml", "Nuova playlist", true);

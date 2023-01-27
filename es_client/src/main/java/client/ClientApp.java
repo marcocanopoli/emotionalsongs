@@ -6,6 +6,7 @@ import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -17,16 +18,18 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Objects;
 
 public class ClientApp extends Application {
 
     private static Stage window;
-    public static String currentView;
     private static AnchorPane mainView;
-    static PlaylistDAO playlistDAO;
-    static EmotionDAO emotionDAO;
-    static SongDAO songDAO;
-    static UserDAO userDAO;
+    private static VBox searchView;
+    private static VBox playlistsView;
+    private static PlaylistDAO playlistDAO;
+    private static EmotionDAO emotionDAO;
+    private static SongDAO songDAO;
+    private static UserDAO userDAO;
 
 
     public static SongDAO getSongDAO() {
@@ -52,75 +55,74 @@ public class ClientApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        ClientApp.window = stage;
-        ClientApp.window.setTitle("Emotional Songs");
-
-        initLayout("rootLayout");
-    }
-
-    public static void initLayout(String layout) {
+        setStage(stage);
+        window.setTitle("Emotional Songs");
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("/client_gui/" + layout + ".fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            ClientApp.window.setScene(scene);
-            ClientApp.window.show();
-            ClientApp.window.centerOnScreen();
+            Parent root = FXMLLoader.load(
+                    Objects.requireNonNull(
+                            ClientApp.class.getResource("/client_gui/rootLayout.fxml")));
+            Scene scene = new Scene(root);
+
+            window.setScene(scene);
+            window.show();
+            window.centerOnScreen();
+
+            createViews();
+            showSearchView();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static Stage createStage(String resourceName, String title, boolean isModal) {
+    public static void setStage(Stage stage) {
+        window = stage;
+    }
+
+    public static void createStage(String resourceName, String title, boolean isModal) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("/client_gui/" + resourceName));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
 
-            stage.initOwner(ClientApp.window);
-            stage.initModality(isModal ? Modality.WINDOW_MODAL : Modality.NONE);
+            stage.initOwner(window);
+            stage.initModality(isModal ? Modality.APPLICATION_MODAL : Modality.NONE);
             stage.setTitle(title);
-            stage.setScene(scene);
             stage.setResizable(false);
-            stage.show();
-            return stage;
+            stage.setScene(scene);
+
+            if (isModal) {
+                stage.showAndWait();
+            } else {
+                stage.show();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
     public static void showSearchView() {
-        try {
-            if (currentView == null || !currentView.equals("songs")) {
-
-                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/searchView.fxml"));
-                VBox songsView = loader.load();
-//                songsListController = loader.getController();
-
-                mainView.getChildren().clear();
-                mainView.getChildren().add(songsView);
-                currentView = "songs";
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        mainView.getChildren().clear();
+        mainView.getChildren().add(ClientApp.searchView);
     }
 
     public static void showPlaylistsView() {
-        try {
-            if (currentView == null || !currentView.equals("playlists")) {
+        mainView.getChildren().clear();
+        mainView.getChildren().add(ClientApp.playlistsView);
+    }
 
-                FXMLLoader loader = new FXMLLoader(ClientApp.class.getResource("/client_gui/playlistsView.fxml"));
-                VBox playlistsView = loader.load();
+    public static void createViews() throws IOException {
+        playlistsView = FXMLLoader.load(
+                Objects.requireNonNull(
+                        ClientApp.class.getResource("/client_gui/playlistsView.fxml")));
+        System.out.println(playlistsView);
 
-                mainView.getChildren();
-                mainView.getChildren().add(playlistsView);
-                currentView = "playlists";
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        searchView = FXMLLoader.load(
+                Objects.requireNonNull(
+                        ClientApp.class.getResource("/client_gui/searchView.fxml")));
+        System.out.println(searchView);
     }
 
     public static void appStart(String[] args) throws RemoteException, NotBoundException {

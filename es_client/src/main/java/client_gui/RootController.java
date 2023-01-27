@@ -56,7 +56,7 @@ public class RootController {
                         throw new RuntimeException(ex);
                     }
                 }
-                userLabel.setText(newUser != null ? "Ciao, " + newUser.getFirstName() : "");
+                userLabel.setText(newUser != null ? "Ciao, " + newUser.getUsername() : "");
                 menuPlaylistsBtn.setDisable(newUser == null);
                 loginBtn.setDisable(newUser != null);
                 signupBtn.setDisable(newUser != null);
@@ -64,8 +64,6 @@ public class RootController {
             }
         });
 
-
-        ClientApp.showSearchView();
 
         menuSearchBtn.setOnAction(event ->
                 ClientApp.showSearchView()

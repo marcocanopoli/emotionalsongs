@@ -45,12 +45,8 @@ _
 es_client/mvnw,c/b/cb6c668552a478b93429644ffb47aa1cf9beb5f5
 B
 es_client/mvnw.cmd,f/6/f6366ee2bdbc64c8080fd42410f1b58ee1988066
-m
-=es_client/src/main/java/client_gui/NewPlaylistController.java,9/4/94533054ed457b8e1b23da47a9fd41dcb8185744
 g
 7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
-e
-5es_server/src/main/java/database/PlaylistDAOImpl.java,b/d/bd9a62767b6d195a9d7c2d00b859c194f8f3811b
 a
 1es_server/src/main/java/database/UserDAOImpl.java,8/8/886bed884123c66f83ae9affc31aceba9021c841
 ^
