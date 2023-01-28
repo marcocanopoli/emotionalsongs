@@ -51,3 +51,17 @@ a
 1es_server/src/main/java/database/UserDAOImpl.java,8/8/886bed884123c66f83ae9affc31aceba9021c841
 ^
 .es_server/src/main/java/server/ServerMain.java,1/c/1cef74c066033dc8bcaa16f096629770ee19348e
+a
+1es_server/src/main/java/database/SongDAOImpl.java,c/8/c8bad5435f14ba794999c5dbdcab31bbd0424321
+f
+6es_common/src/main/java/common/interfaces/SongDAO.java,6/1/61b161102bbca51ca31145b68bfa7d256a656314
+h
+8es_client/src/main/java/client_gui/SignupController.java,5/9/5968c10f5d5166638c6541a62cffc496322624f1
+l
+<es_client/src/main/java/client_gui/SongsTableController.java,d/1/d1976cd5950793b446f00d4262622184e8aac5f0
+l
+<es_client/src/main/java/client_gui/SearchViewController.java,2/d/2d430610448c30d8ec431b84ee76a4e5879e3b70
+j
+:es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639
+l
+<es_client/src/main/java/client_gui/RatingViewController.java,f/9/f942fcb0a72ae853fa97e5c58c3a413bcc985a3c

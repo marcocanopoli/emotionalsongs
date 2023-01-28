@@ -7,9 +7,15 @@ import common.Playlist;
 import common.User;
 import common.interfaces.EmotionDAO;
 import common.interfaces.PlaylistDAO;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
 import java.rmi.RemoteException;
@@ -26,6 +32,8 @@ public class RootController {
     public Label userLabel;
     @FXML
     public AnchorPane window;
+    @FXML
+    public ListView<Playlist> playlistsList;
     @FXML
     private Button menuSearchBtn;
     @FXML
@@ -50,8 +58,8 @@ public class RootController {
 
                 if (newUser != null) {
                     try {
-                        List<Playlist> playlists = playlistDAO.getUserPlaylists(newUser.getId());
-                        context.setUserPlaylists(playlists);
+                        initPlaylistList(playlistDAO, context);
+                        playlistsList.setVisible(true);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -64,6 +72,7 @@ public class RootController {
             }
         });
 
+        playlistsList.setVisible(false);
 
         menuSearchBtn.setOnAction(event ->
                 ClientApp.showSearchView()
@@ -82,7 +91,39 @@ public class RootController {
         );
 
         logoutBtn.setOnAction(event -> {
+            context.setCurrentPlaylist(null);
             context.setUser(null);
+            playlistsList.setVisible(false);
+        });
+    }
+
+    private void initPlaylistList(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
+        User user = context.getUser();
+        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
+
+        context.setUserPlaylists(playlists);
+        ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
+
+        userPlaylists.addListener((ListChangeListener.Change<? extends Playlist> playlist) ->
+                playlistsList.setItems(FXCollections.observableArrayList(userPlaylists))
+        );
+
+        playlistsList.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Playlist playlist, boolean empty) {
+                super.updateItem(playlist, empty);
+                setText(empty ? "" : playlist.getName());
+            }
+        });
+
+        playlistsList.prefHeightProperty().bind(Bindings.size(userPlaylists).multiply(36).add(2));
+
+        playlistsList.setItems(FXCollections.observableArrayList(userPlaylists));
+
+        playlistsList.setOnMouseClicked(playlist -> {
+            Playlist current = playlistsList.getSelectionModel().getSelectedItem();
+            if (current != null) context.setCurrentPlaylist(current);
+            ClientApp.showPlaylistsView();
         });
     }
 }

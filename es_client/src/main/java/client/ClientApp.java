@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -25,7 +26,7 @@ public class ClientApp extends Application {
     private static Stage window;
     private static AnchorPane mainView;
     private static VBox searchView;
-    private static VBox playlistsView;
+    private static TabPane playlistsView;
     private static PlaylistDAO playlistDAO;
     private static EmotionDAO emotionDAO;
     private static SongDAO songDAO;
@@ -64,6 +65,10 @@ public class ClientApp extends Application {
                             ClientApp.class.getResource("/client_gui/rootLayout.fxml")));
             Scene scene = new Scene(root);
 
+//            scene.getStylesheets().add(
+//                    Objects.requireNonNull(
+//                            ClientApp.class.getResource("/client_gui/bootstrap3.css")).toExternalForm());
+
             window.setScene(scene);
             window.show();
             window.centerOnScreen();
@@ -91,6 +96,8 @@ public class ClientApp extends Application {
             stage.setTitle(title);
             stage.setResizable(false);
             stage.setScene(scene);
+            stage.setAlwaysOnTop(true);
+
 
             if (isModal) {
                 stage.showAndWait();

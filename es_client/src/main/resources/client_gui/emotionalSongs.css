@@ -19,3 +19,7 @@
   -fx-background-color: #B22222, white;
 }
 
+.list-cell:empty {
+    -fx-opacity: 0;
+}
+

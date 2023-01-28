@@ -4,11 +4,7 @@ import client.ClientApp;
 import client.ClientContext;
 import common.Playlist;
 import common.Song;
-import common.User;
 import common.interfaces.PlaylistDAO;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -28,25 +24,24 @@ public class PlaylistsController {
     public Label playlistDuration;
     @FXML
     private TableView<Song> playlistSongsTable;
-    @FXML
-    private TitledPane currentPlaylistPane;
-    @FXML
-    private ListView<Playlist> playlistsList;
-    @FXML
-    private Button newPlaylistBtn;
+//    @FXML
+//    private TitledPane currentPlaylistPane;
+//    @FXML
+//    private ListView<Playlist> playlistsList;
+//    @FXML
+//    private Button newPlaylistBtn;
 
     public void initialize() {
         ClientContext context = ClientContext.getInstance();
 
         context.addPropertyChangeListener(e -> {
-            if (e.getPropertyName().equals("user")) {
+            if (e.getPropertyName().equals("playlist")) {
 
-                User newUser = (User) e.getNewValue();
-                PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+                Playlist currentPlaylist = (Playlist) e.getNewValue();
 
-                if (newUser != null) {
+                if (currentPlaylist != null) {
                     try {
-                        initPlaylistList(playlistDAO, context);
+                        setCurrentPlaylist(currentPlaylist);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -55,14 +50,10 @@ public class PlaylistsController {
         });
 
         addTableEmotionAddBtn(context);
-
-        newPlaylistBtn.setOnAction(event -> {
-            ClientApp.createStage("newPlaylistView.fxml", "Nuova playlist", true);
-        });
     }
 
-    private void setCurrentPlaylist(PlaylistDAO playlistDAO, Playlist playlist) throws RemoteException {
-
+    private void setCurrentPlaylist(Playlist playlist) throws RemoteException {
+        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
         List<Song> songs = playlistDAO.getPlaylistSongs(playlist.getId());
         Integer duration = 0;
 
@@ -76,49 +67,10 @@ public class PlaylistsController {
         playlistSongs.setText(String.valueOf(songs.size()));
         playlistDuration.setText(durationString);
 
-        currentPlaylistPane.setExpanded(true);
-
         playlistSongsTable.getItems().clear();
         playlistSongsTable.getItems().addAll(songs);
 
 
-    }
-
-
-    private void initPlaylistList(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
-        User user = context.getUser();
-        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
-
-        context.setUserPlaylists(playlists);
-
-        ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
-
-        userPlaylists.addListener((ListChangeListener.Change<? extends Playlist> playlist) ->
-                playlistsList.setItems(FXCollections.observableArrayList(userPlaylists))
-        );
-
-        playlistsList.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(Playlist playlist, boolean empty) {
-                super.updateItem(playlist, empty);
-                setText(empty ? "" : playlist.getName());
-            }
-        });
-
-
-//        playlistsList.getItems().clear();
-        playlistsList.setItems(FXCollections.observableArrayList(userPlaylists));
-
-        playlistsList.setOnMouseClicked(playlist -> {
-            if (playlistsList.getSelectionModel().getSelectedItem() != null) {
-
-                try {
-                    setCurrentPlaylist(playlistDAO, playlistsList.getSelectionModel().getSelectedItem());
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
     }
 
     private void addTableEmotionAddBtn(ClientContext context) {

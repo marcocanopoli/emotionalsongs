@@ -17,6 +17,7 @@ public final class ClientContext {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<Emotion> emotions;
     private Song currentSong;
+    private Playlist currentPlaylist;
     private User user;
 
     ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
@@ -50,6 +51,16 @@ public final class ClientContext {
 
     public Song getCurrentSong() {
         return currentSong;
+    }
+
+    public void setCurrentPlaylist(Playlist playlist) {
+        Playlist oldPlaylist = currentPlaylist;
+        currentPlaylist = playlist;
+        support.firePropertyChange("playlist", oldPlaylist, playlist);
+    }
+
+    public Playlist getCurrentPlaylist() {
+        return currentPlaylist;
     }
 
     public void setUser(User newUser) {

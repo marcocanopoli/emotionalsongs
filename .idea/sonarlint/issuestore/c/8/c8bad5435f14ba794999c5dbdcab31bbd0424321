@@ -1,0 +1,18 @@
+
+`
+java:S1192è"IDefine a constant instead of duplicating this literal "duration" 4 times.(œÂ…Á
+
+java:S1192"iDefine a constant instead of duplicating this literal "JOIN emotions E ON SE.emotion_id = E.id " 3 times.(½ôúƒ
+r
+java:S1192"WDefine a constant instead of duplicating this literal "FROM song_emotions SE " 4 times.(èëêéúÿÿÿÿ
+c
+java:S11926"HDefine a constant instead of duplicating this literal "Error: " 9 times.(Ù¸—ûÿÿÿÿ
+d
+java:S1192!"NDefine a constant instead of duplicating this literal "WHERE S.id = " 3 times.(Í¹¥¡
+~
+java:S1192"cDefine a constant instead of duplicating this literal "JOIN songs S ON S.id = SE.song_id " 3 times.(ØÏÀóøÿÿÿÿ
+f	java:S117ú"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ú¾Õ5
+g	java:S117ü"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( ı¯¢
+V	java:S106ù"9Replace this use of System.out or System.err by a logger.(£‘Òè8å‚´İŞ0
+F
+java:S2695†"/This "PreparedStatement" only has 1 parameters.(…ü¡»
