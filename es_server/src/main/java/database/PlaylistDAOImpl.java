@@ -21,26 +21,37 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
-    public Integer addSongToPlaylist(int playlistId, int songId) throws RemoteException {
+    public int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) throws RemoteException {
         Connection conn = ServerApp.getConnection();
         final String QUERY = "INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?,?)" +
                 "ON CONFLICT ON CONSTRAINT playlist_songs_id DO NOTHING";
 
         try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
 
-            stmt.setInt(1, playlistId);
-            stmt.setInt(2, songId);
+            for (int id : songIds) {
+                stmt.setInt(1, playlistId);
+                stmt.setInt(2, id);
+                stmt.addBatch();
+            }
+            conn.setAutoCommit(false);
 
-            return stmt.executeUpdate();
+            int[] affected = stmt.executeBatch();
+            conn.commit();
+
+            conn.setAutoCommit(true);
+
+            return affected;
+
 
         } catch (SQLException ex) {
             ServerLogger.error("ERROR: " + ex);
-            return null;
+            return new int[0];
         }
+
     }
 
     @Override
-    public Playlist createNewPlaylist(int userId, String name) throws RemoteException {
+    public Playlist createNewPlaylist(int userId, String name, List<Song> songs) throws RemoteException {
         Connection conn = ServerApp.getConnection();
         final String QUERY = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
 

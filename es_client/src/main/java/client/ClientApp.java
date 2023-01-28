@@ -117,6 +117,7 @@ public class ClientApp extends Application {
 
     public static void showPlaylistsView() {
         mainView.getChildren().clear();
+        ClientApp.playlistsView.getSelectionModel().select(0);
         mainView.getChildren().add(ClientApp.playlistsView);
     }
 

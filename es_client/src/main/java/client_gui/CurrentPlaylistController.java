@@ -14,7 +14,7 @@ import javafx.util.Callback;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public class PlaylistsController {
+public class CurrentPlaylistController {
 
     @FXML
     public Label playlistName;
@@ -24,12 +24,6 @@ public class PlaylistsController {
     public Label playlistDuration;
     @FXML
     private TableView<Song> playlistSongsTable;
-//    @FXML
-//    private TitledPane currentPlaylistPane;
-//    @FXML
-//    private ListView<Playlist> playlistsList;
-//    @FXML
-//    private Button newPlaylistBtn;
 
     public void initialize() {
         ClientContext context = ClientContext.getInstance();
@@ -105,10 +99,10 @@ public class PlaylistsController {
                 };
 
 
-        TableColumn<Song, Void> emotionColumn = new TableColumn<>("Emozioni");
-        emotionColumn.setMinWidth(150);
-        emotionColumn.setCellFactory(cellFactory);
-        playlistSongsTable.getColumns().add(emotionColumn);
+        TableColumn<Song, Void> emotionsAddColumn = new TableColumn<>("Inserisci");
+        emotionsAddColumn.setMinWidth(150);
+        emotionsAddColumn.setCellFactory(cellFactory);
+        playlistSongsTable.getColumns().add(emotionsAddColumn);
     }
 }
 
