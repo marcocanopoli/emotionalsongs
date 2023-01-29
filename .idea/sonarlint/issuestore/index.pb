@@ -51,9 +51,5 @@ j
 :es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639
 l
 <es_client/src/main/java/client_gui/RatingViewController.java,f/9/f942fcb0a72ae853fa97e5c58c3a413bcc985a3c
-g
-7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
-q
-Aes_client/src/main/java/client_gui/CurrentPlaylistController.java,0/0/0012896fea86167167e6df54fba12f55944f0c54
 a
 1es_server/src/main/java/database/UserDAOImpl.java,8/8/886bed884123c66f83ae9affc31aceba9021c841

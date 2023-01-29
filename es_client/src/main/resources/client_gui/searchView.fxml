@@ -8,7 +8,7 @@
       fx:controller="client_gui.SearchViewController">
     <children>
         <fx:include fx:id="searchSongsPane"
-                    source="components/searchSongPane.fxml" VBox.vgrow="ALWAYS"/>
+                    source="components/searchSongPane.fxml" VBox.vgrow="NEVER"/>
         <fx:include fx:id="searchSongsTable"
                     source="components/songsTable.fxml" VBox.vgrow="ALWAYS"/>
     </children>

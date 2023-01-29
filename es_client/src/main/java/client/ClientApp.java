@@ -8,9 +8,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -20,6 +19,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientApp extends Application {
 
@@ -58,6 +58,8 @@ public class ClientApp extends Application {
     public void start(Stage stage) {
         setStage(stage);
         window.setTitle("Emotional Songs");
+        window.setMinWidth(1280);
+        window.setMinHeight(800);
 
         try {
             Parent root = FXMLLoader.load(
@@ -65,9 +67,9 @@ public class ClientApp extends Application {
                             ClientApp.class.getResource("/client_gui/rootLayout.fxml")));
             Scene scene = new Scene(root);
 
-//            scene.getStylesheets().add(
-//                    Objects.requireNonNull(
-//                            ClientApp.class.getResource("/client_gui/bootstrap3.css")).toExternalForm());
+            scene.getStylesheets().add(
+                    Objects.requireNonNull(
+                            ClientApp.class.getResource("/client_gui/emotionalSongs.css")).toExternalForm());
 
             window.setScene(scene);
             window.show();
@@ -110,6 +112,47 @@ public class ClientApp extends Application {
         }
     }
 
+    public static boolean createAlert(Alert.AlertType type, String title, String headerText, String message, boolean wait, boolean visibleConcel) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(message);
+
+        Region spacer = new Region();
+        ButtonBar.setButtonData(spacer, ButtonBar.ButtonData.BIG_GAP);
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        alert.getDialogPane().applyCss();
+        HBox hboxDialogPane = (HBox) alert.getDialogPane().lookup(".container");
+        hboxDialogPane.getChildren().add(spacer);
+
+        AtomicBoolean res = new AtomicBoolean(false);
+
+        if (!visibleConcel) {
+            final Button cancelBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancelBtn.setVisible(false);
+        }
+
+        if (wait) {
+            alert.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> res.set(true));
+        } else {
+            alert.show();
+        }
+
+        return res.get();
+    }
+
+    public static void createViews() throws IOException {
+        playlistsView = FXMLLoader.load(
+                Objects.requireNonNull(
+                        ClientApp.class.getResource("/client_gui/playlistsView.fxml")));
+
+        searchView = FXMLLoader.load(
+                Objects.requireNonNull(
+                        ClientApp.class.getResource("/client_gui/searchView.fxml")));
+    }
+
     public static void showSearchView() {
         mainView.getChildren().clear();
         mainView.getChildren().add(ClientApp.searchView);
@@ -119,18 +162,6 @@ public class ClientApp extends Application {
         mainView.getChildren().clear();
         ClientApp.playlistsView.getSelectionModel().select(0);
         mainView.getChildren().add(ClientApp.playlistsView);
-    }
-
-    public static void createViews() throws IOException {
-        playlistsView = FXMLLoader.load(
-                Objects.requireNonNull(
-                        ClientApp.class.getResource("/client_gui/playlistsView.fxml")));
-        System.out.println(playlistsView);
-
-        searchView = FXMLLoader.load(
-                Objects.requireNonNull(
-                        ClientApp.class.getResource("/client_gui/searchView.fxml")));
-        System.out.println(searchView);
     }
 
     public static void appStart(String[] args) throws RemoteException, NotBoundException {

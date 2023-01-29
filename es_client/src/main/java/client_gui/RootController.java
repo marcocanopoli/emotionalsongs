@@ -12,10 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.rmi.RemoteException;
@@ -59,16 +56,19 @@ public class RootController {
                 if (newUser != null) {
                     try {
                         initPlaylistList(playlistDAO, context);
-                        playlistsList.setVisible(true);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
+                } else {
+                    context.setCurrentPlaylist(null);
+                    ClientApp.showSearchView();
                 }
                 userLabel.setText(newUser != null ? "Ciao, " + newUser.getUsername() : "");
                 menuPlaylistsBtn.setDisable(newUser == null);
                 loginBtn.setDisable(newUser != null);
                 signupBtn.setDisable(newUser != null);
                 logoutBtn.setDisable(newUser == null);
+                playlistsList.setVisible(newUser != null);
             }
         });
 
@@ -91,9 +91,10 @@ public class RootController {
         );
 
         logoutBtn.setOnAction(event -> {
-            context.setCurrentPlaylist(null);
-            context.setUser(null);
-            playlistsList.setVisible(false);
+            final String msg = "Sei sicuro di voler uscire dal tuo account?";
+            final boolean res = ClientApp.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true, true);
+            if (res) context.setUser(null);
+
         });
     }
 

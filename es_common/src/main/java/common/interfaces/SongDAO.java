@@ -12,7 +12,7 @@ public interface SongDAO extends Remote {
 
     HashMap<Integer, Integer> getSongEmotions(int songId) throws RemoteException;
 
-    HashMap<String, String> getAlbums(String album) throws RemoteException;
+    List<Song> getAlbums(String album) throws RemoteException;
 
     List<String> getAuthors(String author) throws RemoteException;
 
@@ -32,5 +32,5 @@ public interface SongDAO extends Remote {
 
     List<Song> searchByTitle(String searchString) throws RemoteException;
 
-    List<Song> searchByAlbum(String albumText) throws RemoteException;
+    List<Song> searchByAlbum(String authorText, String albumText) throws RemoteException;
 }

@@ -2,6 +2,7 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
+import client_gui.components.SongsTableController;
 import common.Playlist;
 import common.Song;
 import common.User;
@@ -20,9 +21,7 @@ import javafx.util.Callback;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NewPlaylistController {
 
@@ -45,90 +44,96 @@ public class NewPlaylistController {
     @FXML
     private ListView<String> authorsList;
     @FXML
-    private ListView<String> albumsList;
+    private TableView<Song> albumsTable;
     @FXML
-    private TableView<Song> songsTable;
+    private TableView<Song> byTitleSongsTable;
     @FXML
     private TableView<Song> newPlaylistSongsTable;
     private final ObservableList<String> searchedAuthors = FXCollections.observableArrayList();
-    private final ObservableList<String> searchedAlbums = FXCollections.observableArrayList();
-    private final ObservableList<Song> playlistSongs = FXCollections.observableArrayList();
+    private final ObservableList<Song> searchedAlbums = FXCollections.observableArrayList();
+    private ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
     private ClientContext context;
     private SongDAO songDAO;
     private PlaylistDAO playlistDAO;
+    @FXML
+    private SongsTableController byTitleSongsTableController;
+    @FXML
+    private SongsTableController newPlaylistSongsTableController;
 
 
     public void initialize() {
         context = ClientContext.getInstance();
         songDAO = ClientApp.getSongDAO();
         playlistDAO = ClientApp.getPlaylistDAO();
+        newPlaylistSongs = context.getNewPlaylistSongs();
 
         ObservableList<Song> songs = context.getSearchedSongs();
 
         Property<ObservableList<Song>> searchedSongsProperty = new SimpleObjectProperty<>(songs);
+        Property<ObservableList<Song>> searchedAlbumsProperty = new SimpleObjectProperty<>(searchedAlbums);
         Property<ObservableList<String>> searchedAuthorsProperty = new SimpleObjectProperty<>(searchedAuthors);
-        Property<ObservableList<String>> searchedAlbumsProperty = new SimpleObjectProperty<>(searchedAlbums);
-        Property<ObservableList<Song>> playlistSongsProperty = new SimpleObjectProperty<>(playlistSongs);
+        Property<ObservableList<Song>> playlistSongsProperty = new SimpleObjectProperty<>(newPlaylistSongs);
 
-        songsTable.itemsProperty().bind(searchedSongsProperty);
+        byTitleSongsTable.itemsProperty().bind(searchedSongsProperty);
         authorsList.itemsProperty().bind(searchedAuthorsProperty);
-        albumsList.itemsProperty().bind(searchedAlbumsProperty);
+        albumsTable.itemsProperty().bind(searchedAlbumsProperty);
         newPlaylistSongsTable.itemsProperty().bind(playlistSongsProperty);
 
-        playlistSongsCount.textProperty().bind(Bindings.size(playlistSongs).asString());
+        playlistSongsCount.textProperty().bind(Bindings.size(newPlaylistSongs).asString());
 
         createPlaylistBtn.disableProperty().bind(
-                Bindings.size(playlistSongs).greaterThan(0).not()
+                Bindings.size(newPlaylistSongs).greaterThan(0).not()
                         .or(Bindings.isEmpty(newPlaylistName.textProperty())));
 
         authorsList.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) ->
                 addAuthorSongsBtn.setDisable(nv == null));
 
-        albumsList.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) ->
-                addAlbumSongsBtn.setDisable(nv == null));
-
         newPlaylistName.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().length() <= 256 ? change : null));
 
-        addSongAddToPlaylistBtn();
-        addRemoveSongBtn();
+        byTitleSongsTableController.addSongAddToPlaylistBtn();
+        newPlaylistSongsTableController.addRemoveSongBtn();
+
+        initAlbumsTable();
     }
 
     @FXML
-    private void createNewPlaylist(ClientContext context) throws RemoteException {
+    public void createNewPlaylist() throws RemoteException {
         User user = context.getUser();
+        List<Song> songs = new ArrayList<>(newPlaylistSongs);
 
-        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), playlistSongs);
+        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songs);
 
         if (newPlaylist != null) {
             context.addUserPlaylist(newPlaylist);
+            newPlaylistName.clear();
+            newPlaylistSongs.clear();
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Errore");
-            alert.setHeaderText(null);
-            alert.setContentText("La playlist '" + newPlaylistName.getText() + "' esiste già!");
-
-            alert.showAndWait();
-
+            String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
+            ClientApp.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, true, false);
         }
 
     }
 
-    private void addSongAddToPlaylistBtn() {
+    private void initAlbumsTable() {
 
-        TableColumn<Song, Void> addSongColumn = new TableColumn<>("Aggiungi");
+        TableColumn<Song, Void> addAlbumCol = new TableColumn<>("Aggiungi");
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
             final HBox btnBox = new HBox();
 
-            final Button addBtn = new Button("Aggiungi");
+            final Button viewBtn = new Button("Aggiungi album");
 
             {
-                addBtn.setOnAction(event1 -> {
-                    Song song = songsTable.getItems().get(getIndex());
-                    playlistSongs.add(song);
+                viewBtn.setOnAction(event1 -> {
+                    Song song = albumsTable.getItems().get(getIndex());
+                    try {
+                        addAlbumSongs(song.getAuthor(), song.getAlbum());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
 
-                btnBox.getChildren().add(addBtn);
+                btnBox.getChildren().add(viewBtn);
                 btnBox.setAlignment(Pos.CENTER);
             }
 
@@ -144,46 +149,10 @@ public class NewPlaylistController {
         };
 
 
-        addSongColumn.setMinWidth(100);
-        addSongColumn.setCellFactory(cellFactory);
-        songsTable.getColumns().add(addSongColumn);
-    }
-
-    private void addRemoveSongBtn() {
-
-        newPlaylistSongsTable.getColumns().remove(newPlaylistSongsTable.getColumns().size() - 1);
-
-        TableColumn<Song, Void> removeSongColumn = new TableColumn<>("Rimuovi");
-        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
-            final HBox btnBox = new HBox();
-
-            final Button addBtn = new Button("Rimuovi");
-
-            {
-                addBtn.setOnAction(event1 -> {
-                    Song song = newPlaylistSongsTable.getItems().get(getIndex());
-                    playlistSongs.remove(song);
-                });
-
-                btnBox.getChildren().add(addBtn);
-                btnBox.setAlignment(Pos.CENTER);
-            }
-
-            @Override
-            public void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(btnBox);
-                }
-            }
-        };
-
-
-        removeSongColumn.setMinWidth(100);
-        removeSongColumn.setCellFactory(cellFactory);
-        newPlaylistSongsTable.getColumns().add(removeSongColumn);
+        addAlbumCol.setMinWidth(150);
+        addAlbumCol.setEditable(false);
+        addAlbumCol.setCellFactory(cellFactory);
+        albumsTable.getColumns().add(0, addAlbumCol);
     }
 
     @FXML
@@ -199,11 +168,8 @@ public class NewPlaylistController {
     @FXML
     private void searchAlbums() throws RemoteException {
         String album = albumPrompt.getText().trim();
-
-        HashMap<String, String> results = songDAO.getAlbums(album);
-        List<Map.Entry<String, String>> list = new ArrayList<>(results.entrySet());
-        searchedAlbums.setAll(String.valueOf(list));
-
+        List<Song> results = songDAO.getAlbums(album);
+        searchedAlbums.addAll(results);
         if (!results.isEmpty()) albumPrompt.clear();
     }
 
@@ -213,21 +179,21 @@ public class NewPlaylistController {
         List<Song> results = songDAO.searchByAuthorYear(author, null);
 
         if (!results.isEmpty()) {
-            playlistSongs.addAll(results);
+            context.addNewPlaylistSongs(results);
             authorPrompt.clear();
         }
 
     }
 
     @FXML
-    private void addAlbumSongs() throws RemoteException {
-        String album = albumsList.getSelectionModel().getSelectedItem();
-        List<Song> results = songDAO.searchByAlbum(album);
+    private void addAlbumSongs(String author, String album) throws RemoteException {
+        List<Song> results = songDAO.searchByAlbum(author, album);
 
         if (!results.isEmpty()) {
-            playlistSongs.addAll(results);
+            context.addNewPlaylistSongs(results);
             albumPrompt.clear();
         }
     }
+
 
 }

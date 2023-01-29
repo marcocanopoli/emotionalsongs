@@ -22,6 +22,7 @@ public final class ClientContext {
 
     private ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
     private ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
+    private final ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
 
     private ClientContext() {
     }
@@ -54,6 +55,16 @@ public final class ClientContext {
     public ObservableList<Song> getSearchedSongs() {
 
         return searchedSongs;
+    }
+
+    public void addNewPlaylistSongs(List<Song> newSongs) {
+
+        newPlaylistSongs.addAll(newSongs);
+    }
+
+    public ObservableList<Song> getNewPlaylistSongs() {
+
+        return newPlaylistSongs;
     }
 
     public void setCurrentSong(Song song) {

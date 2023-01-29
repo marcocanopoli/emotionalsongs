@@ -2,47 +2,37 @@ package client_gui.components;
 
 import client.ClientApp;
 import client.ClientContext;
+import common.Playlist;
 import common.Song;
+import common.interfaces.PlaylistDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+
+import java.rmi.RemoteException;
+import java.util.List;
 
 public class SongsTableController {
     @FXML
     private TableView<Song> songsTable;
+    private ClientContext context;
+    private ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
+    private PlaylistDAO playlistDAO;
 
     public void initialize() {
-
-        String[][] columns = {
-                {"author", "Autore"},
-                {"title", "Titolo"},
-                {"album", "Album"},
-                {"year", "Anno"},
-                {"genre", "Genere"},
-                {"duration", "Durata"}
-        };
-
-        for (String[] column : columns) {
-            TableColumn<Song, String> tableCol = new TableColumn<>(column[1]);
-            tableCol.setCellValueFactory(new PropertyValueFactory<>(column[0]));
-            tableCol.setMinWidth(100);
-            tableCol.setResizable(true);
-            songsTable.getColumns().add(tableCol);
-        }
+        context = ClientContext.getInstance();
+        playlistDAO = ClientApp.getPlaylistDAO();
+        newPlaylistSongs = context.getNewPlaylistSongs();
 
         addEmotionsInfoBtn();
     }
 
 
     private void addEmotionsInfoBtn() {
-        ClientContext context = ClientContext.getInstance();
-
         TableColumn<Song, Void> emotionColumn = new TableColumn<>("Dettagli");
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
             final HBox btnBox = new HBox();
@@ -74,7 +64,173 @@ public class SongsTableController {
 
         emotionColumn.setMinWidth(120);
         emotionColumn.setCellFactory(cellFactory);
-        songsTable.getColumns().add(emotionColumn);
+        songsTable.getColumns().add(0, emotionColumn);
     }
 
+    public void addTableEmotionAddBtn(ClientContext context) {
+
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
+                new TableCell<>() {
+
+                    final HBox btnBox = new HBox();
+                    private final Button emotionsAddBtn = new Button("Inserisci emozioni");
+
+                    {
+                        emotionsAddBtn.setOnAction(event1 -> {
+                            Song song = getTableView().getItems().get(getIndex());
+                            context.setCurrentSong(song);
+                            ClientApp.createStage("ratingView.fxml", "Inserisci emozioni", true);
+                        });
+
+                        btnBox.getChildren().add(emotionsAddBtn);
+                        btnBox.setAlignment(Pos.CENTER);
+                    }
+
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btnBox);
+                        }
+                    }
+                };
+
+
+        TableColumn<Song, Void> emotionsAddColumn = new TableColumn<>("Inserisci");
+        emotionsAddColumn.setMinWidth(150);
+        emotionsAddColumn.setCellFactory(cellFactory);
+        songsTable.getColumns().add(0, emotionsAddColumn);
+    }
+
+    public void addSongAddToPlaylistBtn() {
+
+        TableColumn<Song, Void> addSongColumn = new TableColumn<>("Aggiungi");
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
+            final HBox btnBox = new HBox();
+
+            final Button addBtn = new Button("Aggiungi");
+
+            {
+                addBtn.setOnAction(event1 -> {
+                    Song song = songsTable.getItems().get(getIndex());
+                    newPlaylistSongs.add(song);
+                });
+
+                btnBox.getChildren().add(addBtn);
+                btnBox.setAlignment(Pos.CENTER);
+            }
+
+            @Override
+            public void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnBox);
+                }
+            }
+        };
+
+
+        addSongColumn.setMinWidth(100);
+        addSongColumn.setCellFactory(cellFactory);
+        songsTable.getColumns().add(0, addSongColumn);
+    }
+
+    public void addRemoveSongBtn() {
+
+        songsTable.getColumns().remove(songsTable.getColumns().size() - 1);
+
+        TableColumn<Song, Void> removeSongColumn = new TableColumn<>("Rimuovi");
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
+            final HBox btnBox = new HBox();
+
+            final Button addBtn = new Button("Rimuovi");
+
+            {
+                addBtn.setOnAction(event1 -> {
+                    Song song = songsTable.getItems().get(getIndex());
+                    newPlaylistSongs.remove(song);
+                });
+
+                btnBox.getChildren().add(addBtn);
+                btnBox.setAlignment(Pos.CENTER);
+            }
+
+            @Override
+            public void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnBox);
+                }
+            }
+        };
+
+
+        removeSongColumn.setMinWidth(100);
+        removeSongColumn.setCellFactory(cellFactory);
+        songsTable.getColumns().add(0, removeSongColumn);
+    }
+
+    public void addPlaylistDropdown() {
+
+        ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
+
+        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
+                new TableCell<>() {
+                    final HBox btnBox = new HBox();
+                    private final MenuButton playlistChoice = new MenuButton("Aggiungi a:");
+
+
+                    {
+                        for (Playlist p : userPlaylists) {
+                            MenuItem item = new MenuItem(p.getName());
+                            item.setOnAction(event -> {
+                                Song song = getTableView().getItems().get(getIndex());
+
+                                try {
+                                    int[] rows = playlistDAO.addSongsToPlaylist(p.getId(), List.of(song.id));
+                                    String msg;
+                                    if (rows.length > 0) {
+                                        msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'!";
+                                        ClientApp.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true, false);
+                                    } else {
+                                        msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'!";
+                                        ClientApp.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, true, false);
+                                    }
+                                } catch (RemoteException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                            });
+                            playlistChoice.getItems().add(item);
+                        }
+
+                        btnBox.getChildren().add(playlistChoice);
+                        btnBox.setAlignment(Pos.CENTER);
+                    }
+
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btnBox);
+                        }
+                    }
+                };
+
+        TableColumn<Song, Void> playlistColumn = new TableColumn<>("Playlist");
+        playlistColumn.setMinWidth(130);
+        playlistColumn.setCellFactory(cellFactory);
+
+        songsTable.getColumns().add(1, playlistColumn);
+    }
 }

@@ -115,7 +115,7 @@ public class SongDAOImpl implements SongDAO {
     }
 
     @Override
-    public HashMap<String, String> getAlbums(String album) {
+    public List<Song> getAlbums(String albumText) {
         Connection conn = ServerApp.getConnection();
 
         final String query = "SELECT author, album " +
@@ -126,15 +126,17 @@ public class SongDAOImpl implements SongDAO {
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, "%" + album + "%");
+            stmt.setString(1, "%" + albumText + "%");
 
-            HashMap<String, String> results = new HashMap<>();
+            List<Song> results = new ArrayList<>();
 
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+                String author = rs.getString("author");
+                String album = rs.getString("album");
 
-                results.put(rs.getString("author"), rs.getString("album"));
+                results.add(new Song(author, album));
 
             }
             return results;
@@ -143,7 +145,7 @@ public class SongDAOImpl implements SongDAO {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new HashMap<>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -350,17 +352,19 @@ public class SongDAOImpl implements SongDAO {
     }
 
     @Override
-    public List<Song> searchByAlbum(String albumText) {
+    public List<Song> searchByAlbum(String authorText, String albumText) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        String query = "SELECT  * "
                 + "FROM songs "
                 + "WHERE album = ? "
+                + "AND author = ? "
                 + "ORDER BY title ASC";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, albumText);
+            stmt.setString(2, authorText);
 
             List<Song> results = new ArrayList<>();
 

@@ -2,14 +2,13 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
+import client_gui.components.SongsTableController;
 import common.Playlist;
 import common.Song;
 import common.interfaces.PlaylistDAO;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.util.Callback;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -24,6 +23,8 @@ public class CurrentPlaylistController {
     public Label playlistDuration;
     @FXML
     private TableView<Song> playlistSongsTable;
+    @FXML
+    private SongsTableController playlistSongsTableController;
 
     public void initialize() {
         ClientContext context = ClientContext.getInstance();
@@ -43,7 +44,7 @@ public class CurrentPlaylistController {
             }
         });
 
-        addTableEmotionAddBtn(context);
+        playlistSongsTableController.addTableEmotionAddBtn(context);
     }
 
     private void setCurrentPlaylist(Playlist playlist) throws RemoteException {
@@ -67,42 +68,6 @@ public class CurrentPlaylistController {
 
     }
 
-    private void addTableEmotionAddBtn(ClientContext context) {
 
-        Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
-                new TableCell<>() {
-
-                    final HBox btnBox = new HBox();
-                    private final Button emotionsAddBtn = new Button("Inserisci emozioni");
-
-                    {
-                        emotionsAddBtn.setOnAction(event1 -> {
-                            Song song = getTableView().getItems().get(getIndex());
-                            context.setCurrentSong(song);
-                            ClientApp.createStage("ratingView.fxml", "Inserisci emozioni", true);
-                        });
-
-                        btnBox.getChildren().add(emotionsAddBtn);
-                        btnBox.setAlignment(Pos.CENTER);
-                    }
-
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btnBox);
-                        }
-                    }
-                };
-
-
-        TableColumn<Song, Void> emotionsAddColumn = new TableColumn<>("Inserisci");
-        emotionsAddColumn.setMinWidth(150);
-        emotionsAddColumn.setCellFactory(cellFactory);
-        playlistSongsTable.getColumns().add(emotionsAddColumn);
-    }
 }
 
