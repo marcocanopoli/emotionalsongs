@@ -6,7 +6,6 @@ import common.NodeHelpers;
 import common.Playlist;
 import common.Song;
 import common.interfaces.PlaylistDAO;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -20,15 +19,13 @@ import java.util.List;
 public class SongsTableController {
     @FXML
     private TableView<Song> songsTable;
-    private ClientContext context = ClientContext.getInstance();
-    private ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
-    private PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+    private final ClientContext context = ClientContext.getInstance();
+    private final ObservableList<Song> newPlaylistSongs = context.getNewPlaylistSongs();
+    private final PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
 
     public void initialize() {
-        newPlaylistSongs = context.getNewPlaylistSongs();
         addEmotionsInfoBtn();
     }
-
 
     private void addEmotionsInfoBtn() {
         TableColumn<Song, Void> emotionColumn = new TableColumn<>("Dettagli");
@@ -138,7 +135,7 @@ public class SongsTableController {
         songsTable.getColumns().add(0, addSongColumn);
     }
 
-    public void addRemoveSongBtn() {
+    public void addRemoveSongBtn(ObservableList<Song> songList, boolean isCurrentPlaylist) {
 
         songsTable.getColumns().remove(songsTable.getColumns().size() - 1);
 
@@ -151,7 +148,15 @@ public class SongsTableController {
             {
                 addBtn.setOnAction(event1 -> {
                     Song song = songsTable.getItems().get(getIndex());
-                    newPlaylistSongs.remove(song);
+                    songList.remove(song);
+
+                    if (context.getCurrentPlaylist() != null && isCurrentPlaylist) {
+                        try {
+                            playlistDAO.removeSongFromPlaylist(context.getCurrentPlaylist().getId(), song.id);
+                        } catch (RemoteException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 });
 
                 btnBox.getChildren().add(addBtn);

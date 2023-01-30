@@ -19,9 +19,8 @@ public final class ClientContext {
     private Song currentSong;
     private Playlist currentPlaylist;
     private User user;
-
-    private ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
-    private ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
+    private final ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
+    private final ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
     private final ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
 
     private ClientContext() {

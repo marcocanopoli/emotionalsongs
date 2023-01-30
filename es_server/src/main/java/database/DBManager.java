@@ -113,8 +113,8 @@ public class DBManager {
 
         final String CREATE_PLAYLIST_SONGS_TABLE =
                 "CREATE TABLE IF NOT EXISTS playlist_songs " +
-                        "order SERIAL NOT NULL " +
-                        "(playlist_id INTEGER REFERENCES playlists (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
+                        "(order_key SERIAL UNIQUE NOT NULL ," +
+                        "playlist_id INTEGER REFERENCES playlists (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "song_id INTEGER REFERENCES songs (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "CONSTRAINT playlist_songs_id PRIMARY KEY (playlist_id, song_id))";
 

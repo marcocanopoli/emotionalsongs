@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-
-<TableView fx:id="songsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.components.SongsTableController">
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.*?>
+<TableView fx:id="songsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+           xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="client_gui.components.SongsTableController">
     <columns>
         <TableColumn editable="false" minWidth="100.0" prefWidth="150.0" text="Autore">
             <cellValueFactory>
-                <PropertyValueFactory property="author" />
+                <PropertyValueFactory property="author"/>
             </cellValueFactory>
         </TableColumn>
         <TableColumn editable="false" minWidth="100.0" prefWidth="150.0" text="Titolo">
             <cellValueFactory>
-                <PropertyValueFactory property="title" />
+                <PropertyValueFactory property="title"/>
             </cellValueFactory>
         </TableColumn>
         <TableColumn editable="false" minWidth="100.0" prefWidth="150.0" text="Album">
             <cellValueFactory>
-                <PropertyValueFactory property="album" />
+                <PropertyValueFactory property="album"/>
             </cellValueFactory>
         </TableColumn>
         <TableColumn editable="false" minWidth="50.0" prefWidth="50.0" text="Anno">
             <cellValueFactory>
-                <PropertyValueFactory property="year" />
+                <PropertyValueFactory property="year"/>
             </cellValueFactory>
         </TableColumn>
         <TableColumn editable="false" prefWidth="100.0" text="Genere">
             <cellValueFactory>
-                <PropertyValueFactory property="genre" />
+                <PropertyValueFactory property="genre"/>
             </cellValueFactory>
         </TableColumn>
         <TableColumn editable="false" minWidth="60.0" prefWidth="60.0" text="Durata">
             <cellValueFactory>
-                <PropertyValueFactory property="duration" />
+                <PropertyValueFactory property="duration"/>
             </cellValueFactory>
         </TableColumn>
     </columns>

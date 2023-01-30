@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/19"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.CurrentPlaylistController">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="client_gui.CurrentPlaylistController"
+      stylesheets="@emotionalSongs.css">
     <children>
         <GridPane hgap="20.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                   prefHeight="120.0" VBox.vgrow="NEVER">

@@ -25,6 +25,8 @@ import java.util.List;
 public class NewPlaylistController {
 
     @FXML
+    private ScrollPane leftScrollPane;
+    @FXML
     private Button createPlaylistBtn;
     @FXML
     private Button addAuthorSongsBtn;
@@ -75,6 +77,9 @@ public class NewPlaylistController {
 
         playlistSongsCount.textProperty().bind(Bindings.size(newPlaylistSongs).asString());
 
+        newPlaylistSongsTable.visibleProperty().bind(Bindings.size(newPlaylistSongs).isNotEqualTo(0));
+        leftScrollPane.fitToWidthProperty().bind(Bindings.size(newPlaylistSongs).isEqualTo(0));
+
         createPlaylistBtn.disableProperty().bind(
                 Bindings.size(newPlaylistSongs).greaterThan(0).not()
                         .or(Bindings.isEmpty(newPlaylistName.textProperty())));
@@ -97,7 +102,7 @@ public class NewPlaylistController {
         });
 
         byTitleSongsTableController.addSongAddToPlaylistBtn();
-        newPlaylistSongsTableController.addRemoveSongBtn();
+        newPlaylistSongsTableController.addRemoveSongBtn(newPlaylistSongs, false);
 
         initAlbumsTable();
     }
@@ -105,9 +110,13 @@ public class NewPlaylistController {
     @FXML
     public void createNewPlaylist() throws RemoteException {
         User user = context.getUser();
-        List<Song> songs = new ArrayList<>(newPlaylistSongs);
+        List<Integer> songIds = new ArrayList<>();
 
-        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songs);
+        for (Song song : newPlaylistSongs) {
+            songIds.add(song.id);
+        }
+
+        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songIds);
 
         if (newPlaylist != null) {
             context.addUserPlaylist(newPlaylist);

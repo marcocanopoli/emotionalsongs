@@ -17,58 +17,76 @@ import java.util.Map;
 
 public class SongInfoController {
     @FXML
-    public Label songAuthor;
+    private Label songAuthor;
     @FXML
-    public Label songAlbum;
+    private Label songAlbum;
     @FXML
-    public Label songTitle;
+    private Label songTitle;
     @FXML
-    public Label songYear;
+    private Label songYear;
     @FXML
-    public Label songGenre;
+    private Label songGenre;
     @FXML
-    public Label songDuration;
+    private Label songDuration;
     @FXML
-    public ProgressBar amazementProg;
+    private ProgressBar amazementProg;
     @FXML
-    public ProgressBar solemnityProg;
+    private ProgressBar solemnityProg;
     @FXML
-    public ProgressBar tendernessProg;
+    private ProgressBar tendernessProg;
     @FXML
-    public ProgressBar nostalgiaProg;
+    private ProgressBar nostalgiaProg;
     @FXML
-    public ProgressBar calmnessProg;
+    private ProgressBar calmnessProg;
     @FXML
-    public ProgressBar powerProg;
+    private ProgressBar powerProg;
     @FXML
-    public ProgressBar joyProg;
+    private ProgressBar joyProg;
     @FXML
-    public ProgressBar tensionProg;
+    private ProgressBar tensionProg;
     @FXML
-    public ProgressBar sadnessProg;
+    private ProgressBar sadnessProg;
     @FXML
-    public ListView<String> commentsList;
+    private ListView<String> commentsList;
     @FXML
-    public TextArea currentComment;
+    private TextArea currentComment;
     private final HashMap<Integer, Button> commentBtns = new HashMap<>();
     @FXML
-    public Button sadnessComments;
+    private Button sadnessComments;
     @FXML
-    public Button tensionComments;
+    private Button tensionComments;
     @FXML
-    public Button joyComments;
+    private Button joyComments;
     @FXML
-    public Button powerComments;
+    private Button powerComments;
     @FXML
-    public Button calmnessComments;
+    private Button calmnessComments;
     @FXML
-    public Button nostalgiaComments;
+    private Button nostalgiaComments;
     @FXML
-    public Button tendernessComments;
+    private Button tendernessComments;
     @FXML
-    public Button solemnityComments;
+    private Button solemnityComments;
     @FXML
-    public Button amazementComments;
+    private Button amazementComments;
+    @FXML
+    private Label amazementTot;
+    @FXML
+    private Label solemnityTot;
+    @FXML
+    private Label tendernessTot;
+    @FXML
+    private Label nostalgiaTot;
+    @FXML
+    private Label calmnessTot;
+    @FXML
+    private Label powerTot;
+    @FXML
+    private Label joyTot;
+    @FXML
+    private Label tensionTot;
+    @FXML
+    private Label sadnessTot;
 
     public void initialize() {
         ClientContext context = ClientContext.getInstance();
@@ -91,7 +109,7 @@ public class SongInfoController {
         songGenre.setText(song.getGenre());
         songDuration.setText(song.getDuration());
 
-        displaySongStats(song);
+        displayProgress(song);
 
     }
 
@@ -144,33 +162,40 @@ public class SongInfoController {
 
             int total = songDAO.getSongEmotionsCount(song.id);
 
-            float[] emotionsValues = new float[9];
+            float[] emoPerc = new float[9];
+            int[] emoCount = new int[9];
 
             for (int i = 0; i < 9; i++) {
-                emotionsValues[i] = emotions.get(i + 1) != null ? emotions.get(i + 1) : 0;
+                emoCount[i] = emotions.get(i + 1) != null ? emotions.get(i + 1) : 0;
 
                 if (total > 0) {
-                    emotionsValues[i] = emotionsValues[i] / total;
+                    emoPerc[i] = (float) emoCount[i] / total;
                 }
 
             }
 
-            amazementProg.setProgress(emotionsValues[0]);
-            solemnityProg.setProgress(emotionsValues[1]);
-            tendernessProg.setProgress(emotionsValues[2]);
-            nostalgiaProg.setProgress(emotionsValues[3]);
-            calmnessProg.setProgress(emotionsValues[4]);
-            powerProg.setProgress(emotionsValues[5]);
-            joyProg.setProgress(emotionsValues[6]);
-            tensionProg.setProgress(emotionsValues[7]);
-            sadnessProg.setProgress(emotionsValues[8]);
+            amazementProg.setProgress(emoPerc[0]);
+            solemnityProg.setProgress(emoPerc[1]);
+            tendernessProg.setProgress(emoPerc[2]);
+            nostalgiaProg.setProgress(emoPerc[3]);
+            calmnessProg.setProgress(emoPerc[4]);
+            powerProg.setProgress(emoPerc[5]);
+            joyProg.setProgress(emoPerc[6]);
+            tensionProg.setProgress(emoPerc[7]);
+            sadnessProg.setProgress(emoPerc[8]);
+
+            amazementTot.setText(emoPerc[0] + "% | " + emoCount[0] + "/" + total);
+            solemnityTot.setText(emoPerc[1] + "% | " + emoCount[1] + "/" + total);
+            tendernessTot.setText(emoPerc[2] + "% | " + emoCount[2] + "/" + total);
+            nostalgiaTot.setText(emoPerc[3] + "% | " + emoCount[3] + "/" + total);
+            calmnessTot.setText(emoPerc[4] + "% | " + emoCount[4] + "/" + total);
+            powerTot.setText(emoPerc[5] + "% | " + emoCount[5] + "/" + total);
+            joyTot.setText(emoPerc[6] + "% | " + emoCount[6] + "/" + total);
+            tensionTot.setText(emoPerc[7] + "% | " + emoCount[7] + "/" + total);
+            sadnessTot.setText(emoPerc[8] + "% | " + emoCount[8] + "/" + total);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void displaySongStats(Song song) {
-        displayProgress(song);
     }
 
 

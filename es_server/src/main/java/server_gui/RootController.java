@@ -37,12 +37,6 @@ public class RootController {
     @FXML
     public void initialize() {
 
-
-    }
-
-
-    @FXML
-    protected void onConnect() {
         connectBtn.setOnAction(event -> {
             String host = dbHost.getText();
             String database = dbName.getText();
@@ -50,7 +44,7 @@ public class RootController {
             String password = dbPassword.getText();
             DBManager dbManager = new DBManager();
             Connection conn = dbManager.openConnection(host, database, user, password);
-            
+
             if (conn != null) {
                 ServerApp.setConnection(conn);
                 ServerLogger.debug("Connection set");
@@ -69,5 +63,6 @@ public class RootController {
                 title.setTextFill(Color.GREEN);
             }
         });
+
     }
 }

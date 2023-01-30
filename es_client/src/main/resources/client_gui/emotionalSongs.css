@@ -3,6 +3,10 @@
   -fx-default-button: peachpuff;
   }
 
+ .button {
+    -fx-cursor: hand;
+ }
+
 .sidebar-btn {
   -fx-background-color: none;
 }
@@ -40,3 +44,48 @@
     -fx-background-insets: 0 0 0 0, 1 0 1 0;
 }
 
+.toolbar .button {
+    -fx-min-height: 30;
+}
+.sidebar {
+    LEFT-COLOR: ladder(
+                -fx-base,
+                derive(-fx-base,0%) 0%,
+                derive(-fx-base,46%) 100%
+            );
+        -fx-background-color:
+            linear-gradient(to right, derive(LEFT-COLOR,25%) 0%, -fx-outer-border 90%),
+            linear-gradient(to right, LEFT-COLOR 2%, derive(-fx-base,-2.1%) 95%);
+        -fx-background-insets: 0 0 0 0, 0 1 0 1;
+}
+
+
+.sidebar-list  .list-cell,
+.sidebar-list  .list-cell:odd {
+        -fx-background-color: none;
+        -fx-text-fill: -fx-text-base-color;
+}
+
+.sidebar-list .list-cell:filled:selected:focused:disabled,
+.sidebar-list .list-cell:filled:selected {
+    -fx-background-color: none;
+}
+
+.sidebar-list:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:focused {
+    -fx-background-color: peachpuff;
+}
+.sidebar-list,
+.sidebar-list:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0, 0, 0;
+}
+
+.add-songs-accordion .titled-pane > .title {
+        -fx-pref-height: 36.0;
+        -fx-padding: 8;
+}
+
+.table-row-cell {
+        -fx-pref-height: 36.0;
+}

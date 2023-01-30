@@ -51,7 +51,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
-    public Playlist createNewPlaylist(int userId, String name, List<Song> songs) throws RemoteException {
+    public Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) throws RemoteException {
         Connection conn = ServerApp.getConnection();
         final String QUERY = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
 
@@ -68,6 +68,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    addSongsToPlaylist(generatedKeys.getInt(1), songIds);
                     return new Playlist(generatedKeys.getInt(1), userId, name);
                 } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
@@ -89,6 +90,27 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, playListId);
+
+            return stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int removeSongFromPlaylist(int playListId, int songId) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+
+        final String query = "DELETE FROM playlist_songs " +
+                "WHERE playlist_id = ? " +
+                "AND song_id = ? ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, playListId);
+            stmt.setInt(2, songId);
 
             return stmt.executeUpdate();
 
@@ -171,7 +193,8 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         final String QUERY = "SELECT * " +
                 "FROM songs S " +
                 "JOIN playlist_songs PS ON PS.song_id = S.id " +
-                "WHERE PS.playlist_id = ?";
+                "WHERE PS.playlist_id = ? " +
+                "ORDER BY PS.order_key ASC";
 
         try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
             stmt.setInt(1, playlistId);

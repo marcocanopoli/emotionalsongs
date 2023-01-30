@@ -5,7 +5,7 @@
 <VBox alignment="TOP_CENTER" minWidth="-Infinity" spacing="20.0" AnchorPane.bottomAnchor="0.0"
       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="client_gui.SearchViewController">
+      fx:controller="client_gui.SearchViewController" stylesheets="@emotionalSongs.css">
     <children>
         <fx:include fx:id="searchSongsPane"
                     source="components/searchSongPane.fxml" VBox.vgrow="NEVER"/>

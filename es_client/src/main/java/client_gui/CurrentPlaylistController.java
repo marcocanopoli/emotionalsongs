@@ -38,7 +38,7 @@ public class CurrentPlaylistController {
     private final PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
     private final ClientContext context = ClientContext.getInstance();
     private Playlist currentPlaylist = context.getCurrentPlaylist();
-    private ObservableList<Song> currentPlaylistSongs = FXCollections.observableArrayList();
+    private final ObservableList<Song> currentPlaylistSongs = FXCollections.observableArrayList();
 
     public void initialize() {
 
@@ -66,6 +66,7 @@ public class CurrentPlaylistController {
         });
 
         playlistSongsTableController.addTableEmotionAddBtn();
+        playlistSongsTableController.addRemoveSongBtn(currentPlaylistSongs, true);
     }
 
     private void initCurrentPlaylist() throws RemoteException {
