@@ -19,7 +19,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Objects;
 
 public class ClientApp extends Application {
 
@@ -68,11 +67,7 @@ public class ClientApp extends Application {
 
         setWindow(stage.getOwner());
 
-        stage.setMinWidth(1280);
-        stage.setMinHeight(800);
-
-        setMainStage(Objects.requireNonNull(NodeHelpers.createStage(
-                null, stage, rootURL, "Emotional Songs", false)).getKey());
+        setMainStage(NodeHelpers.createMainStage(stage, rootURL, "Emotional Songs", 1280, 800));
 
         if (stylesheetURL != null) mainStage.getScene().getStylesheets().add((stylesheetURL).toExternalForm());
 

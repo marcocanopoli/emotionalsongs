@@ -1,15 +1,14 @@
 package server;
 
+import common.NodeHelpers;
 import database.EmotionDAOImpl;
 import database.PlaylistDAOImpl;
 import database.SongDAOImpl;
 import database.UserDAOImpl;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -18,24 +17,20 @@ import java.sql.Connection;
 
 public class ServerApp extends Application {
     private static Connection conn = null;
+    public static final URL dbLoginURL = ServerApp.class.getResource("/server_gui/dbLoginView.fxml");
 
     public static synchronized Connection getConnection() {
         return conn;
     }
 
-    public static synchronized void setConnection(Connection conn) {
-        ServerApp.conn = conn;
+    public static synchronized void setConnection(Connection connection) {
+        conn = connection;
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(ServerApp.class.getResource("/server_gui/dbLoginView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 400, 300);
-        stage.setTitle("Accesso al database");
-        stage.setScene(scene);
         stage.setResizable(false);
-        stage.show();
 
         stage.setOnCloseRequest(event -> {
             try {
@@ -45,12 +40,17 @@ public class ServerApp extends Application {
             }
         });
 
+        NodeHelpers.createMainStage(stage, dbLoginURL, "Avvio server", 330, 300);
+
     }
 
     public static void shutdown() throws RemoteException {
         Registry registry = LocateRegistry.getRegistry();
         try {
             registry.unbind("UserService");
+            registry.unbind("SongService");
+            registry.unbind("EmotionService");
+            registry.unbind("PlaylistService");
         } catch (NotBoundException e) {
             ServerLogger.debug("UserService not bound, skipping");
         }
@@ -67,7 +67,7 @@ public class ServerApp extends Application {
 
     }
 
-    public static void appStart(String[] args) throws RemoteException {
+    public static void register(String[] args) throws RemoteException {
 
         Registry registry = LocateRegistry.createRegistry(1099);
         PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);

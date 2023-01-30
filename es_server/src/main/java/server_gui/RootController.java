@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import server.ServerApp;
 import server.ServerLogger;
@@ -28,7 +28,7 @@ public class RootController {
     @FXML
     private PasswordField dbPassword;
     @FXML
-    private Pane mainPane;
+    private VBox loginBox;
     @FXML
     private GridPane loginForm;
     @FXML
@@ -37,6 +37,12 @@ public class RootController {
     @FXML
     public void initialize() {
 
+
+    }
+
+
+    @FXML
+    protected void onConnect() {
         connectBtn.setOnAction(event -> {
             String host = dbHost.getText();
             String database = dbName.getText();
@@ -44,6 +50,7 @@ public class RootController {
             String password = dbPassword.getText();
             DBManager dbManager = new DBManager();
             Connection conn = dbManager.openConnection(host, database, user, password);
+            
             if (conn != null) {
                 ServerApp.setConnection(conn);
                 ServerLogger.debug("Connection set");
@@ -55,19 +62,12 @@ public class RootController {
                     throw new RuntimeException(e);
                 }
                 ServerLogger.debug("Seeds executed");
-                mainPane.getScene().getWindow().setHeight(120);
-                mainPane.getChildren().remove(loginForm);
-                mainPane.getChildren().remove(connectBtn);
+                loginBox.getScene().getWindow().setHeight(120);
+                loginBox.getChildren().remove(loginForm);
+                loginBox.getChildren().remove(connectBtn);
                 title.setText("Connesso al database");
                 title.setTextFill(Color.GREEN);
             }
         });
     }
-
-    //    @FXML
-//    protected void onConnect() {
-//        String host = dbUser.getText();
-//        String password = dbPassword.getText();
-//        ServerLogger.info(MessageFormat.format("Host: {0}, Password: {1}", host, password));
-//    }
 }

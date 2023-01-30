@@ -82,12 +82,12 @@ public class RootController {
 
         signupBtn.setOnAction(event ->
                 NodeHelpers.createStage(
-                        window, null, ClientApp.signupURL, "Registrazione utente", true)
+                        window, ClientApp.signupURL, "Registrazione utente", true)
         );
 
         loginBtn.setOnAction(event ->
                 NodeHelpers.createStage(
-                        window, null, ClientApp.loginURL, "Login", true)
+                        window, ClientApp.loginURL, "Login", true)
         );
 
         logoutBtn.setOnAction(event -> {

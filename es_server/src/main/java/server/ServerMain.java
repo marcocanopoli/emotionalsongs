@@ -6,6 +6,6 @@ public class ServerMain {
 
     public static void main(String[] args) throws RemoteException {
 
-        ServerApp.appStart(args);
+        ServerApp.register(args);
     }
 }

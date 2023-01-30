@@ -41,12 +41,7 @@ public class SongsTableController {
                 viewBtn.setOnAction(event1 -> {
                     Song song = songsTable.getItems().get(getIndex());
                     context.setCurrentSong(song);
-                    NodeHelpers.createStage(
-                            ClientApp.getWindow(),
-                            null,
-                            ClientApp.songInfoURL,
-                            "Info canzone",
-                            true);
+                    NodeHelpers.createStage(ClientApp.getWindow(), ClientApp.songInfoURL, "Info canzone", true);
                 });
 
                 btnBox.getChildren().add(viewBtn);
@@ -82,7 +77,7 @@ public class SongsTableController {
                         emotionsAddBtn.setOnAction(event1 -> {
                             Song song = getTableView().getItems().get(getIndex());
                             context.setCurrentSong(song);
-                            NodeHelpers.createStage(ClientApp.getWindow(), null, ClientApp.ratingURL, "Inserisci emozioni", true);
+                            NodeHelpers.createStage(ClientApp.getWindow(), ClientApp.ratingURL, "Inserisci emozioni", true);
                         });
 
                         btnBox.getChildren().add(emotionsAddBtn);

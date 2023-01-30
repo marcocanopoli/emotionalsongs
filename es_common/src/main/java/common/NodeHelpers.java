@@ -9,7 +9,6 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.net.URL;
@@ -56,33 +55,43 @@ public class NodeHelpers {
         return res.get();
     }
 
-    public static Pair<Stage, Scene> createStage(Window owner, Stage oldStage, URL resource, String title, boolean isModal) {
-        Stage stage = null;
-        Scene scene = null;
-
+    public static Stage createMainStage(Stage stage, URL resource, String title, int width, int height) {
         try {
             if (resource != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader(resource);
-                scene = new Scene(fxmlLoader.load());
-                stage = oldStage != null ? oldStage : new Stage();
-
-                if (owner != null) {
-                    stage.initOwner(owner);
-                    stage.initModality(isModal ? Modality.APPLICATION_MODAL : Modality.NONE);
-                    stage.setAlwaysOnTop(isModal);
-                    stage.setResizable(false);
-                }
-
+                Scene scene = new Scene(fxmlLoader.load(), width, height);
                 stage.setTitle(title);
                 stage.setScene(scene);
                 stage.centerOnScreen();
                 stage.show();
             }
-            return new Pair<>(stage, scene);
+            return stage;
 
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void createStage(Window owner, URL resource, String title, boolean isModal) {
+        try {
+            if (resource != null) {
+                FXMLLoader fxmlLoader = new FXMLLoader(resource);
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage stage = new Stage();
+
+                stage.initOwner(owner);
+                stage.initModality(isModal ? Modality.APPLICATION_MODAL : Modality.NONE);
+                stage.setAlwaysOnTop(isModal);
+                stage.setResizable(false);
+                stage.setTitle(title);
+                stage.setScene(scene);
+                stage.centerOnScreen();
+                stage.show();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
