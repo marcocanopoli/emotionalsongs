@@ -107,6 +107,10 @@ public final class ClientContext {
         userPlaylists.add(playlist);
     }
 
+    public void removeUserPlaylist(Playlist playlist) {
+        userPlaylists.remove(playlist);
+    }
+
     public ObservableList<Playlist> getUserPlaylists() {
         return userPlaylists;
     }

@@ -3,15 +3,14 @@ package client_gui;
 import client.ClientApp;
 import client.ClientContext;
 import client_gui.components.SongsTableController;
-import common.Playlist;
-import common.Song;
-import common.User;
+import common.*;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -49,12 +48,13 @@ public class NewPlaylistController {
     private TableView<Song> byTitleSongsTable;
     @FXML
     private TableView<Song> newPlaylistSongsTable;
+    private final ClientContext context = ClientContext.getInstance();
     private final ObservableList<String> searchedAuthors = FXCollections.observableArrayList();
     private final ObservableList<Song> searchedAlbums = FXCollections.observableArrayList();
-    private ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
-    private ClientContext context;
-    private SongDAO songDAO;
-    private PlaylistDAO playlistDAO;
+    private final ObservableList<Song> newPlaylistSongs = context.getNewPlaylistSongs();
+    private final ObservableList<Song> searchedSongs = context.getSearchedSongs();
+    private final SongDAO songDAO = ClientApp.getSongDAO();
+    private final PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
     @FXML
     private SongsTableController byTitleSongsTableController;
     @FXML
@@ -62,14 +62,8 @@ public class NewPlaylistController {
 
 
     public void initialize() {
-        context = ClientContext.getInstance();
-        songDAO = ClientApp.getSongDAO();
-        playlistDAO = ClientApp.getPlaylistDAO();
-        newPlaylistSongs = context.getNewPlaylistSongs();
 
-        ObservableList<Song> songs = context.getSearchedSongs();
-
-        Property<ObservableList<Song>> searchedSongsProperty = new SimpleObjectProperty<>(songs);
+        Property<ObservableList<Song>> searchedSongsProperty = new SimpleObjectProperty<>(searchedSongs);
         Property<ObservableList<Song>> searchedAlbumsProperty = new SimpleObjectProperty<>(searchedAlbums);
         Property<ObservableList<String>> searchedAuthorsProperty = new SimpleObjectProperty<>(searchedAuthors);
         Property<ObservableList<Song>> playlistSongsProperty = new SimpleObjectProperty<>(newPlaylistSongs);
@@ -91,6 +85,17 @@ public class NewPlaylistController {
         newPlaylistName.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().length() <= 256 ? change : null));
 
+
+        newPlaylistSongs.addListener((ListChangeListener<Song>) change -> {
+            String durationString = "0";
+
+            while (change.next()) {
+                ObservableList<Song> songsList = FXCollections.observableArrayList(change.getList());
+                durationString = StringHelpers.getSongsListDurationString(songsList);
+            }
+            playlistDuration.setText(durationString);
+        });
+
         byTitleSongsTableController.addSongAddToPlaylistBtn();
         newPlaylistSongsTableController.addRemoveSongBtn();
 
@@ -110,7 +115,7 @@ public class NewPlaylistController {
             newPlaylistSongs.clear();
         } else {
             String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
-            ClientApp.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, true, false);
+            NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
         }
 
     }

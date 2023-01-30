@@ -3,6 +3,7 @@ package client_gui;
 import client.ClientApp;
 import client.ClientContext;
 import common.Emotion;
+import common.NodeHelpers;
 import common.Playlist;
 import common.User;
 import common.interfaces.EmotionDAO;
@@ -14,11 +15,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Window;
 
 import java.rmi.RemoteException;
 import java.util.List;
 
 public class RootController {
+
     @FXML
     public Button logoutBtn;
     @FXML
@@ -28,8 +31,6 @@ public class RootController {
     @FXML
     public Label userLabel;
     @FXML
-    public AnchorPane window;
-    @FXML
     public ListView<Playlist> playlistsList;
     @FXML
     private Button menuSearchBtn;
@@ -37,6 +38,7 @@ public class RootController {
     public Button menuPlaylistsBtn;
     @FXML
     private AnchorPane mainView;
+    private final Window window = ClientApp.getWindow();
 
     public void initialize() throws RemoteException {
         ClientApp.setMainView(mainView);
@@ -61,7 +63,7 @@ public class RootController {
                     }
                 } else {
                     context.setCurrentPlaylist(null);
-                    ClientApp.showSearchView();
+                    ClientApp.showView(ClientApp.ViewName.SEARCH);
                 }
                 userLabel.setText(newUser != null ? "Ciao, " + newUser.getUsername() : "");
                 menuPlaylistsBtn.setDisable(newUser == null);
@@ -74,25 +76,23 @@ public class RootController {
 
         playlistsList.setVisible(false);
 
-        menuSearchBtn.setOnAction(event ->
-                ClientApp.showSearchView()
-        );
+        menuSearchBtn.setOnAction(event -> ClientApp.showView(ClientApp.ViewName.SEARCH));
 
-        menuPlaylistsBtn.setOnAction(event ->
-                ClientApp.showPlaylistsView()
-        );
+        menuPlaylistsBtn.setOnAction(event -> ClientApp.showView(ClientApp.ViewName.PLAYLISTS));
 
         signupBtn.setOnAction(event ->
-                ClientApp.createStage("signupView.fxml", "Registrazione utente", true)
+                NodeHelpers.createStage(
+                        window, null, ClientApp.signupURL, "Registrazione utente", true)
         );
 
         loginBtn.setOnAction(event ->
-                ClientApp.createStage("loginView.fxml", "Login", true)
+                NodeHelpers.createStage(
+                        window, null, ClientApp.loginURL, "Login", true)
         );
 
         logoutBtn.setOnAction(event -> {
             final String msg = "Sei sicuro di voler uscire dal tuo account?";
-            final boolean res = ClientApp.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true, true);
+            final boolean res = NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true);
             if (res) context.setUser(null);
 
         });
@@ -124,7 +124,7 @@ public class RootController {
         playlistsList.setOnMouseClicked(playlist -> {
             Playlist current = playlistsList.getSelectionModel().getSelectedItem();
             if (current != null) context.setCurrentPlaylist(current);
-            ClientApp.showPlaylistsView();
+            ClientApp.showView(ClientApp.ViewName.PLAYLISTS);
         });
     }
 }

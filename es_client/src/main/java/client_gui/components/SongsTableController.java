@@ -2,6 +2,7 @@ package client_gui.components;
 
 import client.ClientApp;
 import client.ClientContext;
+import common.NodeHelpers;
 import common.Playlist;
 import common.Song;
 import common.interfaces.PlaylistDAO;
@@ -19,15 +20,12 @@ import java.util.List;
 public class SongsTableController {
     @FXML
     private TableView<Song> songsTable;
-    private ClientContext context;
+    private ClientContext context = ClientContext.getInstance();
     private ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
-    private PlaylistDAO playlistDAO;
+    private PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
 
     public void initialize() {
-        context = ClientContext.getInstance();
-        playlistDAO = ClientApp.getPlaylistDAO();
         newPlaylistSongs = context.getNewPlaylistSongs();
-
         addEmotionsInfoBtn();
     }
 
@@ -43,7 +41,12 @@ public class SongsTableController {
                 viewBtn.setOnAction(event1 -> {
                     Song song = songsTable.getItems().get(getIndex());
                     context.setCurrentSong(song);
-                    ClientApp.createStage("songInfoView.fxml", "Info canzone", true);
+                    NodeHelpers.createStage(
+                            ClientApp.getWindow(),
+                            null,
+                            ClientApp.songInfoURL,
+                            "Info canzone",
+                            true);
                 });
 
                 btnBox.getChildren().add(viewBtn);
@@ -67,7 +70,7 @@ public class SongsTableController {
         songsTable.getColumns().add(0, emotionColumn);
     }
 
-    public void addTableEmotionAddBtn(ClientContext context) {
+    public void addTableEmotionAddBtn() {
 
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
                 new TableCell<>() {
@@ -79,7 +82,7 @@ public class SongsTableController {
                         emotionsAddBtn.setOnAction(event1 -> {
                             Song song = getTableView().getItems().get(getIndex());
                             context.setCurrentSong(song);
-                            ClientApp.createStage("ratingView.fxml", "Inserisci emozioni", true);
+                            NodeHelpers.createStage(ClientApp.getWindow(), null, ClientApp.ratingURL, "Inserisci emozioni", true);
                         });
 
                         btnBox.getChildren().add(emotionsAddBtn);
@@ -198,10 +201,10 @@ public class SongsTableController {
                                     String msg;
                                     if (rows.length > 0) {
                                         msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'!";
-                                        ClientApp.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true, false);
+                                        NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
                                     } else {
                                         msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'!";
-                                        ClientApp.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, true, false);
+                                        NodeHelpers.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, false);
                                     }
                                 } catch (RemoteException e) {
                                     throw new RuntimeException(e);

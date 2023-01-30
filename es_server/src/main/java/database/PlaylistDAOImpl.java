@@ -81,6 +81,25 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     }
 
     @Override
+    public int deletePlaylist(int playListId) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+
+        final String query = "DELETE FROM playlists " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, playListId);
+
+            return stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return 0;
+    }
+
+    @Override
     public Playlist getPlaylistById(int playlistId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 

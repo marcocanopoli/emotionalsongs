@@ -1,29 +1,30 @@
 package client;
 
+import common.NodeHelpers;
 import common.interfaces.EmotionDAO;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Modality;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
+import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientApp extends Application {
 
-    private static Stage window;
+    private static Window window;
+    private static Stage mainStage;
     private static AnchorPane mainView;
     private static VBox searchView;
     private static TabPane playlistsView;
@@ -31,7 +32,16 @@ public class ClientApp extends Application {
     private static EmotionDAO emotionDAO;
     private static SongDAO songDAO;
     private static UserDAO userDAO;
+    public static final URL stylesheetURL = ClientApp.class.getResource("/client_gui/emotionalSongs.css");
+    public static final URL rootURL = ClientApp.class.getResource("/client_gui/rootLayout.fxml");
+    public static final URL playlistsViewURL = ClientApp.class.getResource("/client_gui/playlistsView.fxml");
+    public static final URL searchViewURL = ClientApp.class.getResource("/client_gui/searchView.fxml");
+    public static final URL signupURL = ClientApp.class.getResource("/client_gui/signupView.fxml");
+    public static final URL loginURL = ClientApp.class.getResource("/client_gui/loginView.fxml");
+    public static final URL songInfoURL = ClientApp.class.getResource("/client_gui/songInfoView.fxml");
+    public static final URL ratingURL = ClientApp.class.getResource("/client_gui/ratingView.fxml");
 
+    public enum ViewName {PLAYLISTS, SEARCH}
 
     public static SongDAO getSongDAO() {
         return songDAO;
@@ -53,115 +63,52 @@ public class ClientApp extends Application {
         mainView = view;
     }
 
-
     @Override
-    public void start(Stage stage) {
-        setStage(stage);
-        window.setTitle("Emotional Songs");
-        window.setMinWidth(1280);
-        window.setMinHeight(800);
+    public void start(Stage stage) throws IOException {
 
-        try {
-            Parent root = FXMLLoader.load(
-                    Objects.requireNonNull(
-                            ClientApp.class.getResource("/client_gui/rootLayout.fxml")));
-            Scene scene = new Scene(root);
+        setWindow(stage.getOwner());
 
-            scene.getStylesheets().add(
-                    Objects.requireNonNull(
-                            ClientApp.class.getResource("/client_gui/emotionalSongs.css")).toExternalForm());
+        stage.setMinWidth(1280);
+        stage.setMinHeight(800);
 
-            window.setScene(scene);
-            window.show();
-            window.centerOnScreen();
+        setMainStage(Objects.requireNonNull(NodeHelpers.createStage(
+                null, stage, rootURL, "Emotional Songs", false)).getKey());
 
-            createViews();
-            showSearchView();
+        if (stylesheetURL != null) mainStage.getScene().getStylesheets().add((stylesheetURL).toExternalForm());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createViews();
+        showView(ViewName.SEARCH);
     }
 
-    public static void setStage(Stage stage) {
-        window = stage;
+    public static void setMainStage(Stage stage) {
+        mainStage = stage;
     }
 
-    public static void createStage(String resourceName, String title, boolean isModal) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("/client_gui/" + resourceName));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-
-            stage.initOwner(window);
-            stage.initModality(isModal ? Modality.APPLICATION_MODAL : Modality.NONE);
-            stage.setTitle(title);
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.setAlwaysOnTop(true);
-
-
-            if (isModal) {
-                stage.showAndWait();
-            } else {
-                stage.show();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static Window getWindow() {
+        return window;
     }
 
-    public static boolean createAlert(Alert.AlertType type, String title, String headerText, String message, boolean wait, boolean visibleConcel) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(headerText);
-        alert.setContentText(message);
-
-        Region spacer = new Region();
-        ButtonBar.setButtonData(spacer, ButtonBar.ButtonData.BIG_GAP);
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        alert.getDialogPane().applyCss();
-        HBox hboxDialogPane = (HBox) alert.getDialogPane().lookup(".container");
-        hboxDialogPane.getChildren().add(spacer);
-
-        AtomicBoolean res = new AtomicBoolean(false);
-
-        if (!visibleConcel) {
-            final Button cancelBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
-            cancelBtn.setVisible(false);
-        }
-
-        if (wait) {
-            alert.showAndWait()
-                    .filter(response -> response == ButtonType.OK)
-                    .ifPresent(response -> res.set(true));
-        } else {
-            alert.show();
-        }
-
-        return res.get();
+    public static void setWindow(Window appWindow) {
+        window = appWindow;
     }
 
     public static void createViews() throws IOException {
-        playlistsView = FXMLLoader.load(
-                Objects.requireNonNull(
-                        ClientApp.class.getResource("/client_gui/playlistsView.fxml")));
 
-        searchView = FXMLLoader.load(
-                Objects.requireNonNull(
-                        ClientApp.class.getResource("/client_gui/searchView.fxml")));
+        if (playlistsViewURL != null) playlistsView = FXMLLoader.load(playlistsViewURL);
+        if (searchViewURL != null) searchView = FXMLLoader.load(searchViewURL);
+
     }
 
-    public static void showSearchView() {
+    public static void showView(ViewName view) {
         mainView.getChildren().clear();
-        mainView.getChildren().add(ClientApp.searchView);
-    }
 
-    public static void showPlaylistsView() {
-        mainView.getChildren().clear();
-        ClientApp.playlistsView.getSelectionModel().select(0);
-        mainView.getChildren().add(ClientApp.playlistsView);
+        switch (view) {
+            case SEARCH -> mainView.getChildren().add(ClientApp.searchView);
+            case PLAYLISTS -> {
+                ClientApp.playlistsView.getSelectionModel().select(0);
+                mainView.getChildren().add(ClientApp.playlistsView);
+            }
+        }
     }
 
     public static void appStart(String[] args) throws RemoteException, NotBoundException {

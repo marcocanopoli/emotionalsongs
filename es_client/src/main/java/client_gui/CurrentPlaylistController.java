@@ -3,15 +3,23 @@ package client_gui;
 import client.ClientApp;
 import client.ClientContext;
 import client_gui.components.SongsTableController;
+import common.NodeHelpers;
 import common.Playlist;
 import common.Song;
+import common.StringHelpers;
 import common.interfaces.PlaylistDAO;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 
 import java.rmi.RemoteException;
-import java.util.List;
 
 public class CurrentPlaylistController {
 
@@ -22,49 +30,66 @@ public class CurrentPlaylistController {
     @FXML
     public Label playlistDuration;
     @FXML
+    public Button deletePlaylistBtn;
+    @FXML
     private TableView<Song> playlistSongsTable;
     @FXML
     private SongsTableController playlistSongsTableController;
+    private final PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+    private final ClientContext context = ClientContext.getInstance();
+    private Playlist currentPlaylist = context.getCurrentPlaylist();
+    private ObservableList<Song> currentPlaylistSongs = FXCollections.observableArrayList();
 
     public void initialize() {
-        ClientContext context = ClientContext.getInstance();
+
+        Property<ObservableList<Song>> playlistSongsProperty = new SimpleObjectProperty<>(currentPlaylistSongs);
+
+        playlistSongs.textProperty().bind(Bindings.size(currentPlaylistSongs).asString());
+        playlistSongsTable.itemsProperty().bind(playlistSongsProperty);
 
         context.addPropertyChangeListener(e -> {
             if (e.getPropertyName().equals("playlist")) {
 
-                Playlist currentPlaylist = (Playlist) e.getNewValue();
+                currentPlaylist = (Playlist) e.getNewValue();
 
                 if (currentPlaylist != null) {
                     try {
-                        setCurrentPlaylist(currentPlaylist);
+                        initCurrentPlaylist();
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
+                } else {
+                    playlistName.setText("");
+                    playlistDuration.setText("0");
                 }
             }
         });
 
-        playlistSongsTableController.addTableEmotionAddBtn(context);
+        playlistSongsTableController.addTableEmotionAddBtn();
     }
 
-    private void setCurrentPlaylist(Playlist playlist) throws RemoteException {
-        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
-        List<Song> songs = playlistDAO.getPlaylistSongs(playlist.getId());
-        Integer duration = 0;
+    private void initCurrentPlaylist() throws RemoteException {
+        currentPlaylistSongs.setAll(playlistDAO.getPlaylistSongs(currentPlaylist.getId()));
+        playlistName.setText(currentPlaylist.getName());
+        playlistDuration.setText(StringHelpers.getSongsListDurationString(currentPlaylistSongs));
+    }
 
-        for (Song song : songs) {
-            duration += song.getDurationInt();
+    @FXML
+    private void deletePlaylist() throws RemoteException {
+        String msg = "Sei sicuro di voler eliminare la playlist '" + currentPlaylist.getName() + "' ?";
+
+        boolean res = NodeHelpers.createAlert(
+                Alert.AlertType.CONFIRMATION, "Conferma eliminazione playlist", null, msg, true);
+
+        if (res) {
+            int deleted = playlistDAO.deletePlaylist(currentPlaylist.getId());
+
+            if (deleted > 0) {
+                context.removeUserPlaylist(currentPlaylist);
+                context.setCurrentPlaylist(null);
+            }
+
         }
-
-        String durationString = duration == 0 ? "0" : String.format("%d:%02d:%02d", duration / 3600, (duration % 3600) / 60, (duration % 60));
-
-        playlistName.setText(playlist.getName());
-        playlistSongs.setText(String.valueOf(songs.size()));
-        playlistDuration.setText(durationString);
-
-        playlistSongsTable.getItems().clear();
-        playlistSongsTable.getItems().addAll(songs);
-
 
     }
 

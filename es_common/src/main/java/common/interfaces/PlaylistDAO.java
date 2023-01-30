@@ -13,6 +13,8 @@ public interface PlaylistDAO extends Remote {
 
     Playlist createNewPlaylist(int userId, String name, List<Song> songs) throws RemoteException;
 
+    int deletePlaylist(int playListId) throws RemoteException;
+
     Playlist getPlaylistById(int playlistId) throws RemoteException;
 
     Playlist getPlaylistByName(String name) throws RemoteException;
