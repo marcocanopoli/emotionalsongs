@@ -152,7 +152,7 @@ public class SongsTableController {
 
                     if (context.getCurrentPlaylist() != null && isCurrentPlaylist) {
                         try {
-                            playlistDAO.removeSongFromPlaylist(context.getCurrentPlaylist().getId(), song.id);
+                            playlistDAO.deletePlaylistSong(context.getCurrentPlaylist().getId(), song.id);
                         } catch (RemoteException e) {
                             throw new RuntimeException(e);
                         }

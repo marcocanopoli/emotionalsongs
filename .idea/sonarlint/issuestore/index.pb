@@ -41,8 +41,6 @@ a
 1es_common/src/main/java/common/StringHelpers.java,9/e/9ece91570dd2c61b1d730ee2ff1ba751f2360dae
 ]
 -es_client/src/main/java/client/ClientApp.java,b/9/b941031ee94d3efdc866d566a7ec4f8a9faa227b
-f
-6es_common/src/main/java/common/interfaces/UserDAO.java,1/c/1c189ce05955e8cd936f99ab2d6683d03f28159d
 _
 /es_common/src/main/java/common/NodeHelpers.java,0/a/0a43a5ad89dee526d14e7bcc04809f8374e5088a
 T
@@ -53,3 +51,17 @@ A
 -es_server/src/main/java/server/ServerApp.java,e/1/e1294e8c054a4d0813a5c06026a27fe37c807e74
 f
 6es_server/src/main/java/server_gui/RootController.java,a/5/a5e80a55580b996d9c27d9078fdeb4729ebbe0ad
+g
+7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
+w
+Ges_client/src/main/java/client_gui/components/SongsTableController.java,2/3/23f5ad2a2827cf26bda29cd5c07588b7b4ac5004
+q
+Aes_client/src/main/java/client_gui/CurrentPlaylistController.java,0/0/0012896fea86167167e6df54fba12f55944f0c54
+j
+:es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639
+a
+1es_client/src/main/java/client/ClientContext.java,5/2/52e714645ef87f67505850e3a9af692b6af75413
+f
+6es_client/src/main/java/client_gui/RootController.java,f/2/f2902d8f943ac319447c8a8069f37de974809d3c
+m
+=es_client/src/main/java/client_gui/NewPlaylistController.java,9/4/94533054ed457b8e1b23da47a9fd41dcb8185744
