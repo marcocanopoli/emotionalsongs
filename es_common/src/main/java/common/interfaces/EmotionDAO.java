@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface EmotionDAO extends Remote {
 
-    List<Emotion> getEmotions() throws RemoteException;
+    List<Emotion> getAllEmotions() throws RemoteException;
 }

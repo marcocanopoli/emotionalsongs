@@ -22,8 +22,12 @@ public class EmotionDAOImpl implements EmotionDAO {
         registry.rebind("EmotionService", emotionDAOStub);
     }
 
+    //================================================================================
+    // SELECT
+    //================================================================================
+
     @Override
-    public List<Emotion> getEmotions() throws RemoteException {
+    public List<Emotion> getAllEmotions() throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
         final String QUERY = "SELECT * "

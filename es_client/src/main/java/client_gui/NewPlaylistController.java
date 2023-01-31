@@ -190,7 +190,7 @@ public class NewPlaylistController {
     @FXML
     private void addAuthorSongs() throws RemoteException {
         String author = authorsList.getSelectionModel().getSelectedItem();
-        List<Song> results = songDAO.searchByAuthorYear(author, null);
+        List<Song> results = songDAO.getSongsByAuthorYear(author, null);
 
         if (!results.isEmpty()) {
             context.addNewPlaylistSongs(results);
@@ -201,7 +201,7 @@ public class NewPlaylistController {
 
     @FXML
     private void addAlbumSongs(String author, String album) throws RemoteException {
-        List<Song> results = songDAO.searchByAlbum(author, album);
+        List<Song> results = songDAO.getSongsByAuthorAlbum(author, album);
 
         if (!results.isEmpty()) {
             context.addNewPlaylistSongs(results);

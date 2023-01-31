@@ -33,19 +33,16 @@ public class RatingViewController {
     @FXML
     public Label songDuration;
 
+    ClientContext context = ClientContext.getInstance();
     List<SongEmotion> songEmotions;
+    SongDAO songDAO = ClientApp.getSongDAO();
+    User user = context.getUser();
+    Song song = context.getCurrentSong();
 
-    SongDAO songDAO;
-
-    User user;
-
-    Song song;
+    List<Emotion> emotions = context.getEmotions();
 
     public void initialize() throws IOException {
-        ClientContext context = ClientContext.getInstance();
-        song = context.getCurrentSong();
-        user = context.getUser();
-        songDAO = ClientApp.getSongDAO();
+
         songEmotions = songDAO.getSongEmotionsRating(user.getId(), song.id);
 
         songAuthor.setText(song.getAuthor());
@@ -55,12 +52,11 @@ public class RatingViewController {
         songGenre.setText(song.getGenre());
         songDuration.setText(song.getDuration());
 
-        List<Emotion> emotions = context.getEmotions();
 
-        initEmotions(emotions);
+        initEmotions();
     }
 
-    private void initEmotions(List<Emotion> emotions) {
+    private void initEmotions() {
 
         for (int i = 0; i < emotions.size(); i++) {
 

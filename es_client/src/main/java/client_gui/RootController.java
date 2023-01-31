@@ -46,7 +46,7 @@ public class RootController {
 
         PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
         EmotionDAO emotionDAO = ClientApp.getEmotionDAO();
-        List<Emotion> emotions = emotionDAO.getEmotions();
+        List<Emotion> emotions = emotionDAO.getAllEmotions();
 
         context.setEmotions(emotions);
 

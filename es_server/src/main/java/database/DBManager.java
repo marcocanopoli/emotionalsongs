@@ -59,8 +59,14 @@ public class DBManager {
     public ResultSet executeQuery(String query) {
 
         Connection conn = ServerApp.getConnection();
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+
+            }
             return rs;
 
         } catch (SQLException ex) {

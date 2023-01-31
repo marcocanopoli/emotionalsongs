@@ -1,25 +1,0 @@
-
-
-java:S1192"iDefine a constant instead of duplicating this literal "JOIN emotions E ON SE.emotion_id = E.id " 3 times.(½ôúƒ
-r
-java:S1192"WDefine a constant instead of duplicating this literal "FROM song_emotions SE " 4 times.(èëêéúÿÿÿÿ
-d
-java:S11926"IDefine a constant instead of duplicating this literal "Error: " 12 times.(Ù¸—ûÿÿÿÿ
-b
-java:S1192z"LDefine a constant instead of duplicating this literal "FROM songs " 5 times.(¾Õ©ê
-^
-java:S1192ˆ"GDefine a constant instead of duplicating this literal "author" 5 times.(×¤µó
-d
-java:S1192!"NDefine a constant instead of duplicating this literal "WHERE S.id = " 3 times.(Í¹¥¡
-~
-java:S1192"cDefine a constant instead of duplicating this literal "JOIN songs S ON S.id = SE.song_id " 3 times.(ØÏÀóøÿÿÿÿ
-d
-java:S1192¥"FDefine a constant instead of duplicating this literal "title" 3 times.(‘¬ä‚8ÒÌ’ğß0
-g
-java:S1192ª"IDefine a constant instead of duplicating this literal "duration" 6 times.(œÂ…Á8ÒÌ’ğß0
-i
-java:S1192©"FDefine a constant instead of duplicating this literal "genre" 3 times.(Ÿ”›¼ùÿÿÿÿ8ÒÌ’ğß0
-i
-java:S1192‰"FDefine a constant instead of duplicating this literal "album" 4 times.(Ò‹¯”şÿÿÿÿ8Ø–•îß0
-F
-java:S2695Ç"/This "PreparedStatement" only has 1 parameters.(…ü¡»

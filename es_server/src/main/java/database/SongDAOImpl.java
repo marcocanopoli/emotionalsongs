@@ -9,7 +9,10 @@ import server.ServerLogger;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,130 @@ public class SongDAOImpl implements SongDAO {
         registry.rebind("SongService", songDAOStub);
     }
 
+    //================================================================================
+    // SELECT
+    //================================================================================
+
+    @Override
+    public List<Song> getSongsByTitle(String titleText) {
+        Connection conn = ServerApp.getConnection();
+        final String query = "SELECT * "
+                + "FROM songs "
+                + "WHERE title "
+                + "ILIKE ? "
+                + "ORDER BY title ASC";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, "%" + titleText + "%");
+
+            List<Song> results = new ArrayList<>();
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int year = rs.getInt("year");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
+
+                results.add(new Song(id, title, author, year, album, genre, duration));
+
+            }
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Song> getSongsByAuthorYear(String authorText, Integer yearText) {
+        Connection conn = ServerApp.getConnection();
+        String yearQuery = yearText != null ? "AND year = ? " : "";
+
+        String query = "SELECT * "
+                + "FROM songs "
+                + "WHERE author "
+                + "ILIKE ? "
+                + yearQuery
+                + "ORDER BY author ASC";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, "%" + authorText + "%");
+            if (yearText != null) stmt.setInt(2, yearText);
+
+            List<Song> results = new ArrayList<>();
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int year = rs.getInt("year");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
+
+                results.add(new Song(id, title, author, year, album, genre, duration));
+
+            }
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Song> getSongsByAuthorAlbum(String authorText, String albumText) {
+        Connection conn = ServerApp.getConnection();
+
+        String query = "SELECT  * "
+                + "FROM songs "
+                + "WHERE album = ? "
+                + "AND author = ? "
+                + "ORDER BY title ASC";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, albumText);
+            stmt.setString(2, authorText);
+
+            List<Song> results = new ArrayList<>();
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int year = rs.getInt("year");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
+
+                results.add(new Song(id, title, author, year, album, genre, duration));
+
+            }
+            return results;
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return new ArrayList<>();
+    }
+
     @Override
     public List<SongEmotion> getSongEmotionsRating(int userId, int songId) {
         Connection conn = ServerApp.getConnection();
@@ -30,13 +157,16 @@ public class SongDAOImpl implements SongDAO {
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
                 "JOIN users U on U.id = SE.user_id " +
-                "WHERE S.id = " + songId +
-                "AND U.id = " + userId;
+                "WHERE S.id = ? " +
+                "AND U.id = ? ";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, songId);
+            stmt.setInt(2, userId);
 
             List<SongEmotion> results = new ArrayList<>();
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 int emoId = rs.getInt("emotion_id");
@@ -57,17 +187,20 @@ public class SongDAOImpl implements SongDAO {
     }
 
     @Override
-    public List<String> getSongEmotionNotes(int userId, int songId, int emotionId) {
+    public List<String> getSongEmotionNotes(int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = "SELECT SE.notes  " +
                 "FROM song_emotions SE " +
-                "WHERE SE.song_id  = " + songId +
-                "AND SE.user_id  = " + userId +
-                "AND SE.emotion_id = " + emotionId;
+                "WHERE SE.song_id  = ? " +
+                "AND SE.emotion_id = ? ";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, songId);
+            stmt.setInt(2, emotionId);
+
+            ResultSet rs = stmt.executeQuery();
             List<String> results = new ArrayList<>();
 
             while (rs.next()) {
@@ -91,12 +224,15 @@ public class SongDAOImpl implements SongDAO {
                 "FROM song_emotions SE " +
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
-                "WHERE S.id = " + songId +
+                "WHERE S.id = ? " +
                 " GROUP BY E.id";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, songId);
+
             HashMap<Integer, Integer> results = new HashMap<>();
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 int emoId = rs.getInt("id");
@@ -188,10 +324,13 @@ public class SongDAOImpl implements SongDAO {
                 "FROM song_emotions SE " +
                 "JOIN emotions E ON SE.emotion_id = E.id " +
                 "JOIN songs S ON S.id = SE.song_id " +
-                "WHERE S.id = " + songId;
+                "WHERE S.id = ? ";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, songId);
+
+            ResultSet rs = stmt.executeQuery();
+
             int count = 0;
 
             while (rs.next()) {
@@ -208,6 +347,10 @@ public class SongDAOImpl implements SongDAO {
 
         return 0;
     }
+
+    //================================================================================
+    // INSERT
+    //================================================================================
 
     @Override
     public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
@@ -249,6 +392,10 @@ public class SongDAOImpl implements SongDAO {
         }
     }
 
+    //================================================================================
+    // DELETE
+    //================================================================================
+
     @Override
     public int deleteSongEmotion(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
@@ -271,123 +418,4 @@ public class SongDAOImpl implements SongDAO {
         return 0;
     }
 
-    @Override
-    public List<Song> searchByTitle(String titleText) {
-        Connection conn = ServerApp.getConnection();
-        final String query = "SELECT * "
-                + "FROM songs "
-                + "WHERE title "
-                + "ILIKE ? "
-                + "ORDER BY title ASC";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, "%" + titleText + "%");
-
-            List<Song> results = new ArrayList<>();
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String author = rs.getString("author");
-                int year = rs.getInt("year");
-                String album = rs.getString("album");
-                String genre = rs.getString("genre");
-                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
-
-                results.add(new Song(id, title, author, year, album, genre, duration));
-
-            }
-            return results;
-
-        } catch (SQLException ex) {
-            ServerLogger.error("Error: " + ex);
-        }
-
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<Song> searchByAuthorYear(String authorText, Integer yearText) {
-        Connection conn = ServerApp.getConnection();
-        String yearQuery = yearText != null ? "AND year = ? " : "";
-
-        String query = "SELECT * "
-                + "FROM songs "
-                + "WHERE author "
-                + "ILIKE ? "
-                + yearQuery
-                + "ORDER BY author ASC";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, "%" + authorText + "%");
-            if (yearText != null) stmt.setInt(2, yearText);
-
-            List<Song> results = new ArrayList<>();
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String author = rs.getString("author");
-                int year = rs.getInt("year");
-                String album = rs.getString("album");
-                String genre = rs.getString("genre");
-                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
-
-                results.add(new Song(id, title, author, year, album, genre, duration));
-
-            }
-            return results;
-
-        } catch (SQLException ex) {
-            ServerLogger.error("Error: " + ex);
-        }
-
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<Song> searchByAlbum(String authorText, String albumText) {
-        Connection conn = ServerApp.getConnection();
-
-        String query = "SELECT  * "
-                + "FROM songs "
-                + "WHERE album = ? "
-                + "AND author = ? "
-                + "ORDER BY title ASC";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, albumText);
-            stmt.setString(2, authorText);
-
-            List<Song> results = new ArrayList<>();
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String author = rs.getString("author");
-                int year = rs.getInt("year");
-                String album = rs.getString("album");
-                String genre = rs.getString("genre");
-                Integer duration = rs.getInt("duration") > 0 ? rs.getInt("duration") : null;
-
-                results.add(new Song(id, title, author, year, album, genre, duration));
-
-            }
-            return results;
-
-        } catch (SQLException ex) {
-            ServerLogger.error("Error: " + ex);
-        }
-
-        return new ArrayList<>();
-    }
 }

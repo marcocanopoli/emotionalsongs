@@ -10,17 +10,17 @@ import java.util.List;
 
 public interface SongDAO extends Remote {
 
-    HashMap<Integer, Integer> getSongEmotions(int songId) throws RemoteException;
-
     List<Song> getAlbums(String album) throws RemoteException;
 
     List<String> getAuthors(String author) throws RemoteException;
+
+    HashMap<Integer, Integer> getSongEmotions(int songId) throws RemoteException;
 
     int getSongEmotionsCount(int songId) throws RemoteException;
 
     List<SongEmotion> getSongEmotionsRating(int userId, int songId) throws RemoteException;
 
-    List<String> getSongEmotionNotes(int userId, int songId, int emotionId) throws RemoteException;
+    List<String> getSongEmotionNotes(int songId, int emotionId) throws RemoteException;
 
     int deleteSongEmotion(int userId, int songId, int emotionId) throws RemoteException;
 
@@ -28,9 +28,9 @@ public interface SongDAO extends Remote {
 
     void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) throws RemoteException;
 
-    List<Song> searchByAuthorYear(String authorText, Integer yearText) throws RemoteException;
+    List<Song> getSongsByAuthorYear(String authorText, Integer yearText) throws RemoteException;
 
-    List<Song> searchByTitle(String searchString) throws RemoteException;
+    List<Song> getSongsByTitle(String searchString) throws RemoteException;
 
-    List<Song> searchByAlbum(String authorText, String albumText) throws RemoteException;
+    List<Song> getSongsByAuthorAlbum(String authorText, String albumText) throws RemoteException;
 }

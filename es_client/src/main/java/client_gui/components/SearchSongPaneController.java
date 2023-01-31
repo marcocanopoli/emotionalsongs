@@ -64,7 +64,7 @@ public class SearchSongPaneController {
     private void searchByTitle() throws RemoteException {
         String title = titleInput.getText().trim();
 
-        List<Song> results = songDAO.searchByTitle(title);
+        List<Song> results = songDAO.getSongsByTitle(title);
         context.setSearchedSongs(results);
         if (!results.isEmpty()) titleInput.clear();
     }
@@ -74,7 +74,7 @@ public class SearchSongPaneController {
         String author = authorInput.getText().trim();
         Integer year = yearInput.getText().isBlank() ? null : Integer.parseInt(yearInput.getText());
 
-        List<Song> results = songDAO.searchByAuthorYear(author, year);
+        List<Song> results = songDAO.getSongsByAuthorYear(author, year);
         context.setSearchedSongs(results);
         if (!results.isEmpty()) authorInput.clear();
         if (!results.isEmpty()) yearInput.clear();
