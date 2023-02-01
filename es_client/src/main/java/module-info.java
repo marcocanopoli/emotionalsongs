@@ -12,4 +12,6 @@ module es_client {
     exports client;
     exports client_gui;
     opens client_gui to javafx.fxml;
+    exports client_gui.components;
+    opens client_gui.components to javafx.fxml;
 }

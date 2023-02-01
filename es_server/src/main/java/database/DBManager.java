@@ -1,10 +1,13 @@
 package database;
 
+import common.User;
 import server.ServerApp;
 import server.ServerLogger;
 
 import java.sql.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class DBManager {
@@ -56,8 +59,14 @@ public class DBManager {
     public ResultSet executeQuery(String query) {
 
         Connection conn = ServerApp.getConnection();
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+
+            }
             return rs;
 
         } catch (SQLException ex) {
@@ -75,7 +84,7 @@ public class DBManager {
                         id +
                         "first_name VARCHAR(60) NOT NULL, " +
                         "last_name VARCHAR(100) NOT NULL, " +
-                        "cf VARCHAR(16) NOT NULL, " +
+                        "cf VARCHAR(16) UNIQUE NOT NULL, " +
                         "address VARCHAR(200), " +
                         "username VARCHAR(20) UNIQUE NOT NULL, " +
                         "email VARCHAR(60) UNIQUE NOT NULL, " +
@@ -108,20 +117,21 @@ public class DBManager {
                         "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "name VARCHAR(256) UNIQUE NOT NULL)";
 
-        final String CREATE_PLAYLIST_SONG_TABLE =
-                "CREATE TABLE IF NOT EXISTS playlist_song " +
-                        "(playlist_id INTEGER REFERENCES playlists (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
+        final String CREATE_PLAYLIST_SONGS_TABLE =
+                "CREATE TABLE IF NOT EXISTS playlist_songs " +
+                        "(order_key SERIAL UNIQUE NOT NULL ," +
+                        "playlist_id INTEGER REFERENCES playlists (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "song_id INTEGER REFERENCES songs (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
-                        "CONSTRAINT playlist_song_id PRIMARY KEY (playlist_id, song_id))";
+                        "CONSTRAINT playlist_songs_id PRIMARY KEY (playlist_id, song_id))";
 
-        final String CREATE_SONG_EMOTION_TABLE =
-                "CREATE TABLE IF NOT EXISTS song_emotion " +
+        final String CREATE_SONG_EMOTIONS_TABLE =
+                "CREATE TABLE IF NOT EXISTS song_emotions " +
                         "(song_id INTEGER REFERENCES songs (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "emotion_id INTEGER REFERENCES emotions (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE ," +
                         "rating INTEGER ," +
                         "notes VARCHAR(256) ," +
-                        "CONSTRAINT song_emotion_user_id PRIMARY KEY (song_id, emotion_id, user_id))";
+                        "CONSTRAINT user_song_emotion PRIMARY KEY (user_id, song_id, emotion_id))";
 
         Connection conn = ServerApp.getConnection();
 
@@ -130,8 +140,8 @@ public class DBManager {
             stmt.executeUpdate(CREATE_SONGS_TABLE);
             stmt.executeUpdate(CREATE_EMOTIONS_TABLE);
             stmt.executeUpdate(CREATE_PLAYLISTS_TABLE);
-            stmt.executeUpdate(CREATE_PLAYLIST_SONG_TABLE);
-            stmt.executeUpdate(CREATE_SONG_EMOTION_TABLE);
+            stmt.executeUpdate(CREATE_PLAYLIST_SONGS_TABLE);
+            stmt.executeUpdate(CREATE_SONG_EMOTIONS_TABLE);
         } catch (SQLException e) {
             ServerLogger.error("Table creation error: " + e);
         }
@@ -145,11 +155,25 @@ public class DBManager {
 //        createTable(CREATE_SONG_EMOTION_TABLE);
     }
 
-    public static void seed() {
+    public static void seed() throws SQLException {
+
+        Connection conn = ServerApp.getConnection();
+
+        conn.setAutoCommit(false);
+
+        seedUsers(conn);
+        seedEmotions(conn);
+
+        conn.setAutoCommit(true);
+
+    }
+
+    public static void seedEmotions(Connection conn) {
         final String SEED_EMOTIONS_QUERY =
                 "INSERT INTO emotions (name, description) VALUES (?, ?) " +
                         "ON CONFLICT (name) DO UPDATE " +
                         "SET description = EXCLUDED.description";
+
         final String[][] records = {
                 {"Amazement", "Feeling of wonder or happiness."},
                 {"Solemnity", "Feeling of transcendence, inspiration. Thrills."},
@@ -162,11 +186,7 @@ public class DBManager {
                 {"Sadness", "Feeling depressed, sorrowful."}
         };
 
-        Connection conn = ServerApp.getConnection();
-
         try (PreparedStatement stmt = conn.prepareStatement(SEED_EMOTIONS_QUERY)) {
-
-            conn.setAutoCommit(false);
 
             for (String[] emotion : records) {
                 stmt.setString(1, emotion[0]);
@@ -176,7 +196,41 @@ public class DBManager {
 
             stmt.executeBatch();
             conn.commit();
-            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            ServerLogger.error("Seeder error: " + e);
+        }
+
+    }
+
+    public static void seedUsers(Connection conn) {
+        final String SEED_USERS_QUERY = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
+                + "VALUES(?,?,?,?,?,?,?) ON CONFLICT (cf) DO NOTHING";
+
+        final List<User> users = new ArrayList<>();
+
+        users.add(new User(
+                "admin",
+                "admin",
+                "ADMIN",
+                null,
+                "admin@emotionalsongs.com",
+                "admin"));
+
+        try (PreparedStatement stmt = conn.prepareStatement(SEED_USERS_QUERY)) {
+
+            for (User u : users) {
+                stmt.setString(1, u.getFirstName());
+                stmt.setString(2, u.getLastName());
+                stmt.setString(3, u.getCF());
+                stmt.setString(4, u.getAddress());
+                stmt.setString(5, u.getUsername());
+                stmt.setString(6, u.getEmail());
+                stmt.setString(7, u.getUsername());
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+            conn.commit();
         } catch (SQLException e) {
             ServerLogger.error("Seeder error: " + e);
         }

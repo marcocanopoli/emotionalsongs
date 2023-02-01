@@ -1,6 +1,0 @@
-common/UserAddress.class
-common/Song.class
-common/interfaces/SongDAO.class
-common/interfaces/UserDAO.class
-module-info.class
-common/User.class

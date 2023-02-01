@@ -1,0 +1,21 @@
+
+t
+java:S2142>"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€
+a
+java:S1854L"?Remove this useless assignment to local variable "userService".(Áüˆşÿÿÿÿ8“Œèà0
+\
+java:S1854K"?Remove this useless assignment to local variable "songService".(³ê¡¸8”Œèà0
+_
+java:S1854J"BRemove this useless assignment to local variable "emotionService".(Ş×´—8”Œèà0
+e
+java:S1854I"CRemove this useless assignment to local variable "playlistService".(°Ç¯Øúÿÿÿÿ8”Œèà0
+M
+java:S1172F"+Remove this unused method parameter "args".(Æú¿òûÿÿÿÿ8Š­Ò‚à0
+V
+java:S1481I"4Remove this unused "playlistService" local variable.(°Ç¯Øúÿÿÿÿ8•Œèà0
+P
+java:S1481J"3Remove this unused "emotionService" local variable.(Ş×´—8•Œèà0
+M
+java:S1481K"0Remove this unused "songService" local variable.(³ê¡¸8•Œèà0
+R
+java:S1481L"0Remove this unused "userService" local variable.(Áüˆşÿÿÿÿ8–Œèà0

@@ -23,31 +23,31 @@ public class LoginController {
     public Button confirmLoginBtn;
 
     public void initialize() {
-        ClientContext context = ClientContext.getInstance();
+
 
 //        if (ClientContext.getUser() != null) {
 //            username.setDisable(true);
 //            pwd.setDisable(true);
 //            confirmLoginBtn.setText("Logout");
 //        }
+    }
 
-        confirmLoginBtn.setOnAction(event -> {
+    @FXML
+    private void login() {
+        ClientContext context = ClientContext.getInstance();
+        UserDAO userDAO = ClientApp.getUserDAO();
 
-            UserDAO userDAO = ClientApp.getUserDAO();
+        try {
+            User user = userDAO.getUser(username.getText(), pwd.getText());
+            context.setUser(user);
 
-            try {
-                User user = userDAO.getUser(username.getText(), pwd.getText());
-                context.setUser(user);
+            ClientLogger.debug("LoggedUser = " + (user != null ? String.valueOf(user) : "null"));
 
-                ClientLogger.debug("LoggedUser = " + (user != null ? String.valueOf(user) : "null"));
+            ((Stage) confirmLoginBtn.getScene().getWindow()).close();
 
-                ((Stage) confirmLoginBtn.getScene().getWindow()).close();
-
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

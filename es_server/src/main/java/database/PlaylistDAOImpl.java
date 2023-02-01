@@ -20,65 +20,20 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         registry.rebind("PlaylistService", playlistDAOStub);
     }
 
-    @Override
-    public Integer addSongToPlaylist(int playlistId, int songId) throws RemoteException {
-        Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?,?)" +
-                "ON CONFLICT ON CONSTRAINT playlist_song_id DO NOTHING";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, playlistId);
-            stmt.setInt(2, songId);
-
-            return stmt.executeUpdate();
-
-        } catch (SQLException ex) {
-            ServerLogger.error("ERROR: " + ex);
-            return null;
-        }
-    }
-
-    @Override
-    public Playlist createNewPlaylist(int userId, String name) throws RemoteException {
-        Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-
-            stmt.setInt(1, userId);
-            stmt.setString(2, name);
-
-            int affectedRows = stmt.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("Creating playlist failed, no rows affected.");
-            }
-
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return new Playlist(generatedKeys.getInt(1), userId, name);
-                } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
-                }
-            }
-
-        } catch (SQLException ex) {
-            ServerLogger.error("PLAYLIST NOT FOUND: " + ex);
-            return null;
-        }
-    }
+    //================================================================================
+    // SELECT
+    //================================================================================
 
     @Override
     public Playlist getPlaylistById(int playlistId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM playlists P "
                 + "WHERE  P.id = ? LIMIT 1";
 
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY);) {
             stmt.setInt(1, playlistId);
             ResultSet rs = stmt.executeQuery();
 
@@ -106,13 +61,13 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public Playlist getPlaylistByName(String name) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM playlists "
                 + "WHERE (name) "
                 + "ILIKE ('%"
                 + name + "%') LIMIT 1";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY);) {
             ResultSet rs = stmt.executeQuery();
 
             Playlist playlist = null;
@@ -138,12 +93,13 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public List<Song> getPlaylistSongs(int playlistId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * " +
+        final String QUERY = "SELECT * " +
                 "FROM songs S " +
-                "JOIN playlist_song PS ON PS.song_id = S.id " +
-                "WHERE PS.playlist_id = ?";
+                "JOIN playlist_songs PS ON PS.song_id = S.id " +
+                "WHERE PS.playlist_id = ? " +
+                "ORDER BY PS.order_key ASC";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
             stmt.setInt(1, playlistId);
             ResultSet rs = stmt.executeQuery();
 
@@ -175,12 +131,12 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     public List<Playlist> getUserPlaylists(int userId) throws RemoteException {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM playlists P "
                 + "WHERE  P.user_id = ?";
 
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
 
@@ -200,5 +156,114 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         }
 
         return null;
+    }
+
+    //================================================================================
+    // INSERT
+    //================================================================================
+
+    @Override
+    public int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+        final String QUERY = "INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?,?)" +
+                "ON CONFLICT ON CONSTRAINT playlist_songs_id DO NOTHING";
+
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
+
+            for (int id : songIds) {
+                stmt.setInt(1, playlistId);
+                stmt.setInt(2, id);
+                stmt.addBatch();
+            }
+            conn.setAutoCommit(false);
+
+            int[] affected = stmt.executeBatch();
+            conn.commit();
+
+            conn.setAutoCommit(true);
+
+            return affected;
+
+
+        } catch (SQLException ex) {
+            ServerLogger.error("ERROR: " + ex);
+            return new int[0];
+        }
+
+    }
+
+    @Override
+    public Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+        final String QUERY = "INSERT INTO playlists (user_id, name) VALUES (?,?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, name);
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating playlist failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    addSongsToPlaylist(generatedKeys.getInt(1), songIds);
+                    return new Playlist(generatedKeys.getInt(1), userId, name);
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
+        } catch (SQLException ex) {
+            ServerLogger.error("PLAYLIST NOT FOUND: " + ex);
+            return null;
+        }
+    }
+
+    //================================================================================
+    // DELETE
+    //================================================================================
+
+    @Override
+    public int deletePlaylist(int playListId) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+
+        final String query = "DELETE FROM playlists " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, playListId);
+
+            return stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int removeSongFromPlaylist(int playListId, int songId) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+
+        final String query = "DELETE FROM playlist_songs " +
+                "WHERE playlist_id = ? " +
+                "AND song_id = ? ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, playListId);
+            stmt.setInt(2, songId);
+
+            return stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return 0;
     }
 }

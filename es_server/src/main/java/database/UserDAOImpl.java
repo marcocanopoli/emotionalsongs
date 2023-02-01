@@ -18,44 +18,20 @@ public class UserDAOImpl implements UserDAO {
         registry.rebind("UserService", userDAOStub);
     }
 
-    @Override
-    public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
-        Connection conn = ServerApp.getConnection();
-        String query = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
-                + "VALUES(?,?,?,?,?,?,?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, firstName);
-            stmt.setString(2, lastName);
-            stmt.setString(3, cf);
-            stmt.setString(4, address);
-            stmt.setString(5, username);
-            stmt.setString(6, email);
-            stmt.setString(7, password);
-
-            stmt.executeUpdate();
-
-            ServerLogger.debug("USER " + email + " ADDED");
-//            User newUser = getUser(username, password);
-//            ServerLogger.debug("NEW USER" + newUser);
-            return true;
-        } catch (SQLException ex) {
-            ServerLogger.error("USER NOT ADDED: " + ex);
-            return false;
-        }
-    }
+    //================================================================================
+    // SELECT
+    //================================================================================
 
     @Override
     public User getUser(String username, String pwd) {
         Connection conn = ServerApp.getConnection();
 
-        String query = "SELECT * "
+        final String QUERY = "SELECT * "
                 + "FROM users "
                 + "WHERE username = '" + username + "' LIMIT 1";
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
 
             User user = null;
 
@@ -80,6 +56,38 @@ public class UserDAOImpl implements UserDAO {
             return null;
         }
 
+    }
+
+    //================================================================================
+    // INSERT
+    //================================================================================
+
+    @Override
+    public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
+        Connection conn = ServerApp.getConnection();
+        final String QUERY = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
+                + "VALUES(?,?,?,?,?,?,?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
+
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, cf);
+            stmt.setString(4, address);
+            stmt.setString(5, username);
+            stmt.setString(6, email);
+            stmt.setString(7, password);
+
+            stmt.executeUpdate();
+
+            ServerLogger.debug("USER " + email + " ADDED");
+//            User newUser = getUser(username, password);
+//            ServerLogger.debug("NEW USER" + newUser);
+            return true;
+        } catch (SQLException ex) {
+            ServerLogger.error("USER NOT ADDED: " + ex);
+            return false;
+        }
     }
 
 //    public void shutdown() throws RemoteException {

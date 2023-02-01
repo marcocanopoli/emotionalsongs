@@ -17,9 +17,11 @@ public final class ClientContext {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<Emotion> emotions;
     private Song currentSong;
+    private Playlist currentPlaylist;
     private User user;
-
-    ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
+    private final ObservableList<Playlist> userPlaylists = FXCollections.observableArrayList();
+    private final ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
+    private final ObservableList<Song> newPlaylistSongs = FXCollections.observableArrayList();
 
     private ClientContext() {
     }
@@ -44,12 +46,42 @@ public final class ClientContext {
         return emotions;
     }
 
+    public void setSearchedSongs(List<Song> newSongs) {
+
+        searchedSongs.setAll(newSongs);
+    }
+
+    public ObservableList<Song> getSearchedSongs() {
+
+        return searchedSongs;
+    }
+
+    public void addNewPlaylistSongs(List<Song> newSongs) {
+
+        newPlaylistSongs.addAll(newSongs);
+    }
+
+    public ObservableList<Song> getNewPlaylistSongs() {
+
+        return newPlaylistSongs;
+    }
+
     public void setCurrentSong(Song song) {
         currentSong = song;
     }
 
     public Song getCurrentSong() {
         return currentSong;
+    }
+
+    public void setCurrentPlaylist(Playlist playlist) {
+        Playlist oldPlaylist = currentPlaylist;
+        currentPlaylist = playlist;
+        support.firePropertyChange("playlist", oldPlaylist, playlist);
+    }
+
+    public Playlist getCurrentPlaylist() {
+        return currentPlaylist;
     }
 
     public void setUser(User newUser) {
@@ -72,6 +104,10 @@ public final class ClientContext {
 
     public void addUserPlaylist(Playlist playlist) {
         userPlaylists.add(playlist);
+    }
+
+    public void removeUserPlaylist(Playlist playlist) {
+        userPlaylists.remove(playlist);
     }
 
     public ObservableList<Playlist> getUserPlaylists() {
