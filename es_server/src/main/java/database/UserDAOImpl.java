@@ -8,7 +8,10 @@ import server.ServerLogger;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -26,12 +29,14 @@ public class UserDAOImpl implements UserDAO {
     public User getUser(String username, String pwd) {
         Connection conn = ServerApp.getConnection();
 
-        final String QUERY = "SELECT * "
-                + "FROM users "
-                + "WHERE username = '" + username + "' LIMIT 1";
+        final String query = UserDAO.userSelQueries.get(UserSel.USER);
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(QUERY)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+            stmt.setString(2, pwd);
+
+            ResultSet rs = stmt.executeQuery();
 
             User user = null;
 
@@ -45,8 +50,6 @@ public class UserDAOImpl implements UserDAO {
 //                String password = rs.getString("password");
 
                 user = new User(id, firstName, lastName, cf, address, email, username);
-            } else {
-                ServerLogger.debug("Null user");
             }
 
             return user;
@@ -65,10 +68,9 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
         Connection conn = ServerApp.getConnection();
-        final String QUERY = "INSERT INTO users (first_name, last_name, cf, address, username, email, password) "
-                + "VALUES(?,?,?,?,?,?,?)";
+        final String query = UserDAO.userInsQueries.get(UserIns.USER);
 
-        try (PreparedStatement stmt = conn.prepareStatement(QUERY)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
