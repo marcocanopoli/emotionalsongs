@@ -79,7 +79,8 @@ public class RootController {
         if (dbCreated) {
             DBManager.migrate();
             ServerLogger.debug("Migrations executed");
-            DBManager.seed();
+            DBManager.seedUsers();
+            DBManager.seedEmotions();
             ServerLogger.debug("Seeds executed");
             ServerLogger.debug("Database initialized");
         }

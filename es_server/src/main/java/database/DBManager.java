@@ -258,11 +258,6 @@ public class DBManager {
 
     }
 
-    public static void seed() {
-        seedUsers();
-        seedEmotions();
-    }
-
     public static void seedSongs() throws IOException {
 
         final String SEED_SONGS_QUERY =
@@ -271,7 +266,7 @@ public class DBManager {
                         (author,title,year,album,genre,duration) VALUES (?,?,?,?,?,?)
                         """;
 
-        URL datasetUrl = DBManager.class.getResource("songsData2.csv");
+        URL datasetUrl = DBManager.class.getResource("songsData.csv");
 
         if (datasetUrl != null) {
             File dataset = new File(datasetUrl.getPath());
@@ -348,4 +343,5 @@ public class DBManager {
         }
     }
 }
+
 
