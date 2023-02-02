@@ -1,5 +1,6 @@
 package database;
 
+import common.StringHelpers;
 import common.User;
 import server.ServerApp;
 import server.ServerLogger;
@@ -270,7 +271,7 @@ public class DBManager {
                         (author,title,year,album,genre,duration) VALUES (?,?,?,?,?,?)
                         """;
 
-        URL datasetUrl = DBManager.class.getResource("songsData.csv");
+        URL datasetUrl = DBManager.class.getResource("songsData2.csv");
 
         if (datasetUrl != null) {
             File dataset = new File(datasetUrl.getPath());
@@ -319,7 +320,7 @@ public class DBManager {
                         totalAlbums++;
                     }
 
-                    String album = "album_" + totalAlbums + albumCounter;
+                    String album = "album_" + StringHelpers.toAlphabetic(totalAlbums) + albumCounter;
                     prevAuthor = author;
 
                     stmt.setString(1, author);

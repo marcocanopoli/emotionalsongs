@@ -23,8 +23,6 @@ A
 es_client/pom.xml,b/6/b6c6805b52b7370d0d9f0376805732577264c513
 X
 (es_common/src/main/java/module-info.java,e/2/e21bc39c70293f2f756007f5fe3fe2c949dc3ab7
-a
-1es_common/src/main/java/common/StringHelpers.java,9/e/9ece91570dd2c61b1d730ee2ff1ba751f2360dae
 ]
 -es_client/src/main/java/client/ClientApp.java,b/9/b941031ee94d3efdc866d566a7ec4f8a9faa227b
 A
