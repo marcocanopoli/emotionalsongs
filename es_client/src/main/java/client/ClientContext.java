@@ -104,10 +104,13 @@ public final class ClientContext {
 
     public void addUserPlaylist(Playlist playlist) {
         userPlaylists.add(playlist);
+        support.firePropertyChange("newPlaylist", userPlaylists, playlist);
+
     }
 
     public void removeUserPlaylist(Playlist playlist) {
         userPlaylists.remove(playlist);
+        support.firePropertyChange("deletePlaylist", userPlaylists, playlist);
     }
 
     public ObservableList<Playlist> getUserPlaylists() {

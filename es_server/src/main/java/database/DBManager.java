@@ -59,14 +59,15 @@ public class DBManager {
         connProps.put("password", password);
         Connection conn = DriverManager.getConnection(url, connProps);
 
-        final String DROP_DB_QUERY = "DROP DATABASE " + oldDBName;
+        final String DROP_DB_QUERY = "DROP DATABASE IF EXISTS " + oldDBName;
         final String CREATE_DB_QUERY = "CREATE DATABASE " + newDBName;
 
         try (Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(DROP_DB_QUERY);
-            ServerLogger.debug("EMOTIONALSONGS database dropped");
+
+            int dropped = stmt.executeUpdate(DROP_DB_QUERY);
+            ServerLogger.debug(oldDBName.toUpperCase() + (dropped > 0 ? " database dropped" : " database not found, drop skipped"));
             stmt.executeUpdate(CREATE_DB_QUERY);
-            ServerLogger.debug("EMOTIONALSONGS database created");
+            ServerLogger.debug(newDBName.toUpperCase() + " database created");
             return true;
         } catch (SQLException e) {
             ServerLogger.error("Database creation error: " + e);

@@ -24,6 +24,16 @@ public class SongsTableController {
     private final PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
 
     public void initialize() {
+
+        context.addPropertyChangeListener(e -> {
+            if (e.getNewValue() != null &&
+                    (e.getPropertyName().equals("newPlaylist") ||
+                            e.getPropertyName().equals("deletePlaylist"))) {
+                songsTable.getColumns().remove(1);
+                addPlaylistDropdown();
+            }
+        });
+
         addEmotionsInfoBtn();
     }
 
@@ -189,7 +199,6 @@ public class SongsTableController {
                     final HBox btnBox = new HBox();
                     private final MenuButton playlistChoice = new MenuButton("Aggiungi a:");
 
-
                     {
                         for (Playlist p : userPlaylists) {
                             MenuItem item = new MenuItem(p.getName());
@@ -209,7 +218,6 @@ public class SongsTableController {
                                 } catch (RemoteException e) {
                                     throw new RuntimeException(e);
                                 }
-
                             });
                             playlistChoice.getItems().add(item);
                         }

@@ -15,8 +15,6 @@ X
 es_client/mvnw,c/b/cb6c668552a478b93429644ffb47aa1cf9beb5f5
 B
 es_client/mvnw.cmd,f/6/f6366ee2bdbc64c8080fd42410f1b58ee1988066
-h
-8es_client/src/main/java/client_gui/SignupController.java,5/9/5968c10f5d5166638c6541a62cffc496322624f1
 7
 pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
 A
@@ -33,7 +31,9 @@ q
 Aes_client/src/main/java/client_gui/CurrentPlaylistController.java,0/0/0012896fea86167167e6df54fba12f55944f0c54
 j
 :es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639
-a
-1es_client/src/main/java/client/ClientContext.java,5/2/52e714645ef87f67505850e3a9af692b6af75413
 f
 6es_client/src/main/java/client_gui/RootController.java,f/2/f2902d8f943ac319447c8a8069f37de974809d3c
+A
+es_common/pom.xml,0/4/04092683b5012c975583047e7ff2b26274357895
+l
+<es_client/src/main/java/client_gui/SearchViewController.java,2/d/2d430610448c30d8ec431b84ee76a4e5879e3b70
