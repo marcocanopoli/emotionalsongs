@@ -17,7 +17,7 @@ import java.sql.Connection;
 
 public class ServerApp extends Application {
     private static Connection conn = null;
-    public static final URL dbLoginURL = ServerApp.class.getResource("/server_gui/dbLoginView.fxml");
+    public static final URL dbLoginURL = ServerApp.class.getResource("/server_gui/rootLayout.fxml");
 
     public static synchronized Connection getConnection() {
         return conn;
@@ -40,7 +40,7 @@ public class ServerApp extends Application {
             }
         });
 
-        NodeHelpers.createMainStage(stage, dbLoginURL, "Avvio server", 330, 300);
+        NodeHelpers.createMainStage(stage, dbLoginURL, "Avvio server", null, null);
 
     }
 
@@ -52,15 +52,15 @@ public class ServerApp extends Application {
             registry.unbind("EmotionService");
             registry.unbind("PlaylistService");
         } catch (NotBoundException e) {
-            ServerLogger.debug("UserService not bound, skipping");
+            ServerLogger.debug("Service not bound, skipping");
         }
 
         new Thread(() -> {
-            ServerLogger.debug("Shutting down...");
+            ServerLogger.info("Shutting down...");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                ServerLogger.debug("Shutdown was interrupted: " + e);
+                ServerLogger.error("Shutdown was interrupted: " + e);
             }
             System.exit(0);
         }).start();
@@ -74,7 +74,7 @@ public class ServerApp extends Application {
         EmotionDAOImpl emotionService = new EmotionDAOImpl(registry);
         SongDAOImpl songService = new SongDAOImpl(registry);
         UserDAOImpl userService = new UserDAOImpl(registry);
-        ServerLogger.info("Server initialised");
+        ServerLogger.debug("DAOs registered");
 
         launch();
     }

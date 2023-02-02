@@ -1,5 +1,6 @@
 package common;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,9 +13,24 @@ import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NodeHelpers {
+
+    NodeHelpers() {
+
+    }
+
+    private static void centerButtons(DialogPane dialogPane) {
+        Region spacer = new Region();
+        ButtonBar.setButtonData(spacer, ButtonBar.ButtonData.BIG_GAP);
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        dialogPane.applyCss();
+        HBox hboxDialogPane = (HBox) dialogPane.lookup(".container");
+        hboxDialogPane.getChildren().add(spacer);
+    }
+
     public static boolean createAlert(
             Alert.AlertType type,
             String title,
@@ -29,20 +45,14 @@ public class NodeHelpers {
 
         AtomicBoolean res = new AtomicBoolean(false);
 
-        DialogPane dialog = alert.getDialogPane();
+        DialogPane dialogPane = alert.getDialogPane();
+        centerButtons(dialogPane);
 
         if (!wait) {
-            final Button cancelBtn = (Button) dialog.lookupButton(ButtonType.CANCEL);
-            final ButtonBar buttonBar = (ButtonBar) dialog.getChildren().get(2);
+            final Button cancelBtn = (Button) dialogPane.lookupButton(ButtonType.CANCEL);
+            final ButtonBar buttonBar = (ButtonBar) dialogPane.getChildren().get(2);
             buttonBar.getButtons().remove(cancelBtn);
         }
-
-        Region spacer = new Region();
-        ButtonBar.setButtonData(spacer, ButtonBar.ButtonData.BIG_GAP);
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        dialog.applyCss();
-        HBox hboxDialogPane = (HBox) dialog.lookup(".container");
-        hboxDialogPane.getChildren().add(spacer);
 
         if (wait) {
             alert.showAndWait()
@@ -55,11 +65,42 @@ public class NodeHelpers {
         return res.get();
     }
 
-    public static Stage createMainStage(Stage stage, URL resource, String title, int width, int height) {
+    public static String createTextInputDialog(
+            String title,
+            String headerText,
+            String message,
+            String defaultInput) {
+
+        TextInputDialog dialog = new TextInputDialog(defaultInput);
+        DialogPane dialogPane = dialog.getDialogPane();
+        centerButtons(dialogPane);
+
+        dialog.setTitle(title);
+        dialog.setHeaderText(headerText);
+        dialog.setContentText(message);
+
+        Optional<String> result = dialog.showAndWait();
+
+        Button okBtn = (Button) dialogPane.lookupButton(ButtonType.OK);
+        TextField input = dialog.getEditor();
+
+        okBtn.disableProperty().bind(Bindings.isNotEmpty(input.textProperty()));
+
+        return result.orElse(null);
+    }
+
+    public static Stage createMainStage(Stage stage, URL resource, String title, Integer width, Integer height) {
         try {
             if (resource != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader(resource);
-                Scene scene = new Scene(fxmlLoader.load(), width, height);
+                Scene scene;
+
+                if (width != null && height != null) {
+                    scene = new Scene(fxmlLoader.load(), width, height);
+                } else {
+                    scene = new Scene(fxmlLoader.load());
+                }
+
                 stage.setTitle(title);
                 stage.setScene(scene);
                 stage.centerOnScreen();
@@ -94,6 +135,5 @@ public class NodeHelpers {
             e.printStackTrace();
         }
     }
-
 
 }

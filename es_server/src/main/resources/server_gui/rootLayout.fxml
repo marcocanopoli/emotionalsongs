@@ -43,6 +43,12 @@
                                GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             </children>
         </GridPane>
+        <VBox spacing="10.0" fx:id="checkboxes">
+            <children>
+                <CheckBox fx:id="initDB" mnemonicParsing="false" text="Inizializza database" VBox.vgrow="NEVER"/>
+                <CheckBox fx:id="seedSongs" mnemonicParsing="false" text="Inserisci catalogo canzoni"/>
+            </children>
+        </VBox>
         <Button fx:id="connectBtn" defaultButton="true" mnemonicParsing="false" text="Connetti"/>
     </children>
     <padding>

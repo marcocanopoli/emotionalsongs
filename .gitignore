@@ -5,10 +5,7 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+/.idea/
 *.iws
 *.iml
 *.ipr
@@ -37,3 +34,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+/es_server/src/main/resources/database/songsData2.csv

@@ -82,9 +82,7 @@ public class UserDAOImpl implements UserDAO {
 
             stmt.executeUpdate();
 
-            ServerLogger.debug("USER " + email + " ADDED");
-//            User newUser = getUser(username, password);
-//            ServerLogger.debug("NEW USER" + newUser);
+            ServerLogger.debug("USER " + email + " added");
             return true;
         } catch (SQLException ex) {
             ServerLogger.error("USER NOT ADDED: " + ex);
