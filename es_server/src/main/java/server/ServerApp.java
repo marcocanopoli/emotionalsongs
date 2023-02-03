@@ -67,7 +67,7 @@ public class ServerApp extends Application {
 
     }
 
-    public static void register(String[] args) throws RemoteException {
+    public static void main(String[] args) throws RemoteException {
 
         Registry registry = LocateRegistry.createRegistry(1099);
         PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);

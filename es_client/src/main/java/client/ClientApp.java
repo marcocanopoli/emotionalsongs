@@ -106,7 +106,7 @@ public class ClientApp extends Application {
         }
     }
 
-    public static void appStart(String[] args) throws RemoteException, NotBoundException {
+    public static void main(String[] args) throws RemoteException, NotBoundException {
 
         ClientLogger.debug("Client main");
         String host = args.length >= 1 ? args[0] : null;
