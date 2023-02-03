@@ -6,10 +6,9 @@ import server.ServerApp;
 import server.ServerLogger;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.*;
@@ -267,80 +266,73 @@ public class DBManager {
                         (author,title,year,album,genre,duration) VALUES (?,?,?,?,?,?)
                         """;
 
-        URL datasetUrl = DBManager.class.getResource("songsData.csv");
+        Connection conn = ServerApp.getConnection();
 
-        if (datasetUrl != null) {
-            File dataset = new File(datasetUrl.getPath());
-            Connection conn = ServerApp.getConnection();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(
+                DBManager.class.getResourceAsStream("songsData.csv")), StandardCharsets.UTF_8));
+             PreparedStatement stmt = conn.prepareStatement(SEED_SONGS_QUERY)) {
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(dataset));
-                 PreparedStatement stmt = conn.prepareStatement(SEED_SONGS_QUERY)) {
-
-                conn.setAutoCommit(false);
+            conn.setAutoCommit(false);
 
 
-                String line = reader.readLine();
-                String prevAuthor = "";
-                int lineCounter = 0;
-                int sameAuthorCounter = 0;
-                int albumCounter = 0;
-                int totalAlbums = 0;
-                Random random = new Random();
+            String line = reader.readLine();
+            String prevAuthor = "";
+            int lineCounter = 0;
+            int sameAuthorCounter = 0;
+            int albumCounter = 0;
+            int totalAlbums = 0;
+            Random random = new Random();
 
-                while (line != null) {
-                    lineCounter++;
-                    ServerLogger.debug("Processing: " + lineCounter);
+            while (line != null) {
+                lineCounter++;
+                ServerLogger.debug("Processing: " + lineCounter);
 
-                    String[] fields = line.split(",");
-                    String author = fields[0].trim();
-                    String title = fields[1].trim();
-                    int year = Integer.parseInt(fields[2]);
-                    String genre = fields[3].trim().equals("null") ? "" : fields[3].trim();
-                    int duration;
+                String[] fields = line.split(",");
+                String author = fields[0].trim();
+                String title = fields[1].trim();
+                int year = Integer.parseInt(fields[2]);
+                String genre = fields[3].trim().equals("null") ? "" : fields[3].trim();
+                int duration;
 
-                    if (fields[4].trim().equals("null")) {
-                        duration = random.nextInt(300 - 120) + 120;
-                    } else {
-                        duration = Integer.parseInt(fields[4]);
-                    }
-
-                    if (prevAuthor.equals(author)) {
-                        sameAuthorCounter++;
-                        if (sameAuthorCounter >= 5) {
-                            sameAuthorCounter = 0;
-                            albumCounter++;
-                        }
-                    } else {
-                        albumCounter = 0;
-                        sameAuthorCounter = 0;
-                        totalAlbums++;
-                    }
-
-                    String album = "album_" + StringHelpers.toAlphabetic(totalAlbums) + albumCounter;
-                    prevAuthor = author;
-
-                    stmt.setString(1, author);
-                    stmt.setString(2, title);
-                    stmt.setInt(3, year);
-                    stmt.setString(4, album);
-                    stmt.setString(5, genre);
-                    stmt.setInt(6, duration);
-
-                    stmt.addBatch();
-
-                    line = reader.readLine();
+                if (fields[4].trim().equals("null")) {
+                    duration = random.nextInt(300 - 120) + 120;
+                } else {
+                    duration = Integer.parseInt(fields[4]);
                 }
 
-                stmt.executeBatch();
-                conn.commit();
-                conn.setAutoCommit(true);
-                ServerLogger.debug("Songs seeder executed");
-            } catch (SQLException e) {
-                ServerLogger.error("Seeder error: " + e);
+                if (prevAuthor.equals(author)) {
+                    sameAuthorCounter++;
+                    if (sameAuthorCounter >= 5) {
+                        sameAuthorCounter = 0;
+                        albumCounter++;
+                    }
+                } else {
+                    albumCounter = 0;
+                    sameAuthorCounter = 0;
+                    totalAlbums++;
+                }
+
+                String album = "album_" + StringHelpers.toAlphabetic(totalAlbums) + albumCounter;
+                prevAuthor = author;
+
+                stmt.setString(1, author);
+                stmt.setString(2, title);
+                stmt.setInt(3, year);
+                stmt.setString(4, album);
+                stmt.setString(5, genre);
+                stmt.setInt(6, duration);
+
+                stmt.addBatch();
+
+                line = reader.readLine();
             }
 
-        } else {
-            ServerLogger.error("Songs data file not found");
+            stmt.executeBatch();
+            conn.commit();
+            conn.setAutoCommit(true);
+            ServerLogger.debug("Songs seeder executed");
+        } catch (SQLException e) {
+            ServerLogger.error("Seeder error: " + e);
         }
     }
 }
