@@ -20,6 +20,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+/**
+ * Classe principale che permette di avviare l'applicazione EmotionalSongs client
+ * Estende la classe Application, entry point di un'applicazione JavaFX
+ * Include tutti i riferimenti ai file FXML utilizzati per creare le varie viste e sezioni e i riferimenti agli stub
+ * RMI con i quali avviene la comunicazione verso l'applicazione server
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see client.ClientMain
+ */
 public class ClientApp extends Application {
 
     private static Window window;
@@ -42,28 +51,87 @@ public class ClientApp extends Application {
 
     public enum ViewName {PLAYLISTS, SEARCH}
 
+    /**
+     * Ritorna il riferimento al layer DAO per la gestione delle canzoni
+     *
+     * @return stub del layer DAO
+     */
     public static SongDAO getSongDAO() {
         return songDAO;
     }
 
+    /**
+     * Ritorna il riferimento al layer DAO per la gestione delle emozioni
+     *
+     * @return stub del layer DAO
+     */
     public static EmotionDAO getEmotionDAO() {
         return emotionDAO;
     }
 
+    /**
+     * Ritorna il riferimento al layer DAO per la gestione delle playlist
+     *
+     * @return stub del layer DAO
+     */
     public static PlaylistDAO getPlaylistDAO() {
         return playlistDAO;
     }
 
+    /**
+     * Ritorna il riferimento al layer DAO per la gestione degli utenti
+     *
+     * @return stub del layer DAO
+     */
     public static UserDAO getUserDAO() {
         return userDAO;
     }
 
+    /**
+     * Setter del pannello che contiene la viste principali
+     *
+     * @param view il pannello principale
+     */
     public static void setMainView(AnchorPane view) {
         mainView = view;
     }
 
+    /**
+     * Setter del primary stage dell'applicazione
+     *
+     * @param stage il primary stage
+     */
+    public static void setMainStage(Stage stage) {
+        mainStage = stage;
+    }
+
+    /**
+     * Getter della <strong>window</strong> contenente l'intera applicazione
+     *
+     * @return la window
+     */
+    public static Window getWindow() {
+        return window;
+    }
+
+    /**
+     * Setter della <strong>window</strong> principale contenente l'intera applicazione
+     *
+     * @param appWindow la window
+     */
+    public static void setWindow(Window appWindow) {
+        window = appWindow;
+    }
+
+    /**
+     * Entry point dell'applicazione JavaFX, chiamato dall'inizializzazione del thread Application
+     *
+     * @param stage il <strong>primary stage</strong> dell'applicazione
+     *              sul quale settare la <strong>scene</strong>principale
+     *              L'applicazione può creare altri stage, che non saranno principali
+     */
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
 
         setWindow(stage.getOwner());
 
@@ -75,25 +143,26 @@ public class ClientApp extends Application {
         showView(ViewName.SEARCH);
     }
 
-    public static void setMainStage(Stage stage) {
-        mainStage = stage;
-    }
+    /**
+     * Inizializza le viste principali da includere nel root layout dell'applicazione
+     */
+    public static void createViews() {
+        try {
 
-    public static Window getWindow() {
-        return window;
-    }
-
-    public static void setWindow(Window appWindow) {
-        window = appWindow;
-    }
-
-    public static void createViews() throws IOException {
-
-        if (playlistsViewURL != null) playlistsView = FXMLLoader.load(playlistsViewURL);
-        if (searchViewURL != null) searchView = FXMLLoader.load(searchViewURL);
+            if (playlistsViewURL != null) playlistsView = FXMLLoader.load(playlistsViewURL);
+            if (searchViewURL != null) searchView = FXMLLoader.load(searchViewURL);
+        } catch (IOException e) {
+            ClientLogger.error("Impossibile creare le viste: " + e);
+        }
 
     }
 
+    /**
+     * Mostra una specifica vista tra quelle disponibili
+     *
+     * @param view l'enum identificativo dell vista
+     * @see ViewName
+     */
     public static void showView(ViewName view) {
         mainView.getChildren().clear();
 
@@ -106,16 +175,32 @@ public class ClientApp extends Application {
         }
     }
 
-    public static void appStart(String[] args) throws RemoteException, NotBoundException {
+    /**
+     * Classe main dell'applicazione che lancia il thread Application
+     * E' chiamato dalla classe wrapper <code>ClientMain</code>
+     *
+     * @param args argomenti di avvio
+     * @throws RemoteException   se il riferimento al registro non viene trovato
+     * @throws NotBoundException se lo stub non è registrato (bound)
+     * @see ClientMain
+     */
+    public static void appStart(String[] args) {
 
         ClientLogger.debug("Client main");
         String host = args.length >= 1 ? args[0] : null;
-        Registry registry = LocateRegistry.getRegistry(host);
 
-        playlistDAO = (PlaylistDAO) registry.lookup("PlaylistService");
-        emotionDAO = (EmotionDAO) registry.lookup("EmotionService");
-        songDAO = (SongDAO) registry.lookup("SongService");
-        userDAO = (UserDAO) registry.lookup("UserService");
+        try {
+            Registry registry = LocateRegistry.getRegistry(host);
+            playlistDAO = (PlaylistDAO) registry.lookup("PlaylistService");
+            emotionDAO = (EmotionDAO) registry.lookup("EmotionService");
+            songDAO = (SongDAO) registry.lookup("SongService");
+            userDAO = (UserDAO) registry.lookup("UserService");
+        } catch (RemoteException e) {
+            ClientLogger.error("Registo RMI non trovato: " + e);
+        } catch (NotBoundException e) {
+            ClientLogger.error("Bind dello stub non presente: " + e);
+        }
+
 
         launch();
     }

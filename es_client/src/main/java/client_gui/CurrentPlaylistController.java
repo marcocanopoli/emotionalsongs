@@ -8,6 +8,7 @@ import common.Playlist;
 import common.Song;
 import common.StringHelpers;
 import common.interfaces.PlaylistDAO;
+import exceptions.DAOException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,6 +22,13 @@ import javafx.scene.control.TableView;
 
 import java.rmi.RemoteException;
 
+/**
+ * Controller per FXML della vista di dettaglio di una playlist
+ * Permette di aggiungere tag emozionali per ogni canzone,
+ * visualizzare il dettaglio dei tag o eliminare la playlist
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class CurrentPlaylistController {
 
     @FXML
@@ -40,6 +48,12 @@ public class CurrentPlaylistController {
     private Playlist currentPlaylist = context.getCurrentPlaylist();
     private final ObservableList<Song> currentPlaylistSongs = FXCollections.observableArrayList();
 
+    /**
+     * Metodo di inizializzazione chiamato alla creazione della vista.
+     * Contiene il listener per in ascolto di cambiamenti alla playlist,
+     * i bindings ai componenti UI e l'inizializzazione delle colonne opzionali
+     * della tabella per la specifica vista
+     */
     public void initialize() {
 
         Property<ObservableList<Song>> playlistSongsProperty = new SimpleObjectProperty<>(currentPlaylistSongs);
@@ -53,11 +67,7 @@ public class CurrentPlaylistController {
                 currentPlaylist = (Playlist) e.getNewValue();
 
                 if (currentPlaylist != null) {
-                    try {
-                        initCurrentPlaylist();
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    initCurrentPlaylist();
                 } else {
                     playlistName.setText("");
                     playlistDuration.setText("0");
@@ -65,35 +75,47 @@ public class CurrentPlaylistController {
             }
         });
 
-        playlistSongsTableController.addTableEmotionAddBtn();
+        playlistSongsTableController.addEmotionAddBtn();
         playlistSongsTableController.addRemoveSongBtn(currentPlaylistSongs, true);
     }
 
-    private void initCurrentPlaylist() throws RemoteException {
-        currentPlaylistSongs.setAll(playlistDAO.getPlaylistSongs(currentPlaylist.getId()));
-        playlistName.setText(currentPlaylist.getName());
-        playlistDuration.setText(StringHelpers.getSongsListDurationString(currentPlaylistSongs));
+    /**
+     * Recupera le canzoni della playlist corrente e ne calcola la durata totale
+     */
+    private void initCurrentPlaylist() {
+        try {
+            currentPlaylistSongs.setAll(playlistDAO.getPlaylistSongs(currentPlaylist.getId()));
+            playlistName.setText(currentPlaylist.getName());
+            playlistDuration.setText(StringHelpers.getSongsListDurationString(currentPlaylistSongs));
+
+        } catch (RemoteException e) {
+            throw new DAOException(e);
+        }
     }
 
+    /**
+     * Elimina la playlist corrente
+     */
     @FXML
-    private void deletePlaylist() throws RemoteException {
+    private void deletePlaylist() {
         String msg = "Sei sicuro di voler eliminare la playlist '" + currentPlaylist.getName() + "' ?";
 
         boolean res = NodeHelpers.createAlert(
                 Alert.AlertType.CONFIRMATION, "Conferma eliminazione playlist", null, msg, true);
 
         if (res) {
-            int deleted = playlistDAO.deletePlaylist(currentPlaylist.getId());
+            try {
+                int deleted = playlistDAO.deletePlaylist(currentPlaylist.getId());
 
-            if (deleted > 0) {
-                context.removeUserPlaylist(currentPlaylist);
-                context.setCurrentPlaylist(null);
+                if (deleted > 0) {
+                    context.removeUserPlaylist(currentPlaylist);
+                    context.setCurrentPlaylist(null);
+                }
+
+            } catch (RemoteException e) {
+                throw new DAOException(e);
             }
-
         }
-
     }
-
-
 }
 

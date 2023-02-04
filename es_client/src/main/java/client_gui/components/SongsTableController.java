@@ -16,6 +16,13 @@ import javafx.util.Callback;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Controller per FXML della tabella che mostra le canzoni ricercate.
+ * In qunato componente riutilizzabile, contiene metodi per aggiungere
+ * colonne addizionali alla tabella a seconda del caso d'uso
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class SongsTableController {
     @FXML
     private TableView<Song> songsTable;
@@ -23,6 +30,10 @@ public class SongsTableController {
     private final ObservableList<Song> newPlaylistSongs = context.getNewPlaylistSongs();
     private final PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
 
+    /**
+     * Metodo di inizializzazione chiamato alla creazione della vista.
+     * Contiene il listener per l'aggiornamento delle colonne all'aggiunta o rimozione di una playlist
+     */
     public void initialize() {
 
         context.addPropertyChangeListener(e -> {
@@ -37,6 +48,10 @@ public class SongsTableController {
         addEmotionsInfoBtn();
     }
 
+    /**
+     * Aggiunge ad ogni riga il bottone per la visualizzazione della singola canzone
+     * con il prospetto dei tag emozionali
+     */
     private void addEmotionsInfoBtn() {
         TableColumn<Song, Void> emotionColumn = new TableColumn<>("Dettagli");
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param -> new TableCell<>() {
@@ -72,7 +87,10 @@ public class SongsTableController {
         songsTable.getColumns().add(0, emotionColumn);
     }
 
-    public void addTableEmotionAddBtn() {
+    /**
+     * Aggiunge ad ogni riga il bottone per aggiungere tag emozionali alla canzone
+     */
+    public void addEmotionAddBtn() {
 
         Callback<TableColumn<Song, Void>, TableCell<Song, Void>> cellFactory = param ->
                 new TableCell<>() {
@@ -110,6 +128,10 @@ public class SongsTableController {
         songsTable.getColumns().add(0, emotionsAddColumn);
     }
 
+    /**
+     * Aggiunge ad ogni riga un tasto per l'aggiunta di una canzone ad una playlist
+     * in fase di creazione
+     */
     public void addSongAddToPlaylistBtn() {
 
         TableColumn<Song, Void> addSongColumn = new TableColumn<>("Aggiungi");
@@ -145,7 +167,14 @@ public class SongsTableController {
         songsTable.getColumns().add(0, addSongColumn);
     }
 
-    public void addRemoveSongBtn(ObservableList<Song> songList, boolean isCurrentPlaylist) {
+    /**
+     * Aggiunge ad ogni riga un tasto per la rimozione della canzone dalla playlist
+     * in fase di ceazione con eliminazione opzionale per playlist già esistenti
+     *
+     * @param songList   la lista di canzoni della playlist da cui rimuovere
+     * @param deleteSong flag per la cancellazione della canzone dalla playlist
+     */
+    public void addRemoveSongBtn(ObservableList<Song> songList, boolean deleteSong) {
 
         songsTable.getColumns().remove(songsTable.getColumns().size() - 1);
 
@@ -160,7 +189,7 @@ public class SongsTableController {
                     Song song = songsTable.getItems().get(getIndex());
                     songList.remove(song);
 
-                    if (context.getCurrentPlaylist() != null && isCurrentPlaylist) {
+                    if (context.getCurrentPlaylist() != null && deleteSong) {
                         try {
                             playlistDAO.deletePlaylistSong(context.getCurrentPlaylist().getId(), song.id);
                         } catch (RemoteException e) {
@@ -190,6 +219,9 @@ public class SongsTableController {
         songsTable.getColumns().add(0, removeSongColumn);
     }
 
+    /**
+     * Aggiunge ad ogni riga un bottone di aggiunta rapida della canzone ad una determinata playlist
+     */
     public void addPlaylistDropdown() {
 
         ObservableList<Playlist> userPlaylists = context.getUserPlaylists();

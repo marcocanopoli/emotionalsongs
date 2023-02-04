@@ -6,6 +6,7 @@ import client_gui.components.SongsTableController;
 import common.*;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
+import exceptions.DAOException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -22,6 +23,14 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller per FXML della vista di creazione di una nuova playlist.
+ * Mostra una lista delle canzoni inserite, un prompt per il nome e
+ * diversi metodi di ricerca per l'aggiunta di canzoni alla playlist.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
+
 public class NewPlaylistController {
 
     @FXML
@@ -30,8 +39,6 @@ public class NewPlaylistController {
     private Button createPlaylistBtn;
     @FXML
     private Button addAuthorSongsBtn;
-    @FXML
-    private Button addAlbumSongsBtn;
     @FXML
     private Label playlistSongsCount;
     @FXML
@@ -62,7 +69,12 @@ public class NewPlaylistController {
     @FXML
     private SongsTableController newPlaylistSongsTableController;
 
-
+    /**
+     * Metodo di inizializzazione chiamato alla creazione della vista.
+     * Effettua il binding dei vari componenti UI ai rispettivi oggetti, rendendo la vista reattiva
+     * ai cambiamenti.
+     * Aggiunge listener per la formattazione e validazione degli input
+     */
     public void initialize() {
 
         Property<ObservableList<Song>> searchedSongsProperty = new SimpleObjectProperty<>(searchedSongs);
@@ -90,7 +102,6 @@ public class NewPlaylistController {
         newPlaylistName.setTextFormatter(new TextFormatter<>(change ->
                 change.getControlNewText().length() <= 256 ? change : null));
 
-
         newPlaylistSongs.addListener((ListChangeListener<Song>) change -> {
             String durationString = "0";
 
@@ -107,8 +118,12 @@ public class NewPlaylistController {
         initAlbumsTable();
     }
 
+    /**
+     * Crea una nuova playlist nominata secondo il prompt e aggiunge i riferimenti alle canzoni selezionate.
+     * Aggiorna il context per mantenere la reattività
+     */
     @FXML
-    public void createNewPlaylist() throws RemoteException {
+    public void createNewPlaylist() {
         User user = context.getUser();
         List<Integer> songIds = new ArrayList<>();
 
@@ -116,19 +131,28 @@ public class NewPlaylistController {
             songIds.add(song.id);
         }
 
-        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songIds);
+        try {
+            Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songIds);
 
-        if (newPlaylist != null) {
-            context.addUserPlaylist(newPlaylist);
-            newPlaylistName.clear();
-            newPlaylistSongs.clear();
-        } else {
-            String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
-            NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
+            if (newPlaylist != null) {
+                context.addUserPlaylist(newPlaylist);
+                newPlaylistName.clear();
+                newPlaylistSongs.clear();
+            } else {
+                String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
+                NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
+            }
+        } catch (RemoteException e) {
+            throw new DAOException(e);
         }
+
 
     }
 
+    /**
+     * Inizializza la tabella dei risultati di ricerca album aggiungendo
+     * la colonna con il bottone di aggiunta album alla playlist
+     */
     private void initAlbumsTable() {
 
         TableColumn<Song, Void> addAlbumCol = new TableColumn<>("Aggiungi");
@@ -140,11 +164,7 @@ public class NewPlaylistController {
             {
                 viewBtn.setOnAction(event1 -> {
                     Song song = albumsTable.getItems().get(getIndex());
-                    try {
-                        addAlbumSongs(song.getAuthor(), song.getAlbum());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
+                    addAlbumSongs(song.getAuthor(), song.getAlbum());
                 });
 
                 btnBox.getChildren().add(viewBtn);
@@ -169,43 +189,78 @@ public class NewPlaylistController {
         albumsTable.getColumns().add(0, addAlbumCol);
     }
 
+    /**
+     * Ricerca tutti gli autori contenenti nel nome la stringa inserita
+     * e li aggiunge alla lista di autori
+     */
     @FXML
-    private void searchAuthors() throws RemoteException {
+    private void searchAuthors() {
         String author = authorPrompt.getText().trim();
 
-        List<String> results = songDAO.getAuthors(author);
-        searchedAuthors.setAll(results);
-
-        if (!results.isEmpty()) authorPrompt.clear();
-    }
-
-    @FXML
-    private void searchAlbums() throws RemoteException {
-        String album = albumPrompt.getText().trim();
-        List<Song> results = songDAO.getAlbums(album);
-        searchedAlbums.addAll(results);
-        if (!results.isEmpty()) albumPrompt.clear();
-    }
-
-    @FXML
-    private void addAuthorSongs() throws RemoteException {
-        String author = authorsList.getSelectionModel().getSelectedItem();
-        List<Song> results = songDAO.getSongsByAuthorYear(author, null);
-
-        if (!results.isEmpty()) {
-            context.addNewPlaylistSongs(results);
-            authorPrompt.clear();
+        try {
+            List<String> results = songDAO.getAuthors(author);
+            searchedAuthors.setAll(results);
+            if (!results.isEmpty()) authorPrompt.clear();
+        } catch (RemoteException e) {
+            throw new DAOException(e);
         }
 
     }
 
+    /**
+     * Ricerca tutti gli album contenenti nel titolo la stringa inserita
+     * e li aggiunge alla lista di album
+     */
     @FXML
-    private void addAlbumSongs(String author, String album) throws RemoteException {
-        List<Song> results = songDAO.getSongsByAuthorAlbum(author, album);
+    private void searchAlbums() {
+        String album = albumPrompt.getText().trim();
 
-        if (!results.isEmpty()) {
-            context.addNewPlaylistSongs(results);
-            albumPrompt.clear();
+        try {
+            List<Song> results = songDAO.getAlbums(album);
+            searchedAlbums.addAll(results);
+            if (!results.isEmpty()) albumPrompt.clear();
+        } catch (RemoteException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * Aggiunge alla nuova playlist tutte le canzoni di un autore
+     */
+    @FXML
+    private void addAuthorSongs() {
+        String author = authorsList.getSelectionModel().getSelectedItem();
+
+        try {
+            List<Song> results = songDAO.getSongsByAuthorYear(author, null);
+
+            if (!results.isEmpty()) {
+                context.addNewPlaylistSongs(results);
+                authorPrompt.clear();
+            }
+        } catch (RemoteException e) {
+            throw new DAOException(e);
+        }
+
+    }
+
+    /**
+     * Aggiunge alla nuova playlist le tutte le canzoni di un determinato album di un autore
+     *
+     * @param author l'autore dell'album
+     * @param album  il titolo dell'album
+     */
+    @FXML
+    private void addAlbumSongs(String author, String album) {
+        try {
+            List<Song> results = songDAO.getSongsByAuthorAlbum(author, album);
+
+            if (!results.isEmpty()) {
+                context.addNewPlaylistSongs(results);
+                albumPrompt.clear();
+            }
+        } catch (RemoteException e) {
+            throw new DAOException(e);
         }
     }
 

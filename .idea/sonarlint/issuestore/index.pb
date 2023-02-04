@@ -1,23 +1,5 @@
 
-\
-,es_common/src/main/java/common/Playlist.java,2/3/2305c913731e3311c80efb676acfd9d6d3b8ea97
-[
-+es_common/src/main/java/common/Emotion.java,b/3/b3e3a388c3b10806e4270adb9f89bd8503c195ba
-_
-/es_common/src/main/java/common/SongEmotion.java,a/f/af380b466804acaafc31328dde40f3706a6a91d7
-X
-(es_common/src/main/java/common/User.java,2/1/21663498018d26701f77b8648d0d1f19016bfa1d
->
-es_client/mvnw,c/b/cb6c668552a478b93429644ffb47aa1cf9beb5f5
 B
 es_client/mvnw.cmd,f/6/f6366ee2bdbc64c8080fd42410f1b58ee1988066
-g
-7es_client/src/main/java/client_gui/LoginController.java,c/b/cb5c6ea6c19e1fb6ebad919b58e5abb3e7f1434a
-q
-Aes_client/src/main/java/client_gui/CurrentPlaylistController.java,0/0/0012896fea86167167e6df54fba12f55944f0c54
-j
-:es_client/src/main/java/client_gui/SongInfoController.java,8/6/86384f8ef83569063ac617ea19f420e195d42639
-f
-6es_client/src/main/java/client_gui/RootController.java,f/2/f2902d8f943ac319447c8a8069f37de974809d3c
 l
 <es_client/src/main/java/client_gui/SearchViewController.java,2/d/2d430610448c30d8ec431b84ee76a4e5879e3b70

@@ -5,6 +5,7 @@ import client.ClientContext;
 import client.ClientLogger;
 import common.User;
 import common.interfaces.UserDAO;
+import exceptions.DAOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -13,6 +14,14 @@ import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 
+/**
+ * Controller per FXML del dialog di login.
+ * Mostra un form di login con username e password
+ * e effettua l'operazione di login.
+ * Include le validazioni per la password
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class LoginController {
 
     @FXML
@@ -22,6 +31,10 @@ public class LoginController {
     @FXML
     public Button confirmLoginBtn;
 
+    /**
+     * Metodo di inizializzazione chiamato alla creazione del dialog.
+     * Aggiunge i listener per la validazione della password e i campi vuoti
+     */
     public void initialize() {
 
 
@@ -32,6 +45,10 @@ public class LoginController {
 //        }
     }
 
+    /**
+     * Effettua il login ricercando sul database l'utente corrispondente
+     * alle credenziali di accesso inserite
+     */
     @FXML
     private void login() {
         ClientContext context = ClientContext.getInstance();
@@ -41,12 +58,12 @@ public class LoginController {
             User user = userDAO.getUser(username.getText(), pwd.getText());
             context.setUser(user);
 
-            ClientLogger.debug("LoggedUser = " + (user != null ? String.valueOf(user) : "null"));
+            ClientLogger.info("Utente '" + user.getUsername() + "': accesso effettuato");
 
             ((Stage) confirmLoginBtn.getScene().getWindow()).close();
 
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            throw new DAOException(e);
         }
     }
 
