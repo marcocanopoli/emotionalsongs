@@ -3,6 +3,7 @@ package common.interfaces;
 import common.User;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -61,8 +62,9 @@ public interface UserDAO extends Remote {
      * @param username lo username
      * @param password la password
      * @return l'utente, se trovato
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    User getUser(String username, String password);
+    User getUser(String username, String password) throws RemoteException;
 
     //================================================================================
     // INSERT
@@ -79,7 +81,8 @@ public interface UserDAO extends Remote {
      * @param email     l'indirizzo email
      * @param password  la password
      * @return true se l'utente è stato aggiunto, false altrimenti
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password);
+    boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) throws RemoteException;
 
 }

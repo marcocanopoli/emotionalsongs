@@ -50,6 +50,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <outputDirectory>${project.parent.basedir}/out</outputDirectory>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>

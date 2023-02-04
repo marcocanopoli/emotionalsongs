@@ -14,7 +14,7 @@
     <artifactId>es_server</artifactId>
     <name>EmotionalSongsServer</name>
     <packaging>jar</packaging>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -49,6 +49,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <outputDirectory>${project.parent.basedir}/out</outputDirectory>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>

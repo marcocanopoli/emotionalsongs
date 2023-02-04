@@ -5,6 +5,7 @@ import common.interfaces.EmotionDAO;
 import server.ServerApp;
 import server.ServerLogger;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,6 +23,8 @@ import java.util.List;
  */
 public class EmotionDAOImpl implements EmotionDAO {
 
+    private static final String REMOTE_NAME = "EmotionService";
+
     /**
      * Costruttore della classe.
      * Si occupa del bind dello stub al registry
@@ -31,7 +34,23 @@ public class EmotionDAOImpl implements EmotionDAO {
      */
     public EmotionDAOImpl(Registry registry) throws RemoteException {
         EmotionDAO emotionDAOStub = (EmotionDAO) UnicastRemoteObject.exportObject(this, 3939);
-        registry.rebind("EmotionService", emotionDAOStub);
+        registry.rebind(REMOTE_NAME, emotionDAOStub);
+    }
+
+
+    /**
+     * Esegue l'unbind dal registro e l'unexport del remote object
+     *
+     * @param registry il registro RMI
+     */
+    public void unexport(Registry registry) {
+        try {
+            registry.unbind(REMOTE_NAME);
+            UnicastRemoteObject.unexportObject(this, false);
+        } catch (NotBoundException | RemoteException e) {
+            ServerLogger.error(REMOTE_NAME + " unexport failed");
+        }
+
     }
 
     //================================================================================

@@ -5,6 +5,7 @@ import common.interfaces.UserDAO;
 import server.ServerApp;
 import server.ServerLogger;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -20,6 +21,8 @@ import java.sql.SQLException;
  */
 public class UserDAOImpl implements UserDAO {
 
+    private static final String REMOTE_NAME = "UserService";
+
     /**
      * Costruttore della classe.
      * Si occupa del bind dello stub al registry
@@ -30,7 +33,23 @@ public class UserDAOImpl implements UserDAO {
     public UserDAOImpl(Registry registry) throws RemoteException {
         UserDAO userDAOStub = (UserDAO)
                 UnicastRemoteObject.exportObject(this, 3939);
-        registry.rebind("UserService", userDAOStub);
+        registry.rebind(REMOTE_NAME, userDAOStub);
+    }
+
+
+    /**
+     * Esegue l'unbind dal registro e l'unexport del remote object
+     *
+     * @param registry il registro RMI
+     */
+    public void unexport(Registry registry) {
+        try {
+            registry.unbind(REMOTE_NAME);
+            UnicastRemoteObject.unexportObject(this, false);
+        } catch (NotBoundException | RemoteException e) {
+            ServerLogger.error(REMOTE_NAME + " unexport failed");
+        }
+
     }
 
     //================================================================================
@@ -108,13 +127,4 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-//    public void shutdown() throws RemoteException {
-//        Registry registry = LocateRegistry.getRegistry();
-//        try {
-//            registry.unbind("UserService");
-//        } catch (NotBoundException ignored) {
-//        }
-//        UnicastRemoteObject.unexportObject(this, false);
-//
-//    }
 }

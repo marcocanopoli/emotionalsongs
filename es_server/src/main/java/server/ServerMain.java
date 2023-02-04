@@ -19,6 +19,6 @@ public class ServerMain {
      */
     public static void main(String[] args) {
 
-        ServerApp.startApp(args);
+        ServerApp.appStart(args);
     }
 }

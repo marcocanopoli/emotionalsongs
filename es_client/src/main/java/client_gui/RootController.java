@@ -8,6 +8,7 @@ import common.Playlist;
 import common.User;
 import common.interfaces.EmotionDAO;
 import common.interfaces.PlaylistDAO;
+import exceptions.RMIStubException;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -17,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -60,9 +62,13 @@ public class RootController {
         ClientApp.setMainView(mainView);
 
         EmotionDAO emotionDAO = ClientApp.getEmotionDAO();
-        List<Emotion> emotions = emotionDAO.getAllEmotions();
+        try {
+            List<Emotion> emotions = emotionDAO.getAllEmotions();
+            context.setEmotions(emotions);
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
 
-        context.setEmotions(emotions);
 
         context.addPropertyChangeListener(e -> {
             if (e.getPropertyName().equals("user")) {
@@ -115,8 +121,12 @@ public class RootController {
     private void initPlaylistList() {
         PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
         User user = context.getUser();
-        List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
-        context.setUserPlaylists(playlists);
+        try {
+            List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
+            context.setUserPlaylists(playlists);
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
 
         ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
 

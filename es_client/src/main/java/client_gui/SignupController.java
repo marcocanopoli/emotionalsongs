@@ -6,10 +6,12 @@ import common.NodeHelpers;
 import common.StringHelpers;
 import common.User;
 import common.interfaces.UserDAO;
+import exceptions.RMIStubException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -207,21 +209,25 @@ public class SignupController {
 //                            pwd.trim().equals(pwdConfirm.trim())
 //            )
 //            {
-        boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
+        try {
+            boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
 
-        if (userAdded) {
-            User user = userDAO.getUser(username, pwd);
-            ClientContext context = ClientContext.getInstance();
-            context.setUser(user);
+            if (userAdded) {
+                User user = userDAO.getUser(username, pwd);
+                ClientContext context = ClientContext.getInstance();
+                context.setUser(user);
 
-            ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
-        } else {
-            NodeHelpers.createAlert(
-                    Alert.AlertType.WARNING,
-                    "Utente già esistente",
-                    "Esiste già un utente corrispondente ai dati immessi",
-                    "Controllare username, emai e codice fiscale e riprovare",
-                    true);
+                ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
+            } else {
+                NodeHelpers.createAlert(
+                        Alert.AlertType.WARNING,
+                        "Utente già esistente",
+                        "Esiste già un utente corrispondente ai dati immessi",
+                        "Controllare username, emai e codice fiscale e riprovare",
+                        true);
+            }
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
         }
 //            }
     }

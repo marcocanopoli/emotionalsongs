@@ -51,6 +51,16 @@ public class SearchViewController {
             searchSongsTableController.addPlaylistDropdown();
         }
 
+
+        context.addPropertyChangeListener(e -> {
+            if (e.getNewValue() != null &&
+                    (e.getPropertyName().equals("newPlaylist") ||
+                            e.getPropertyName().equals("deletePlaylist"))) {
+                searchSongsTable.getColumns().remove(1);
+                searchSongsTableController.addPlaylistDropdown();
+            }
+        });
+
     }
 
     /**

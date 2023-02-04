@@ -3,6 +3,7 @@ package common.interfaces;
 import common.Emotion;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ public interface EmotionDAO extends Remote {
      * Getter di tutte le emozioni disponibili a DB
      *
      * @return una lista di <code>Emotion</code>
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Emotion> getAllEmotions();
+    List<Emotion> getAllEmotions() throws RemoteException;
 }

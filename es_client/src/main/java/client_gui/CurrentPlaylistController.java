@@ -8,6 +8,7 @@ import common.Playlist;
 import common.Song;
 import common.StringHelpers;
 import common.interfaces.PlaylistDAO;
+import exceptions.RMIStubException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,6 +19,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+
+import java.rmi.RemoteException;
 
 /**
  * Controller per FXML della vista di dettaglio di una playlist
@@ -80,9 +83,13 @@ public class CurrentPlaylistController {
      * Recupera le canzoni della playlist corrente e ne calcola la durata totale
      */
     private void initCurrentPlaylist() {
-        currentPlaylistSongs.setAll(playlistDAO.getPlaylistSongs(currentPlaylist.getId()));
-        playlistName.setText(currentPlaylist.getName());
-        playlistDuration.setText(StringHelpers.getSongsListDurationString(currentPlaylistSongs));
+        try {
+            currentPlaylistSongs.setAll(playlistDAO.getPlaylistSongs(currentPlaylist.getId()));
+            playlistName.setText(currentPlaylist.getName());
+            playlistDuration.setText(StringHelpers.getSongsListDurationString(currentPlaylistSongs));
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
     }
 
     /**
@@ -96,11 +103,15 @@ public class CurrentPlaylistController {
                 Alert.AlertType.CONFIRMATION, "Conferma eliminazione playlist", null, msg, true);
 
         if (res) {
-            int deleted = playlistDAO.deletePlaylist(currentPlaylist.getId());
+            try {
+                int deleted = playlistDAO.deletePlaylist(currentPlaylist.getId());
 
-            if (deleted > 0) {
-                context.removeUserPlaylist(currentPlaylist);
-                context.setCurrentPlaylist(null);
+                if (deleted > 0) {
+                    context.removeUserPlaylist(currentPlaylist);
+                    context.setCurrentPlaylist(null);
+                }
+            } catch (RemoteException e) {
+                throw new RMIStubException(e);
             }
         }
     }

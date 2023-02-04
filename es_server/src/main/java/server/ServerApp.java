@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -25,6 +24,13 @@ import java.sql.Connection;
  * @see ServerMain
  */
 public class ServerApp extends Application {
+
+    private static final int PORT = 1099;
+    static Registry registry;
+    static EmotionDAOImpl emotionDAO;
+    static SongDAOImpl songDAO;
+    static PlaylistDAOImpl playlistDAO;
+    static UserDAOImpl userDAO;
     private static Connection conn = null;
     public static final URL dbLoginURL = ServerApp.class.getResource("/server_gui/rootLayout.fxml");
 
@@ -58,18 +64,11 @@ public class ServerApp extends Application {
      * Rimuove le associazioni degli stub RMI dal registro e chiude l'applicazione dopo un timoute di 1000ms
      */
     public static void shutdown() {
-        try {
-            Registry registry = LocateRegistry.getRegistry();
-            registry.unbind("UserService");
-            registry.unbind("SongService");
-            registry.unbind("EmotionService");
-            registry.unbind("PlaylistService");
-        } catch (NotBoundException e) {
-            ServerLogger.debug("Service not bound, skipping");
-        } catch (RemoteException e) {
-            ServerLogger.debug("Registry not found: " + e);
 
-        }
+        emotionDAO.unexport(registry);
+        playlistDAO.unexport(registry);
+        songDAO.unexport(registry);
+        userDAO.unexport(registry);
 
         new Thread(() -> {
             ServerLogger.info("Shutting down...");
@@ -77,6 +76,7 @@ public class ServerApp extends Application {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 ServerLogger.error("Shutdown was interrupted: " + e);
+                Thread.currentThread().interrupt();
             }
             System.exit(0);
         }).start();
@@ -91,14 +91,14 @@ public class ServerApp extends Application {
      * @param args argomenti di avvio
      * @see ServerMain
      */
-    public static void startApp(String[] args) {
+    public static void appStart(String[] args) {
         try {
 
-            Registry registry = LocateRegistry.createRegistry(1099);
-            PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);
-            EmotionDAOImpl emotionService = new EmotionDAOImpl(registry);
-            SongDAOImpl songService = new SongDAOImpl(registry);
-            UserDAOImpl userService = new UserDAOImpl(registry);
+            registry = LocateRegistry.createRegistry(PORT);
+            playlistDAO = new PlaylistDAOImpl(registry);
+            emotionDAO = new EmotionDAOImpl(registry);
+            songDAO = new SongDAOImpl(registry);
+            userDAO = new UserDAOImpl(registry);
             ServerLogger.debug("DAOs registered");
 
             launch();

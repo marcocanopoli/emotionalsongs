@@ -4,11 +4,13 @@ import client.ClientApp;
 import client.ClientContext;
 import common.Song;
 import common.interfaces.SongDAO;
+import exceptions.RMIStubException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -76,9 +78,13 @@ public class SearchSongPaneController {
     @FXML
     private void searchByTitle() {
         String title = titleInput.getText().trim();
-        List<Song> results = songDAO.getSongsByTitle(title);
-        context.setSearchedSongs(results);
-        if (!results.isEmpty()) titleInput.clear();
+        try {
+            List<Song> results = songDAO.getSongsByTitle(title);
+            context.setSearchedSongs(results);
+            if (!results.isEmpty()) titleInput.clear();
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
 
     }
 
@@ -91,10 +97,14 @@ public class SearchSongPaneController {
     public void searchByAuthorYear() {
         String author = authorInput.getText().trim();
         Integer year = yearInput.getText().isBlank() ? null : Integer.parseInt(yearInput.getText());
-        List<Song> results = songDAO.getSongsByAuthorYear(author, year);
-        context.setSearchedSongs(results);
-        if (!results.isEmpty()) authorInput.clear();
-        if (!results.isEmpty()) yearInput.clear();
+        try {
+            List<Song> results = songDAO.getSongsByAuthorYear(author, year);
+            context.setSearchedSongs(results);
+            if (!results.isEmpty()) authorInput.clear();
+            if (!results.isEmpty()) yearInput.clear();
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
     }
 
 }

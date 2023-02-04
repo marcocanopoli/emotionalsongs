@@ -6,6 +6,7 @@ import common.NodeHelpers;
 import common.Playlist;
 import common.Song;
 import common.interfaces.PlaylistDAO;
+import exceptions.RMIStubException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -34,15 +36,6 @@ public class SongsTableController {
      * Contiene il listener per l'aggiornamento delle colonne all'aggiunta o rimozione di una playlist
      */
     public void initialize() {
-
-        context.addPropertyChangeListener(e -> {
-            if (e.getNewValue() != null &&
-                    (e.getPropertyName().equals("newPlaylist") ||
-                            e.getPropertyName().equals("deletePlaylist"))) {
-                songsTable.getColumns().remove(1);
-                addPlaylistDropdown();
-            }
-        });
 
         addEmotionsInfoBtn();
     }
@@ -190,15 +183,19 @@ public class SongsTableController {
 
                     if (context.getCurrentPlaylist() != null && deleteSong) {
                         Playlist playlist = context.getCurrentPlaylist();
-                        int deleted = playlistDAO.deletePlaylistSong(playlist.getId(), song.id);
-                        String msg = "";
+                        try {
+                            int deleted = playlistDAO.deletePlaylistSong(playlist.getId(), song.id);
+                            String msg = "";
 
-                        if (deleted > 0) {
-                            msg = "'" + song.getTitle() + "' è stata rimossa dalla playlist '" + playlist.getName() + "'";
-                            NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
-                        } else {
-                            msg = "Non è stato possibile rimuovere '" + song.getTitle() + "' dalla playlist '" + playlist.getName() + "'";
-                            NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione", null, msg, false);
+                            if (deleted > 0) {
+                                msg = "'" + song.getTitle() + "' è stata rimossa dalla playlist '" + playlist.getName() + "'";
+                                NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
+                            } else {
+                                msg = "Non è stato possibile rimuovere '" + song.getTitle() + "' dalla playlist '" + playlist.getName() + "'";
+                                NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione", null, msg, false);
+                            }
+                        } catch (RemoteException e) {
+                            throw new RMIStubException(e);
                         }
                     }
                 });
@@ -242,14 +239,19 @@ public class SongsTableController {
                             item.setOnAction(event -> {
                                 Song song = getTableView().getItems().get(getIndex());
 
-                                int[] rows = playlistDAO.addSongsToPlaylist(p.getId(), List.of(song.id));
-                                String msg;
-                                if (rows.length > 0) {
-                                    msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'";
-                                    NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
-                                } else {
-                                    msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'";
-                                    NodeHelpers.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, false);
+                                try {
+
+                                    int[] rows = playlistDAO.addSongsToPlaylist(p.getId(), List.of(song.id));
+                                    String msg;
+                                    if (rows.length > 0) {
+                                        msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'";
+                                        NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
+                                    } else {
+                                        msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'";
+                                        NodeHelpers.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, false);
+                                    }
+                                } catch (RemoteException e) {
+                                    throw new RMIStubException(e);
                                 }
                             });
                             playlistChoice.getItems().add(item);

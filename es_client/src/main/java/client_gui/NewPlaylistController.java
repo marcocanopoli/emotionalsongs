@@ -6,6 +6,7 @@ import client_gui.components.SongsTableController;
 import common.*;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
+import exceptions.RMIStubException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,15 +131,19 @@ public class NewPlaylistController {
             songIds.add(song.id);
         }
 
-        Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songIds);
+        try {
+            Playlist newPlaylist = playlistDAO.createNewPlaylist(user.getId(), newPlaylistName.getText(), songIds);
 
-        if (newPlaylist != null) {
-            context.addUserPlaylist(newPlaylist);
-            newPlaylistName.clear();
-            newPlaylistSongs.clear();
-        } else {
-            String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
-            NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
+            if (newPlaylist != null) {
+                context.addUserPlaylist(newPlaylist);
+                newPlaylistName.clear();
+                newPlaylistSongs.clear();
+            } else {
+                String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
+                NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
+            }
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
         }
 
 
@@ -190,9 +196,13 @@ public class NewPlaylistController {
     @FXML
     private void searchAuthors() {
         String author = authorPrompt.getText().trim();
-        List<String> results = songDAO.getAuthors(author);
-        searchedAuthors.setAll(results);
-        if (!results.isEmpty()) authorPrompt.clear();
+        try {
+            List<String> results = songDAO.getAuthors(author);
+            searchedAuthors.setAll(results);
+            if (!results.isEmpty()) authorPrompt.clear();
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
 
     }
 
@@ -203,9 +213,13 @@ public class NewPlaylistController {
     @FXML
     private void searchAlbums() {
         String album = albumPrompt.getText().trim();
-        List<Song> results = songDAO.getAlbums(album);
-        searchedAlbums.addAll(results);
-        if (!results.isEmpty()) albumPrompt.clear();
+        try {
+            List<Song> results = songDAO.getAlbums(album);
+            searchedAlbums.addAll(results);
+            if (!results.isEmpty()) albumPrompt.clear();
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
     }
 
     /**
@@ -214,11 +228,15 @@ public class NewPlaylistController {
     @FXML
     private void addAuthorSongs() {
         String author = authorsList.getSelectionModel().getSelectedItem();
-        List<Song> results = songDAO.getSongsByAuthorYear(author, null);
+        try {
+            List<Song> results = songDAO.getSongsByAuthorYear(author, null);
 
-        if (!results.isEmpty()) {
-            context.addNewPlaylistSongs(results);
-            authorPrompt.clear();
+            if (!results.isEmpty()) {
+                context.addNewPlaylistSongs(results);
+                authorPrompt.clear();
+            }
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
         }
 
     }
@@ -231,11 +249,15 @@ public class NewPlaylistController {
      */
     @FXML
     private void addAlbumSongs(String author, String album) {
-        List<Song> results = songDAO.getSongsByAuthorAlbum(author, album);
+        try {
+            List<Song> results = songDAO.getSongsByAuthorAlbum(author, album);
 
-        if (!results.isEmpty()) {
-            context.addNewPlaylistSongs(results);
-            albumPrompt.clear();
+            if (!results.isEmpty()) {
+                context.addNewPlaylistSongs(results);
+                albumPrompt.clear();
+            }
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
         }
     }
 

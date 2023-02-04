@@ -4,6 +4,7 @@ import common.Song;
 import common.SongEmotion;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,17 +184,19 @@ public interface SongDAO extends Remote {
      * Getter degli album contenenti nel titolo la stringa in input
      *
      * @param album il titolo da cercare
-     * @return una lista di canzoni rappresentative dell'album di apprtenenza
+     * @return una lista di canzoni rappresentative dell'album di appartenenza
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Song> getAlbums(String album);
+    List<Song> getAlbums(String album) throws RemoteException;
 
     /**
      * Getter degli autori contententi nel nome la string in input
      *
      * @param author il nome da cercare
      * @return una lista di nomi di autori
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<String> getAuthors(String author);
+    List<String> getAuthors(String author) throws RemoteException;
 
     /**
      * Ricerca canzoni secondo autore e album
@@ -201,8 +204,9 @@ public interface SongDAO extends Remote {
      * @param authorText l'autore
      * @param albumText  l'album
      * @return una lista di canzoni
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Song> getSongsByAuthorAlbum(String authorText, String albumText);
+    List<Song> getSongsByAuthorAlbum(String authorText, String albumText) throws RemoteException;
 
     /**
      * Ricerca canzoni secondo autore e anno
@@ -210,32 +214,36 @@ public interface SongDAO extends Remote {
      * @param authorText l'autore
      * @param yearText   l'anno
      * @return una lista di canzoni
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Song> getSongsByAuthorYear(String authorText, Integer yearText);
+    List<Song> getSongsByAuthorYear(String authorText, Integer yearText) throws RemoteException;
 
     /**
      * Ricerca canzoni tramite titolo
      *
      * @param titleText il titolo
      * @return una lista di canzoni
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Song> getSongsByTitle(String titleText);
+    List<Song> getSongsByTitle(String titleText) throws RemoteException;
 
     /**
      * Getter del totale per ogni emozione di tutte le emozioni associate ad una canzone
      *
      * @param songId l'id della canzone
      * @return una mappa di id canzone -> count del totale
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    HashMap<Integer, Integer> getSongEmotionsCount(int songId);
+    HashMap<Integer, Integer> getSongEmotionsCount(int songId) throws RemoteException;
 
     /**
      * Getter del totale di voti per le emozioni di una singola canzone
      *
      * @param songId l'id della canzone
      * @return il conteggio totale
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    int getSongEmotionsCountTotal(int songId);
+    int getSongEmotionsCountTotal(int songId) throws RemoteException;
 
     /**
      * Getter delle note di una singola emozione di una canzone
@@ -243,8 +251,9 @@ public interface SongDAO extends Remote {
      * @param songId    l'id della canzone
      * @param emotionId l'id dell'emozione
      * @return una lista di note associate all'emozione
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<String> getSongEmotionNotes(int songId, int emotionId);
+    List<String> getSongEmotionNotes(int songId, int emotionId) throws RemoteException;
 
     /**
      * Getter del rating e note associate alle emozioni di una canzone da un utente definito
@@ -252,9 +261,10 @@ public interface SongDAO extends Remote {
      * @param userId l'id dell'utente
      * @param songId l'id della canzone
      * @return una lista di emozioni con userId, rating e note
+     * @throws RemoteException se lo stub non è raggiungibile
      * @see SongEmotion
      */
-    List<SongEmotion> getUserSongEmotionsCountRating(int userId, int songId);
+    List<SongEmotion> getUserSongEmotionsCountRating(int userId, int songId) throws RemoteException;
 
     //================================================================================
     // INSERT
@@ -267,8 +277,9 @@ public interface SongDAO extends Remote {
      * @param songId    l'id della canzone
      * @param emotionId l'id dell'emozione
      * @param rating    il rating da 1 a 5
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    void setSongEmotion(int userId, int songId, int emotionId, int rating);
+    void setSongEmotion(int userId, int songId, int emotionId, int rating) throws RemoteException;
 
     /**
      * Inserisce le note per una emozione di una canzone da parte di un utente definito
@@ -277,8 +288,9 @@ public interface SongDAO extends Remote {
      * @param songId    l'id della canzone
      * @param emotionId l'id dell'emozione
      * @param notes     le note fino a 256 caratteri
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    void setSongEmotionNotes(int userId, int songId, int emotionId, String notes);
+    void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) throws RemoteException;
 
     //================================================================================
     // DELETE
@@ -291,6 +303,7 @@ public interface SongDAO extends Remote {
      * @param songId    l'id della canzone
      * @param emotionId l'id dell'emozione
      * @return il numero di record modificati: 1 se l'operazione è andata a buon fine, 0 altrimenti
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    int deleteSongEmotion(int userId, int songId, int emotionId);
+    int deleteSongEmotion(int userId, int songId, int emotionId) throws RemoteException;
 }

@@ -6,6 +6,7 @@ import common.Emotion;
 import common.Song;
 import common.User;
 import common.interfaces.SongDAO;
+import exceptions.RMIStubException;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -139,7 +141,11 @@ public class SongInfoController {
      * @param emotionId l'id dell'emozione scelta
      */
     private void getAndSetNotes(int emotionId) {
-        emotionNotes.setAll(songDAO.getSongEmotionNotes(song.id, emotionId));
+        try {
+            emotionNotes.setAll(songDAO.getSongEmotionNotes(song.id, emotionId));
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
 
         notesList.setOnMouseClicked(row -> {
             String note = notesList.getSelectionModel().getSelectedItem();
@@ -151,14 +157,18 @@ public class SongInfoController {
      * Recupera da DB il totale di voti per le emozioni e ne calcola la percentuale sul totale
      */
     private void getRatingTotals() {
-        songEmotions.putAll(songDAO.getSongEmotionsCount(song.id));
-        total = songDAO.getSongEmotionsCountTotal(song.id);
+        try {
+            songEmotions.putAll(songDAO.getSongEmotionsCount(song.id));
+            total = songDAO.getSongEmotionsCountTotal(song.id);
 
-        for (int i = 1; i < 10; i++) {
-            int count = songEmotions.get(i) != null ? songEmotions.get(i) : 0;
-            float percentage = total > 0 ? (float) count / total : 0;
-            votesCount.put(i, count);
-            percentages.put(i, percentage);
+            for (int i = 1; i < 10; i++) {
+                int count = songEmotions.get(i) != null ? songEmotions.get(i) : 0;
+                float percentage = total > 0 ? (float) count / total : 0;
+                votesCount.put(i, count);
+                percentages.put(i, percentage);
+            }
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
         }
     }
 }

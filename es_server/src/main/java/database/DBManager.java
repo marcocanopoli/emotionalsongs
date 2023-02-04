@@ -6,10 +6,9 @@ import server.ServerApp;
 import server.ServerLogger;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.*;
@@ -94,9 +93,9 @@ public class DBManager {
         try (Connection conn = DriverManager.getConnection(url, connProps);
              Statement stmt = conn.createStatement()) {
 
-            int dropped = stmt.executeUpdate(DROP_DB_QUERY);
-            ServerLogger.debug(oldDBName.toUpperCase() + (dropped > 0 ? " database dropped" : " database not found, drop skipped"));
-            stmt.executeUpdate(CREATE_DB_QUERY);
+            stmt.execute(DROP_DB_QUERY);
+            ServerLogger.debug(oldDBName.toUpperCase() + " database dropped");
+            stmt.execute(CREATE_DB_QUERY);
             ServerLogger.debug(newDBName.toUpperCase() + " database created");
             return true;
         } catch (SQLException e) {
@@ -324,13 +323,12 @@ public class DBManager {
                         (author,title,year,album,genre,duration) VALUES (?,?,?,?,?,?)
                         """;
 
-        URL datasetUrl = DBManager.class.getResource("songsData.csv");
+        InputStream datasetStream = DBManager.class.getResourceAsStream("songsData.csv");
 
-        if (datasetUrl != null) {
-            File dataset = new File(datasetUrl.getPath());
+        if (datasetStream != null) {
             Connection conn = ServerApp.getConnection();
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(dataset));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(datasetStream));
                  PreparedStatement stmt = conn.prepareStatement(SEED_SONGS_QUERY)) {
 
                 conn.setAutoCommit(false);
@@ -344,9 +342,9 @@ public class DBManager {
                 int totalAlbums = 0;
                 Random random = new Random();
 
+                ServerLogger.info("Processing songs dataset...");
                 while (line != null) {
                     lineCounter++;
-                    ServerLogger.debug("Processing: " + lineCounter);
 
                     String[] fields = line.split(",");
                     String author = fields[0].trim();
@@ -388,9 +386,11 @@ public class DBManager {
                     line = reader.readLine();
                 }
 
+                ServerLogger.info("Executing songs dataset batch insert...");
                 stmt.executeBatch();
                 conn.commit();
                 conn.setAutoCommit(true);
+                ServerLogger.info(lineCounter + " songs added to DB");
                 ServerLogger.debug("Songs seeder executed");
             } catch (SQLException e) {
                 ServerLogger.error("Seeder error: " + e);

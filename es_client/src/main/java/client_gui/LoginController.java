@@ -5,11 +5,14 @@ import client.ClientContext;
 import client.ClientLogger;
 import common.User;
 import common.interfaces.UserDAO;
+import exceptions.RMIStubException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.rmi.RemoteException;
 
 /**
  * Controller per FXML del dialog di login.
@@ -50,13 +53,16 @@ public class LoginController {
     private void login() {
         ClientContext context = ClientContext.getInstance();
         UserDAO userDAO = ClientApp.getUserDAO();
+        try {
+            User user = userDAO.getUser(username.getText(), pwd.getText());
+            context.setUser(user);
 
-        User user = userDAO.getUser(username.getText(), pwd.getText());
-        context.setUser(user);
+            ClientLogger.info("Utente '" + user.getUsername() + "': accesso effettuato");
 
-        ClientLogger.info("Utente '" + user.getUsername() + "': accesso effettuato");
-
-        ((Stage) confirmLoginBtn.getScene().getWindow()).close();
+            ((Stage) confirmLoginBtn.getScene().getWindow()).close();
+        } catch (RemoteException e) {
+            throw new RMIStubException(e);
+        }
     }
 
 }

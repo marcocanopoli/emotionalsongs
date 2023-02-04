@@ -13,3 +13,4 @@ target/
 .DS_Store
 
 /es_server/src/main/resources/database/songsData2.csv
+/out/

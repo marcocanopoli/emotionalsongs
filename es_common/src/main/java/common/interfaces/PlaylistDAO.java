@@ -4,6 +4,7 @@ import common.Playlist;
 import common.Song;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
@@ -89,16 +90,18 @@ public interface PlaylistDAO extends Remote {
      *
      * @param playlistId l'id della playlist
      * @return una lista di canzoni
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Song> getPlaylistSongs(int playlistId);
+    List<Song> getPlaylistSongs(int playlistId) throws RemoteException;
 
     /**
      * Getter delle playlist di uno specifico utente
      *
      * @param userId l'id dell'utente
      * @return una lista di playlist
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    List<Playlist> getUserPlaylists(int userId);
+    List<Playlist> getUserPlaylists(int userId) throws RemoteException;
 
     //================================================================================
     // INSERT
@@ -110,8 +113,9 @@ public interface PlaylistDAO extends Remote {
      * @param playlistId l'id della playlist
      * @param songIds    una lista di id di canzoni
      * @return un array contenente i riferimenti ai record inseriti
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    int[] addSongsToPlaylist(int playlistId, List<Integer> songIds);
+    int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) throws RemoteException;
 
     /**
      * Crea una nuova playlist contenente una lista di canzoni
@@ -120,8 +124,9 @@ public interface PlaylistDAO extends Remote {
      * @param name    il nome della playlist
      * @param songIds una lista di id di canzoni
      * @return la playlist appena creata
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    Playlist createNewPlaylist(int userId, String name, List<Integer> songIds);
+    Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) throws RemoteException;
 
     //================================================================================
     // DELETE
@@ -132,8 +137,9 @@ public interface PlaylistDAO extends Remote {
      *
      * @param playListId l'id della playlist
      * @return il numero di record modificati: 1 se l'operazione è andata a buon fine, 0 altrimenti
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    int deletePlaylist(int playListId);
+    int deletePlaylist(int playListId) throws RemoteException;
 
     /**
      * Rimuove una canzone da una playlist
@@ -141,7 +147,8 @@ public interface PlaylistDAO extends Remote {
      * @param playListId l'id della playlist
      * @param songId     l'id della canzone
      * @return il numero di record modificati: 1 se l'operazione è andata a buon fine, 0 altrimenti
+     * @throws RemoteException se lo stub non è raggiungibile
      */
-    int deletePlaylistSong(int playListId, int songId);
+    int deletePlaylistSong(int playListId, int songId) throws RemoteException;
 }
 

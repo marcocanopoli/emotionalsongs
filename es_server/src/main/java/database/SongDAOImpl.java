@@ -6,6 +6,7 @@ import common.interfaces.SongDAO;
 import server.ServerApp;
 import server.ServerLogger;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,6 +25,8 @@ import java.util.List;
  */
 public class SongDAOImpl implements SongDAO {
 
+    private static final String REMOTE_NAME = "SongService";
+
     /**
      * Costruttore della classe.
      * Si occupa del bind dello stub al registry
@@ -33,7 +36,22 @@ public class SongDAOImpl implements SongDAO {
      */
     public SongDAOImpl(Registry registry) throws RemoteException {
         SongDAO songDAOStub = (SongDAO) UnicastRemoteObject.exportObject(this, 3939);
-        registry.rebind("SongService", songDAOStub);
+        registry.rebind(REMOTE_NAME, songDAOStub);
+    }
+
+    /**
+     * Esegue l'unbind dal registro e l'unexport del remote object
+     *
+     * @param registry il registro RMI
+     */
+    public void unexport(Registry registry) {
+        try {
+            registry.unbind(REMOTE_NAME);
+            UnicastRemoteObject.unexportObject(this, false);
+        } catch (NotBoundException | RemoteException e) {
+            ServerLogger.error(REMOTE_NAME + " unexport failed");
+        }
+
     }
 
     //================================================================================

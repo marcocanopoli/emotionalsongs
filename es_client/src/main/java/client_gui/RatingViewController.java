@@ -7,6 +7,7 @@ import common.Song;
 import common.SongEmotion;
 import common.User;
 import common.interfaces.SongDAO;
+import exceptions.RMIStubException;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -136,8 +138,12 @@ public class RatingViewController {
         resetBtn.setMaxWidth(Double.MAX_VALUE);
 
         resetBtn.setOnAction(event -> {
-            songDAO.deleteSongEmotion(user.getId(), song.id, emotionId);
-            group.selectToggle(null);
+            try {
+                songDAO.deleteSongEmotion(user.getId(), song.id, emotionId);
+                group.selectToggle(null);
+            } catch (RemoteException e) {
+                throw new RMIStubException(e);
+            }
         });
         resetBtn.setDisable(rating == 0);
 
@@ -154,7 +160,11 @@ public class RatingViewController {
 
                         if (newVal != null) {
                             int newRating = (int) newVal.getUserData();
-                            songDAO.setSongEmotion(user.getId(), song.id, emotionId, newRating);
+                            try {
+                                songDAO.setSongEmotion(user.getId(), song.id, emotionId, newRating);
+                            } catch (RemoteException e) {
+                                throw new RMIStubException(e);
+                            }
                         }
                     }
             );
@@ -201,7 +211,11 @@ public class RatingViewController {
 
 
         commentBtn.setOnAction(event -> {
-            songDAO.setSongEmotionNotes(user.getId(), song.id, emotionId, comment.getText());
+            try {
+                songDAO.setSongEmotionNotes(user.getId(), song.id, emotionId, comment.getText());
+            } catch (RemoteException e) {
+                throw new RMIStubException(e);
+            }
         });
 
         emoBox.add(commentBtn, 1, 1);
