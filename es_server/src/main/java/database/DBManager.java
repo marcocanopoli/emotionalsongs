@@ -274,7 +274,6 @@ public class DBManager {
 
             conn.setAutoCommit(false);
 
-
             String line = reader.readLine();
             String prevAuthor = "";
             int lineCounter = 0;
