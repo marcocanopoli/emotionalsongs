@@ -10,10 +10,15 @@ import javafx.scene.paint.Color;
 import server.ServerApp;
 import server.ServerLogger;
 
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 
+/**
+ * Controller per FXML del layout di base dell'applicazione.
+ * Mostra un form compilabile con le credenziali di accesso al database e
+ * la scelta di esecuzioni aggiuntive quali inizializzazione del DB e seed del dataset di base.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class RootController {
     @FXML
     private VBox checkboxes;
@@ -39,19 +44,7 @@ public class RootController {
     private Button connectBtn;
 
     @FXML
-    private void initialize() {
-        connectBtn.setOnAction(event -> {
-            try {
-                connect();
-            } catch (SQLException | IOException e) {
-                ServerLogger.error("Unable to initialize database: " + e);
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @FXML
-    private void connect() throws SQLException, IOException {
+    private void connect() {
         String host = dbHost.getText().trim();
         String database = dbName.getText().trim();
         String user = dbUser.getText().trim();

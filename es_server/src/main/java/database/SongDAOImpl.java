@@ -17,8 +17,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia <code>SongDAO</code>
+ *
+ * @see SongDAO
+ */
 public class SongDAOImpl implements SongDAO {
 
+    /**
+     * Costruttore della classe.
+     * Si occupa del bind dello stub al registry
+     *
+     * @param registry il registo RMI
+     * @throws RemoteException se la comunicazione col registry o l'export falliscono
+     */
     public SongDAOImpl(Registry registry) throws RemoteException {
         SongDAO songDAOStub = (SongDAO) UnicastRemoteObject.exportObject(this, 3939);
         registry.rebind("SongService", songDAOStub);
@@ -28,6 +40,9 @@ public class SongDAOImpl implements SongDAO {
     // SELECT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Song> getAlbums(String albumText) {
         Connection conn = ServerApp.getConnection();
@@ -58,6 +73,9 @@ public class SongDAOImpl implements SongDAO {
         return new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAuthors(String author) {
         Connection conn = ServerApp.getConnection();
@@ -86,6 +104,9 @@ public class SongDAOImpl implements SongDAO {
         return new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Song> getSongsByAuthorAlbum(String authorText, String albumText) {
         Connection conn = ServerApp.getConnection();
@@ -122,6 +143,9 @@ public class SongDAOImpl implements SongDAO {
         return new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Song> getSongsByAuthorYear(String authorText, Integer yearText) {
         Connection conn = ServerApp.getConnection();
@@ -158,6 +182,9 @@ public class SongDAOImpl implements SongDAO {
         return new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Song> getSongsByTitle(String titleText) {
         Connection conn = ServerApp.getConnection();
@@ -192,8 +219,11 @@ public class SongDAOImpl implements SongDAO {
         return new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public HashMap<Integer, Integer> getSongEmotions(int songId) {
+    public HashMap<Integer, Integer> getSongEmotionsCount(int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS);
@@ -221,8 +251,11 @@ public class SongDAOImpl implements SongDAO {
         return new HashMap<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public int getSongEmotionsCount(int songId) {
+    public int getSongEmotionsCountTotal(int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS_COUNT);
@@ -249,6 +282,9 @@ public class SongDAOImpl implements SongDAO {
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getSongEmotionNotes(int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
@@ -276,8 +312,11 @@ public class SongDAOImpl implements SongDAO {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<SongEmotion> getSongEmotionsRating(int userId, int songId) {
+    public List<SongEmotion> getUserSongEmotionsCountRating(int userId, int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS_RATING);
@@ -312,6 +351,9 @@ public class SongDAOImpl implements SongDAO {
     // INSERT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
         Connection conn = ServerApp.getConnection();
@@ -330,6 +372,9 @@ public class SongDAOImpl implements SongDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) {
         Connection conn = ServerApp.getConnection();
@@ -352,6 +397,9 @@ public class SongDAOImpl implements SongDAO {
     // DELETE
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int deleteSongEmotion(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();

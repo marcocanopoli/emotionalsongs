@@ -11,15 +11,19 @@ import java.util.Arrays;
  * Mostra un'alert e logga l'errore
  *
  * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see common.interfaces.EmotionDAO
+ * @see common.interfaces.PlaylistDAO
+ * @see common.interfaces.SongDAO
+ * @see common.interfaces.UserDAO
  */
-public class DAOException extends RuntimeException {
+public class RMIStubException extends RuntimeException {
 
-    public DAOException(Throwable err) {
-        ClientLogger.error("DAOException: " + Arrays.toString(err.getStackTrace()));
+    public RMIStubException(Throwable err) {
+        ClientLogger.error("Bind dello stub non presente: " + Arrays.toString(err.getStackTrace()));
 
         NodeHelpers.createAlert(
                 Alert.AlertType.ERROR,
-                "DAO exception",
+                "RMI stub not found",
                 "Si è verificato un errore di comunicazione con il server",
                 err.getMessage(),
                 true);

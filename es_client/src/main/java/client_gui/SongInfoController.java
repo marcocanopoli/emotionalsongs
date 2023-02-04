@@ -17,10 +17,17 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Controller per FXML dela vista di dettaglio di una singola canzone.
+ * Mostra i dettagli della canzone e mostra statistiche sul totale di emozioni per la canzone.
+ * Permette inoltre di visualizzare eventuali note registrate dagli utenti per la singola emozione.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class SongInfoController {
     @FXML
     private VBox emotionsBox;
@@ -51,6 +58,13 @@ public class SongInfoController {
     private final HashMap<Integer, Float> percentages = new HashMap<>();
     private final HashMap<Integer, Integer> votesCount = new HashMap<>();
 
+    /**
+     * Metodo di inizializzazione chiamato alla creazione della finestra.
+     * Setta i dettagli della canzone e recupera informazioni sui rating e note
+     * delle singole emozioni per la data canzone.
+     *
+     * @see client.ClientContext
+     */
     public void initialize() {
 
         songAuthor.setText(song.getAuthor());
@@ -68,6 +82,11 @@ public class SongInfoController {
         addEmotionBoxes();
     }
 
+    /**
+     * Crea dinamicamente un componente di riepilogo per ogni emozione disponibile sul DB.
+     * Mostra il numero di rating sul totale con una <code>ProgressBar</code> associata,
+     * ed un bottone per recuperare le note della singola emozione.
+     */
     private void addEmotionBoxes() {
 
         for (Emotion emo : emotions) {
@@ -112,12 +131,15 @@ public class SongInfoController {
         }
     }
 
+    /**
+     * Recupera le note per l'emozione scelta e le mostra in una lista.
+     * Al click sulla singola nota, la stessa viene riproposta in maniera estesa in
+     * una <code>TextArea</code> dedicata per facilitare la lettura delle note più lunghe.
+     *
+     * @param emotionId l'id dell'emozione scelta
+     */
     private void getAndSetNotes(int emotionId) {
-        try {
-            emotionNotes.setAll(songDAO.getSongEmotionNotes(song.id, emotionId));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        emotionNotes.setAll(songDAO.getSongEmotionNotes(song.id, emotionId));
 
         notesList.setOnMouseClicked(row -> {
             String note = notesList.getSelectionModel().getSelectedItem();
@@ -125,13 +147,12 @@ public class SongInfoController {
         });
     }
 
+    /**
+     * Recupera da DB il totale di voti per le emozioni e ne calcola la percentuale sul totale
+     */
     private void getRatingTotals() {
-        try {
-            songEmotions.putAll(songDAO.getSongEmotions(song.id));
-            total = songDAO.getSongEmotionsCount(song.id);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        songEmotions.putAll(songDAO.getSongEmotionsCount(song.id));
+        total = songDAO.getSongEmotionsCountTotal(song.id);
 
         for (int i = 1; i < 10; i++) {
             int count = songEmotions.get(i) != null ? songEmotions.get(i) : 0;

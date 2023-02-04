@@ -3,6 +3,15 @@ package common;
 import java.io.Serial;
 import java.io.Serializable;
 
+
+/**
+ * Contiene l'entità <code>User</code> salvata sul DB.
+ * Implementa <code>Serializable</code> per lo scambio tramite RMI
+ * Contiene costruttore e getter dei parametri.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see java.io.Serializable
+ */
 public class User implements Serializable {
 
     @Serial
@@ -14,26 +23,9 @@ public class User implements Serializable {
     private final String cf;
     private final String username;
     private final String email;
-//    private final String password;
 
     public User(
-            String firstName,
-            String lastName,
-            String cf,
-            String address,
-            String email,
-            String username) {
-        this.id = null;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.cf = cf;
-        this.address = address;
-        this.email = email;
-        this.username = username;
-    }
-
-    public User(
-            int id,
+            Integer id,
             String firstName,
             String lastName,
             String cf,
@@ -75,7 +67,7 @@ public class User implements Serializable {
     }
 
     public String getEmail() {
-        return lastName;
+        return email;
     }
 
     public String getUsername() {

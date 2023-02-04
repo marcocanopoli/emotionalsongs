@@ -15,8 +15,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia <code>EmotionDAO</code>
+ *
+ * @see EmotionDAO
+ */
 public class EmotionDAOImpl implements EmotionDAO {
 
+    /**
+     * Costruttore della classe.
+     * Si occupa del bind dello stub al registry
+     *
+     * @param registry il registo RMI
+     * @throws RemoteException se la comunicazione col registry o l'export falliscono
+     */
     public EmotionDAOImpl(Registry registry) throws RemoteException {
         EmotionDAO emotionDAOStub = (EmotionDAO) UnicastRemoteObject.exportObject(this, 3939);
         registry.rebind("EmotionService", emotionDAOStub);
@@ -26,8 +38,11 @@ public class EmotionDAOImpl implements EmotionDAO {
     // SELECT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Emotion> getAllEmotions() throws RemoteException {
+    public List<Emotion> getAllEmotions() {
         Connection conn = ServerApp.getConnection();
 
         final String query = EmotionDAO.emoSelQueries.get(EmoSel.ALL_EMO);

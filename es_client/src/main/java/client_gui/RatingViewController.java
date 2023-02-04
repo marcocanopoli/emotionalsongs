@@ -14,9 +14,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Controller per FXML della vista di inserimento tag emozionali per ogni canzone.
+ * Permette di inserire un rating da 1 a 5 ed un commento per ogni emozione.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class RatingViewController {
     @FXML
     private FlowPane emoContainer;
@@ -41,9 +46,13 @@ public class RatingViewController {
 
     List<Emotion> emotions = context.getEmotions();
 
+    /**
+     * Metodo di inizializzazione chiamato alla creazione della vista.
+     * Mostra i dettagli della canzone e inizializza i componenti di rating
+     */
     public void initialize() throws IOException {
 
-        songEmotions = songDAO.getSongEmotionsRating(user.getId(), song.id);
+        songEmotions = songDAO.getUserSongEmotionsCountRating(user.getId(), song.id);
 
         songAuthor.setText(song.getAuthor());
         songAlbum.setText(song.getAlbum());
@@ -52,15 +61,17 @@ public class RatingViewController {
         songGenre.setText(song.getGenre());
         songDuration.setText(song.getDuration());
 
-
         initEmotions();
     }
 
+    /**
+     * Inizializza i componenti di rating per le singole emozioni.
+     * I pannelli sono creati dinamicamente a partire dalle emozioni disponibili
+     * sul DB per agevolare la possibile aggiunta di emozioni
+     */
     private void initEmotions() {
 
-        for (int i = 0; i < emotions.size(); i++) {
-
-            Emotion emo = emotions.get(i);
+        for (Emotion emo : emotions) {
 
             GridPane emoBox = new GridPane();
             emoBox.setHgap(20);
@@ -105,24 +116,28 @@ public class RatingViewController {
             emoPane.setMaxWidth(400);
             emoPane.setCollapsible(false);
 
-
             emoContainer.getChildren().add(emoPane);
 
         }
 
     }
 
+    /**
+     * Aggiunge la sezione di rating al pannello della singola emozione.
+     * Setta i listener che inseriscono a DB i nuovi rating
+     *
+     * @param group     il <code>ToggleGroup</code> in cui inserire i toggle dei rating
+     * @param emoBox    il contenitore della sigola emozione
+     * @param emotionId l'id dell'emozione
+     * @param rating    il rating iniziale, se esiste
+     */
     private void addRatingSection(ToggleGroup group, GridPane emoBox, int emotionId, int rating) {
         Button resetBtn = new Button("Reset rating");
         resetBtn.setMaxWidth(Double.MAX_VALUE);
 
         resetBtn.setOnAction(event -> {
-            try {
-                songDAO.deleteSongEmotion(user.getId(), song.id, emotionId);
-                group.selectToggle(null);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            songDAO.deleteSongEmotion(user.getId(), song.id, emotionId);
+            group.selectToggle(null);
         });
         resetBtn.setDisable(rating == 0);
 
@@ -138,14 +153,8 @@ public class RatingViewController {
                     {
 
                         if (newVal != null) {
-
                             int newRating = (int) newVal.getUserData();
-
-                            try {
-                                songDAO.setSongEmotion(user.getId(), song.id, emotionId, newRating);
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
+                            songDAO.setSongEmotion(user.getId(), song.id, emotionId, newRating);
                         }
                     }
             );
@@ -164,6 +173,14 @@ public class RatingViewController {
         emoBox.add(radioGroup, 0, 0);
     }
 
+    /**
+     * Aggiunge l'input per i commenti alla singola emozione.
+     * Setta un bottone di invio/reset a database
+     *
+     * @param emoBox    il contenitore della singola emozione
+     * @param emotionId l'id dell'emozione
+     * @param notes     le note iniziali, se esistono
+     */
     private void addCommentSection(GridPane emoBox, int emotionId, String notes) {
 
         Button commentBtn = new Button();
@@ -184,11 +201,7 @@ public class RatingViewController {
 
 
         commentBtn.setOnAction(event -> {
-            try {
-                songDAO.setSongEmotionNotes(user.getId(), song.id, emotionId, comment.getText());
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            songDAO.setSongEmotionNotes(user.getId(), song.id, emotionId, comment.getText());
         });
 
         emoBox.add(commentBtn, 1, 1);

@@ -13,8 +13,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementazione dell'interfaccia <code>UserDAO</code>
+ *
+ * @see UserDAO
+ */
 public class UserDAOImpl implements UserDAO {
 
+    /**
+     * Costruttore della classe.
+     * Si occupa del bind dello stub al registry
+     *
+     * @param registry il registo RMI
+     * @throws RemoteException se la comunicazione col registry o l'export falliscono
+     */
     public UserDAOImpl(Registry registry) throws RemoteException {
         UserDAO userDAOStub = (UserDAO)
                 UnicastRemoteObject.exportObject(this, 3939);
@@ -25,6 +37,9 @@ public class UserDAOImpl implements UserDAO {
     // SELECT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User getUser(String username, String pwd) {
         Connection conn = ServerApp.getConnection();
@@ -65,6 +80,9 @@ public class UserDAOImpl implements UserDAO {
     // INSERT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
         Connection conn = ServerApp.getConnection();

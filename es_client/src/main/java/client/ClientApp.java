@@ -5,6 +5,8 @@ import common.interfaces.EmotionDAO;
 import common.interfaces.PlaylistDAO;
 import common.interfaces.SongDAO;
 import common.interfaces.UserDAO;
+import exceptions.RMIRegistryNotFoundException;
+import exceptions.RMIStubException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TabPane;
@@ -127,7 +129,7 @@ public class ClientApp extends Application {
      * Entry point dell'applicazione JavaFX, chiamato dall'inizializzazione del thread Application
      *
      * @param stage il <strong>primary stage</strong> dell'applicazione
-     *              sul quale settare la <strong>scene</strong>principale
+     *              sul quale settare la <strong>scene</strong> principale
      *              L'applicazione può creare altri stage, che non saranno principali
      */
     @Override
@@ -176,12 +178,11 @@ public class ClientApp extends Application {
     }
 
     /**
-     * Classe main dell'applicazione che lancia il thread Application
+     * Classe main dell'applicazione che lancia il thread Application.
+     * Rinominata in <code>appStart</code> per mantenere univoco il metodo main.
      * E' chiamato dalla classe wrapper <code>ClientMain</code>
      *
      * @param args argomenti di avvio
-     * @throws RemoteException   se il riferimento al registro non viene trovato
-     * @throws NotBoundException se lo stub non è registrato (bound)
      * @see ClientMain
      */
     public static void appStart(String[] args) {
@@ -196,9 +197,9 @@ public class ClientApp extends Application {
             songDAO = (SongDAO) registry.lookup("SongService");
             userDAO = (UserDAO) registry.lookup("UserService");
         } catch (RemoteException e) {
-            ClientLogger.error("Registo RMI non trovato: " + e);
+            throw new RMIRegistryNotFoundException(e);
         } catch (NotBoundException e) {
-            ClientLogger.error("Bind dello stub non presente: " + e);
+            throw new RMIStubException(e);
         }
 
 

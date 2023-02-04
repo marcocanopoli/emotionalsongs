@@ -16,6 +16,15 @@ import java.util.*;
 
 import static java.util.Map.entry;
 
+
+/**
+ * La classe si occupa di gestire il database <code>PostGreSQL</code>.
+ * Contiene metodi per l'apertura di connessioni verso il DB,
+ * per la creazione di DB e per l'esecuzione di migrazioni e seeder.
+ * Fornisce getter per la porta di comunicazione scelta.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class DBManager {
     private static int port = 5433;
 
@@ -35,6 +44,17 @@ public class DBManager {
         port = newPort;
     }
 
+    /**
+     * Apre una connessione verso il database tramite driver JDBC
+     *
+     * @param host     l'indirizzo dell'host del DB
+     * @param dbName   il nome del DB
+     * @param user     l'utente di accesso a <code>PostGreSQL</code>
+     * @param password la password di accesso a <code>PostGreSQL</code>
+     * @return la connessione aperta
+     * @see Driver
+     * @see Connection
+     */
     public Connection openConnection(String host, String dbName, String user, String password) {
 
         String url = MessageFormat.format("jdbc:postgresql://{0}:{1}/{2}", host, getPort(), dbName);
@@ -52,17 +72,27 @@ public class DBManager {
         }
     }
 
-    public static boolean createDB(String host, String oldDBName, String newDBName, String user, String password) throws SQLException {
+    /**
+     * Effettua il drop di un database e ne crea uno nuovo.
+     * Se il database da eliminare non viene trovato, l'operazione viene saltata .
+     *
+     * @param host      l'indirizzo dell'host del DB
+     * @param oldDBName il nome del database da eliminare
+     * @param newDBName il nome del nuovo database
+     * @param user      l'utente di accesso a <code>PostGreSQL</code>
+     * @param password  la password di accesso a <code>PostGreSQL</code>
+     * @return true se il database è creato correttamente, false altrimenti
+     */
+    public static boolean createDB(String host, String oldDBName, String newDBName, String user, String password) {
         String url = MessageFormat.format("jdbc:postgresql://{0}:{1}/", host, getPort());
         Properties connProps = new Properties();
         connProps.put("user", user);
         connProps.put("password", password);
-        Connection conn = DriverManager.getConnection(url, connProps);
-
         final String DROP_DB_QUERY = "DROP DATABASE IF EXISTS " + oldDBName;
         final String CREATE_DB_QUERY = "CREATE DATABASE " + newDBName;
 
-        try (Statement stmt = conn.createStatement()) {
+        try (Connection conn = DriverManager.getConnection(url, connProps);
+             Statement stmt = conn.createStatement()) {
 
             int dropped = stmt.executeUpdate(DROP_DB_QUERY);
             ServerLogger.debug(oldDBName.toUpperCase() + (dropped > 0 ? " database dropped" : " database not found, drop skipped"));
@@ -75,6 +105,10 @@ public class DBManager {
         return false;
     }
 
+    /**
+     * Migra le tabelle essenziali al funzionamento dell'applicazione.
+     * Contiene le query di migrazione mappate secondo una chiave enum <code>TableMigration</code>;
+     */
     public static void migrate() {
         enum TableMigration {USERS, EMOTIONS, SONGS, SONG_EMOTIONS, PLAYLISTS, PLAYLIST_SONGS}
 
@@ -172,6 +206,9 @@ public class DBManager {
         }
     }
 
+    /**
+     * Effettua il seed degli utenti prefefiniti per l'applicazione
+     */
     public static void seedUsers() {
         final String SEED_USERS_QUERY =
                 """
@@ -183,12 +220,22 @@ public class DBManager {
         final List<User> users = new ArrayList<>();
 
         users.add(new User(
+                1,
                 "admin",
                 "admin",
                 "ADMIN",
                 null,
                 "admin@emotionalsongs.com",
                 "admin"));
+
+        users.add(new User(
+                1,
+                "Marco",
+                "Canopoli",
+                "CNPMRC91M25A290J",
+                "Via Brebbia 333, Cadrezzate con Osmate (VA)",
+                "marco.canopoli@emotionalsongs.com",
+                "canos"));
 
         Connection conn = ServerApp.getConnection();
 
@@ -217,6 +264,9 @@ public class DBManager {
 
     }
 
+    /**
+     * Effettua il seed delle emozioni predefinite per l'applicazione
+     */
     public static void seedEmotions() {
         final String SEED_EMOTIONS_QUERY =
                 """
@@ -259,7 +309,14 @@ public class DBManager {
 
     }
 
-    public static void seedSongs() throws IOException {
+    /**
+     * Effettua il seed di un dataset iniziale di canzoni.
+     * Ai fini dimostrativi del funzionamento dell'applicazione e in mancanza di un dataset completo,
+     * crea un nome album ed una durata fittizi per i record senza tali informazioni.
+     *
+     * @see StringHelpers per la creazie di stringhe alfabetiche
+     */
+    public static void seedSongs() {
 
         final String SEED_SONGS_QUERY =
                 """
@@ -337,6 +394,8 @@ public class DBManager {
                 ServerLogger.debug("Songs seeder executed");
             } catch (SQLException e) {
                 ServerLogger.error("Seeder error: " + e);
+            } catch (IOException e) {
+                ServerLogger.error("Songs dataset file not found: " + e);
             }
 
         } else {

@@ -17,9 +17,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Controller per FXML del layout di base dell'applicazione, nel quale vengono
+ * innestate le viste principali.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class RootController {
 
     @FXML
@@ -40,11 +45,20 @@ public class RootController {
     private AnchorPane mainView;
     private final Window window = ClientApp.getWindow();
 
-    public void initialize() throws RemoteException {
-        ClientApp.setMainView(mainView);
-        ClientContext context = ClientContext.getInstance();
+    private final ClientContext context = ClientContext.getInstance();
 
-        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
+
+    /**
+     * Metodo di inizializzazione chiamato alla creazione del layout.
+     * Setta il pannello principale in cui inserire le viste,
+     * aggiunge listener ai bottoni di login e logout e di cambio vista.
+     * E' in ascolto dei cambiamenti all'utente per bloccare o sbloccare funzionalità.
+     *
+     * @see client.ClientContext
+     */
+    public void initialize() {
+        ClientApp.setMainView(mainView);
+
         EmotionDAO emotionDAO = ClientApp.getEmotionDAO();
         List<Emotion> emotions = emotionDAO.getAllEmotions();
 
@@ -56,11 +70,7 @@ public class RootController {
                 User newUser = (User) e.getNewValue();
 
                 if (newUser != null) {
-                    try {
-                        initPlaylistList(playlistDAO, context);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    initPlaylistList();
                 } else {
                     context.setCurrentPlaylist(null);
                     ClientApp.showView(ClientApp.ViewName.SEARCH);
@@ -87,7 +97,7 @@ public class RootController {
 
         loginBtn.setOnAction(event ->
                 NodeHelpers.createStage(
-                        window, ClientApp.loginURL, "Login", true)
+                        window, ClientApp.loginURL, "Effettua il login", true)
         );
 
         logoutBtn.setOnAction(event -> {
@@ -98,11 +108,16 @@ public class RootController {
         });
     }
 
-    private void initPlaylistList(PlaylistDAO playlistDAO, ClientContext context) throws RemoteException {
+    /**
+     * Inizializza le playlist dell'utente al momento del login.
+     * Setta i listener per popolare la lista di playlist in caso di aggiunta o rimozione.
+     */
+    private void initPlaylistList() {
+        PlaylistDAO playlistDAO = ClientApp.getPlaylistDAO();
         User user = context.getUser();
         List<Playlist> playlists = playlistDAO.getUserPlaylists(user.getId());
-
         context.setUserPlaylists(playlists);
+
         ObservableList<Playlist> userPlaylists = context.getUserPlaylists();
 
         userPlaylists.addListener((ListChangeListener.Change<? extends Playlist> playlist) ->

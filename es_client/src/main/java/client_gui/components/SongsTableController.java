@@ -13,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -190,10 +189,16 @@ public class SongsTableController {
                     songList.remove(song);
 
                     if (context.getCurrentPlaylist() != null && deleteSong) {
-                        try {
-                            playlistDAO.deletePlaylistSong(context.getCurrentPlaylist().getId(), song.id);
-                        } catch (RemoteException e) {
-                            throw new RuntimeException(e);
+                        Playlist playlist = context.getCurrentPlaylist();
+                        int deleted = playlistDAO.deletePlaylistSong(playlist.getId(), song.id);
+                        String msg = "";
+
+                        if (deleted > 0) {
+                            msg = "'" + song.getTitle() + "' è stata rimossa dalla playlist '" + playlist.getName() + "'";
+                            NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
+                        } else {
+                            msg = "Non è stato possibile rimuovere '" + song.getTitle() + "' dalla playlist '" + playlist.getName() + "'";
+                            NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione", null, msg, false);
                         }
                     }
                 });
@@ -237,18 +242,14 @@ public class SongsTableController {
                             item.setOnAction(event -> {
                                 Song song = getTableView().getItems().get(getIndex());
 
-                                try {
-                                    int[] rows = playlistDAO.addSongsToPlaylist(p.getId(), List.of(song.id));
-                                    String msg;
-                                    if (rows.length > 0) {
-                                        msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'!";
-                                        NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
-                                    } else {
-                                        msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'!";
-                                        NodeHelpers.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, false);
-                                    }
-                                } catch (RemoteException e) {
-                                    throw new RuntimeException(e);
+                                int[] rows = playlistDAO.addSongsToPlaylist(p.getId(), List.of(song.id));
+                                String msg;
+                                if (rows.length > 0) {
+                                    msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'";
+                                    NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
+                                } else {
+                                    msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'";
+                                    NodeHelpers.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, false);
                                 }
                             });
                             playlistChoice.getItems().add(item);

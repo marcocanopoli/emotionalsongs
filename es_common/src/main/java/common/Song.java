@@ -3,6 +3,14 @@ package common;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Contiene l'entità <code>Song</code> salvata sul DB.
+ * Implementa <code>Serializable</code> per lo scambio tramite RMI
+ * Contiene costruttore e getter dei parametri.
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see java.io.Serializable
+ */
 public class Song implements Serializable {
 
     @Serial
@@ -52,7 +60,6 @@ public class Song implements Serializable {
     }
 
     public String getTitle() {
-
         return this.title;
     }
 
@@ -73,6 +80,11 @@ public class Song implements Serializable {
         return this.genre;
     }
 
+    /**
+     * Formatta la durata in secondi
+     *
+     * @return la durata formattata 'minuti:secondi'
+     */
     public String getDuration() {
         Integer s = this.duration;
         if (s == null) return "";

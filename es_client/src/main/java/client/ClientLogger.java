@@ -18,7 +18,7 @@ public class ClientLogger {
     }
 
     /**
-     * Logger a livello <strong>DEBUG</strong>
+     * Logga un messaggio a livello <strong>DEBUG</strong>
      *
      * @param msg il messaggio da loggare
      */
@@ -27,7 +27,7 @@ public class ClientLogger {
     }
 
     /**
-     * Logger a livello <strong>INFO</strong>
+     * Logga un messaggio a livello <strong>INFO</strong>
      *
      * @param msg il messaggio da loggare
      */
@@ -36,7 +36,7 @@ public class ClientLogger {
     }
 
     /**
-     * Logger a livello <strong>ERROR</strong>
+     * Logga un messaggio a livello <strong>ERROR</strong>
      *
      * @param msg l'errore da loggare
      */

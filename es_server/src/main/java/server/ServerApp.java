@@ -15,6 +15,15 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.Connection;
 
+/**
+ * Classe principale che permette di avviare l'applicazione EmotionalSongs server.
+ * Estende la classe Application, entry point di un'applicazione JavaFX
+ * Include il riferimento ai file FXML utilizzato per creare il layout di base e
+ * la creazione degli stub RMI per la comunicazione con i client
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see ServerMain
+ */
 public class ServerApp extends Application {
     private static Connection conn = null;
     public static final URL dbLoginURL = ServerApp.class.getResource("/server_gui/rootLayout.fxml");
@@ -27,32 +36,39 @@ public class ServerApp extends Application {
         conn = connection;
     }
 
+    /**
+     * Entry point dell'applicazione JavaFX, chiamato dall'inizializzazione del thread Application
+     *
+     * @param stage il <strong>primary stage</strong> dell'applicazione
+     *              sul quale settare la <strong>scene</strong> principale
+     *              L'applicazione può creare altri stage, che non saranno principali
+     */
     @Override
     public void start(Stage stage) {
 
         stage.setResizable(false);
 
-        stage.setOnCloseRequest(event -> {
-            try {
-                shutdown();
-            } catch (RemoteException e) {
-                ServerLogger.debug("Shutdown exception: " + e);
-            }
-        });
+        stage.setOnCloseRequest(event -> shutdown());
 
         NodeHelpers.createMainStage(stage, dbLoginURL, "Avvio server", null, null);
 
     }
 
-    public static void shutdown() throws RemoteException {
-        Registry registry = LocateRegistry.getRegistry();
+    /**
+     * Rimuove le associazioni degli stub RMI dal registro e chiude l'applicazione dopo un timoute di 1000ms
+     */
+    public static void shutdown() {
         try {
+            Registry registry = LocateRegistry.getRegistry();
             registry.unbind("UserService");
             registry.unbind("SongService");
             registry.unbind("EmotionService");
             registry.unbind("PlaylistService");
         } catch (NotBoundException e) {
             ServerLogger.debug("Service not bound, skipping");
+        } catch (RemoteException e) {
+            ServerLogger.debug("Registry not found: " + e);
+
         }
 
         new Thread(() -> {
@@ -67,15 +83,27 @@ public class ServerApp extends Application {
 
     }
 
-    public static void register(String[] args) throws RemoteException {
+    /**
+     * Classe main dell'applicazione che lancia il thread Application.
+     * Rinominata in <code>appStart</code> per mantenere univoco il metodo main.
+     * E' chiamato dalla classe wrapper <code>ServerMain</code>
+     *
+     * @param args argomenti di avvio
+     * @see ServerMain
+     */
+    public static void startApp(String[] args) {
+        try {
 
-        Registry registry = LocateRegistry.createRegistry(1099);
-        PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);
-        EmotionDAOImpl emotionService = new EmotionDAOImpl(registry);
-        SongDAOImpl songService = new SongDAOImpl(registry);
-        UserDAOImpl userService = new UserDAOImpl(registry);
-        ServerLogger.debug("DAOs registered");
+            Registry registry = LocateRegistry.createRegistry(1099);
+            PlaylistDAOImpl playlistService = new PlaylistDAOImpl(registry);
+            EmotionDAOImpl emotionService = new EmotionDAOImpl(registry);
+            SongDAOImpl songService = new SongDAOImpl(registry);
+            UserDAOImpl userService = new UserDAOImpl(registry);
+            ServerLogger.debug("DAOs registered");
 
-        launch();
+            launch();
+        } catch (RemoteException e) {
+            ServerLogger.error("Impossibile lanciare l'applicazione: " + e);
+        }
     }
 }

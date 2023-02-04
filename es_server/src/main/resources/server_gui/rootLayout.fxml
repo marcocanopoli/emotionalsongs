@@ -49,7 +49,7 @@
                 <CheckBox fx:id="seedSongs" mnemonicParsing="false" text="Inserisci catalogo canzoni"/>
             </children>
         </VBox>
-        <Button fx:id="connectBtn" defaultButton="true" mnemonicParsing="false" text="Connetti"/>
+        <Button fx:id="connectBtn" onAction="#connect" defaultButton="true" mnemonicParsing="false" text="Connetti"/>
     </children>
     <padding>
         <Insets bottom="28.0" left="33.0" right="33.0" top="28.0"/>

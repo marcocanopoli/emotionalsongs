@@ -13,8 +13,20 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia <code>PlaylistDAO</code>
+ *
+ * @see PlaylistDAO
+ */
 public class PlaylistDAOImpl implements PlaylistDAO {
 
+    /**
+     * Costruttore della classe.
+     * Si occupa del bind dello stub al registry
+     *
+     * @param registry il registo RMI
+     * @throws RemoteException se la comunicazione col registry o l'export falliscono
+     */
     public PlaylistDAOImpl(Registry registry) throws RemoteException {
         PlaylistDAO playlistDAOStub = (PlaylistDAO) UnicastRemoteObject.exportObject(this, 3939);
         registry.rebind("PlaylistService", playlistDAOStub);
@@ -24,8 +36,11 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     // SELECT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Song> getPlaylistSongs(int playlistId) throws RemoteException {
+    public List<Song> getPlaylistSongs(int playlistId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistSelQueries.get(PlaylistSel.PLAYLIST_SONGS);
@@ -58,8 +73,11 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Playlist> getUserPlaylists(int userId) throws RemoteException {
+    public List<Playlist> getUserPlaylists(int userId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistSelQueries.get(PlaylistSel.USER_PLAYLISTS);
@@ -90,8 +108,11 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     // INSERT
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) throws RemoteException {
+    public int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) {
         Connection conn = ServerApp.getConnection();
         final String query = PlaylistDAO.playlistInsQueries.get(PlaylistIns.SONG_IN_PLAYLIST);
 
@@ -119,8 +140,11 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) throws RemoteException {
+    public Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) {
         Connection conn = ServerApp.getConnection();
         final String query = PlaylistDAO.playlistInsQueries.get(PlaylistIns.NEW_PLAYLIST);
 
@@ -154,8 +178,11 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     // DELETE
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public int deletePlaylist(int playListId) throws RemoteException {
+    public int deletePlaylist(int playListId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistDelQueries.get(PlaylistDel.PLAYLIST);
@@ -172,8 +199,11 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public int deletePlaylistSong(int playListId, int songId) throws RemoteException {
+    public int deletePlaylistSong(int playListId, int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistDelQueries.get(PlaylistDel.PLAYLIST_SONG);

@@ -16,12 +16,25 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Contiene metodi utili alla creazione di nodi JavaFX.
+ * Implementa <code>Serializable</code> per lo scambio tramite RMI
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see javafx.scene.Node
+ */
 public class NodeHelpers {
 
     NodeHelpers() {
 
     }
 
+    /**
+     * Fix per centrare i bottoni inseriti nel <code>DialogPane</code> di un dialog di default
+     *
+     * @param dialogPane il pane che contiene i bottoni
+     * @see DialogPane
+     */
     private static void centerButtons(DialogPane dialogPane) {
         Region spacer = new Region();
         ButtonBar.setButtonData(spacer, ButtonBar.ButtonData.BIG_GAP);
@@ -31,6 +44,18 @@ public class NodeHelpers {
         hboxDialogPane.getChildren().add(spacer);
     }
 
+    /**
+     * Crea un nodo di tipo <code>Alert</code>
+     *
+     * @param type       il tipo di alert
+     * @param title      il titolo dell'alert
+     * @param headerText il testo de''header
+     * @param message    il messaggio del body
+     * @param wait       specifica se interrompere l'esecuzione fino alla scelta o chiusura dell'alert
+     * @return true al click su 'OK', false altrimenti
+     * @see Alert
+     * @see javafx.scene.control.Alert.AlertType
+     */
     public static boolean createAlert(
             Alert.AlertType type,
             String title,
@@ -65,6 +90,16 @@ public class NodeHelpers {
         return res.get();
     }
 
+    /**
+     * Crea un dialog con input di testo
+     *
+     * @param title        il titolo del dialog
+     * @param headerText   il testo dell'header
+     * @param message      il messaggio del body
+     * @param defaultInput la stringa di default
+     * @return la stringa di input
+     * @see TextInputDialog
+     */
     public static String createTextInputDialog(
             String title,
             String headerText,
@@ -89,6 +124,19 @@ public class NodeHelpers {
         return result.orElse(null);
     }
 
+    /**
+     * Crea il primary stage per una applicazione modificando lo stage in input
+     *
+     * @param stage    lo stage sul quale settare la scene
+     * @param resource l'URL della risorsa FXML
+     * @param title    il titolo dello stage
+     * @param width    la larghezza in px
+     * @param height   l'altezza in px
+     * @return lo stage creato
+     * @see Stage
+     * @see Scene
+     * @see FXMLLoader
+     */
     public static Stage createMainStage(Stage stage, URL resource, String title, Integer width, Integer height) {
         try {
             if (resource != null) {
@@ -114,6 +162,18 @@ public class NodeHelpers {
         }
     }
 
+    /**
+     * Crea uno stage secondario per una applicazione
+     *
+     * @param owner    la finestra owner dello stage
+     * @param resource l'URL della risorsa FXML
+     * @param title    il titolo dello stage
+     * @param isModal  se lo stage è una modale rimarrà sempre in primo piano
+     * @see Stage
+     * @see Scene
+     * @see FXMLLoader
+     * @see Modality
+     */
     public static void createStage(Window owner, URL resource, String title, boolean isModal) {
         try {
             if (resource != null) {

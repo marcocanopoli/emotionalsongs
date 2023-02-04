@@ -4,13 +4,27 @@ import common.Song;
 import common.SongEmotion;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
 
+/**
+ * Interface per il DAO layer riguardante le operazioni sull'entità <code>Song</code>.
+ * E' utilizzato dal client per conoscere i metodi disponibili e implementata dal server che ne
+ * definisce il reale comportameto per i metodi.
+ * <p>
+ * Contiene mappe di query per le operazioni di <code>SELECT, INSERT, DELETE </code> accessibili tramite chiave enum e
+ * strutturate per essere utlizzate tramite <code>PreparedStatement</code> offerto da <code>java.sql</code>
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see Song
+ * @see SongSel
+ * @see SongIns
+ * @see SongDel
+ * @see database
+ */
 public interface SongDAO extends Remote {
 
     enum SongSel {
@@ -165,35 +179,118 @@ public interface SongDAO extends Remote {
     // SELECT
     //================================================================================
 
-    List<Song> getAlbums(String album) throws RemoteException;
+    /**
+     * Getter degli album contenenti nel titolo la stringa in input
+     *
+     * @param album il titolo da cercare
+     * @return una lista di canzoni rappresentative dell'album di apprtenenza
+     */
+    List<Song> getAlbums(String album);
 
-    List<String> getAuthors(String author) throws RemoteException;
+    /**
+     * Getter degli autori contententi nel nome la string in input
+     *
+     * @param author il nome da cercare
+     * @return una lista di nomi di autori
+     */
+    List<String> getAuthors(String author);
 
-    List<Song> getSongsByAuthorAlbum(String authorText, String albumText) throws RemoteException;
+    /**
+     * Ricerca canzoni secondo autore e album
+     *
+     * @param authorText l'autore
+     * @param albumText  l'album
+     * @return una lista di canzoni
+     */
+    List<Song> getSongsByAuthorAlbum(String authorText, String albumText);
 
-    List<Song> getSongsByAuthorYear(String authorText, Integer yearText) throws RemoteException;
+    /**
+     * Ricerca canzoni secondo autore e anno
+     *
+     * @param authorText l'autore
+     * @param yearText   l'anno
+     * @return una lista di canzoni
+     */
+    List<Song> getSongsByAuthorYear(String authorText, Integer yearText);
 
-    List<Song> getSongsByTitle(String searchString) throws RemoteException;
+    /**
+     * Ricerca canzoni tramite titolo
+     *
+     * @param titleText il titolo
+     * @return una lista di canzoni
+     */
+    List<Song> getSongsByTitle(String titleText);
 
-    HashMap<Integer, Integer> getSongEmotions(int songId) throws RemoteException;
+    /**
+     * Getter del totale per ogni emozione di tutte le emozioni associate ad una canzone
+     *
+     * @param songId l'id della canzone
+     * @return una mappa di id canzone -> count del totale
+     */
+    HashMap<Integer, Integer> getSongEmotionsCount(int songId);
 
-    int getSongEmotionsCount(int songId) throws RemoteException;
+    /**
+     * Getter del totale di voti per le emozioni di una singola canzone
+     *
+     * @param songId l'id della canzone
+     * @return il conteggio totale
+     */
+    int getSongEmotionsCountTotal(int songId);
 
-    List<String> getSongEmotionNotes(int songId, int emotionId) throws RemoteException;
+    /**
+     * Getter delle note di una singola emozione di una canzone
+     *
+     * @param songId    l'id della canzone
+     * @param emotionId l'id dell'emozione
+     * @return una lista di note associate all'emozione
+     */
+    List<String> getSongEmotionNotes(int songId, int emotionId);
 
-    List<SongEmotion> getSongEmotionsRating(int userId, int songId) throws RemoteException;
+    /**
+     * Getter del rating e note associate alle emozioni di una canzone da un utente definito
+     *
+     * @param userId l'id dell'utente
+     * @param songId l'id della canzone
+     * @return una lista di emozioni con userId, rating e note
+     * @see SongEmotion
+     */
+    List<SongEmotion> getUserSongEmotionsCountRating(int userId, int songId);
 
     //================================================================================
     // INSERT
     //================================================================================
 
-    void setSongEmotion(int userId, int songId, int emotionId, int rating) throws RemoteException;
+    /**
+     * Inserisce il rating per una emozione di una canzone da parte di un utente definito
+     *
+     * @param userId    l'id dell'utente
+     * @param songId    l'id della canzone
+     * @param emotionId l'id dell'emozione
+     * @param rating    il rating da 1 a 5
+     */
+    void setSongEmotion(int userId, int songId, int emotionId, int rating);
 
-    void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) throws RemoteException;
+    /**
+     * Inserisce le note per una emozione di una canzone da parte di un utente definito
+     *
+     * @param userId    l'id dell'utente
+     * @param songId    l'id della canzone
+     * @param emotionId l'id dell'emozione
+     * @param notes     le note fino a 256 caratteri
+     */
+    void setSongEmotionNotes(int userId, int songId, int emotionId, String notes);
 
     //================================================================================
     // DELETE
     //================================================================================
 
-    int deleteSongEmotion(int userId, int songId, int emotionId) throws RemoteException;
+    /**
+     * Elimina il rating associato ad una emozione di una canzone per un utente definito
+     *
+     * @param userId    l'id dell'utente
+     * @param songId    l'id della canzone
+     * @param emotionId l'id dell'emozione
+     * @return il numero di record modificati: 1 se l'operazione è andata a buon fine, 0 altrimenti
+     */
+    int deleteSongEmotion(int userId, int songId, int emotionId);
 }

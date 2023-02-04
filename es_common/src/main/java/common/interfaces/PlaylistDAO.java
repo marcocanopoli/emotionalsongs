@@ -4,12 +4,27 @@ import common.Playlist;
 import common.Song;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
 
+/**
+ * Interface per il DAO layer riguardante le operazioni sull'entità <code>Playlist</code>.
+ * E' utilizzato dal client per conoscere i metodi disponibili e implementata dal server che ne
+ * definisce il reale comportameto per i metodi.
+ * <p>
+ * Contiene mappe di query per le operazioni di <code>SELECT, INSERT, DELETE </code> accessibili tramite chiave enum e
+ * strutturate per essere utlizzate tramite <code>PreparedStatement</code> offerto da <code>java.sql</code>
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ * @see Song
+ * @see Playlist
+ * @see PlaylistSel
+ * @see PlaylistIns
+ * @see PlaylistDel
+ * @see database
+ */
 public interface PlaylistDAO extends Remote {
 
     enum PlaylistSel {PLAYLIST_SONGS, USER_PLAYLISTS}
@@ -69,24 +84,64 @@ public interface PlaylistDAO extends Remote {
     // SELECT
     //================================================================================
 
-    List<Song> getPlaylistSongs(int playlistId) throws RemoteException;
+    /**
+     * Getter delle canzoni incluse in una playlist
+     *
+     * @param playlistId l'id della playlist
+     * @return una lista di canzoni
+     */
+    List<Song> getPlaylistSongs(int playlistId);
 
-    List<Playlist> getUserPlaylists(int userId) throws RemoteException;
+    /**
+     * Getter delle playlist di uno specifico utente
+     *
+     * @param userId l'id dell'utente
+     * @return una lista di playlist
+     */
+    List<Playlist> getUserPlaylists(int userId);
 
     //================================================================================
     // INSERT
     //================================================================================
 
-    int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) throws RemoteException;
+    /**
+     * Aggiunge un batch di canzoni ad una playlist
+     *
+     * @param playlistId l'id della playlist
+     * @param songIds    una lista di id di canzoni
+     * @return un array contenente i riferimenti ai record inseriti
+     */
+    int[] addSongsToPlaylist(int playlistId, List<Integer> songIds);
 
-    Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) throws RemoteException;
+    /**
+     * Crea una nuova playlist contenente una lista di canzoni
+     *
+     * @param userId  l'id dell'utente
+     * @param name    il nome della playlist
+     * @param songIds una lista di id di canzoni
+     * @return la playlist appena creata
+     */
+    Playlist createNewPlaylist(int userId, String name, List<Integer> songIds);
 
     //================================================================================
     // DELETE
     //================================================================================
 
-    int deletePlaylist(int playListId) throws RemoteException;
+    /**
+     * Elimina una specifica playlist
+     *
+     * @param playListId l'id della playlist
+     * @return il numero di record modificati: 1 se l'operazione è andata a buon fine, 0 altrimenti
+     */
+    int deletePlaylist(int playListId);
 
-    int deletePlaylistSong(int playListId, int songId) throws RemoteException;
+    /**
+     * Rimuove una canzone da una playlist
+     *
+     * @param playListId l'id della playlist
+     * @param songId     l'id della canzone
+     * @return il numero di record modificati: 1 se l'operazione è andata a buon fine, 0 altrimenti
+     */
+    int deletePlaylistSong(int playListId, int songId);
 }
 

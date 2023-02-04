@@ -2,18 +2,23 @@ package client_gui;
 
 import client.ClientApp;
 import client.ClientContext;
+import common.NodeHelpers;
+import common.StringHelpers;
 import common.User;
 import common.interfaces.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * Controller per FXML dela modale di login.
+ * e azioni di visualizzazione e aggiunta ad una playlist per ogni canzone
+ *
+ * @author Marco Canopoli - Mat.731108 - Sede VA
+ */
 public class SignupController {
     @FXML
     public Button confirmRegistrationBtn;
@@ -36,6 +41,13 @@ public class SignupController {
     @FXML
     public Label errorLabel;
 
+    /**
+     * Metodo di inizializzazione chiamato alla creazione della modale.
+     * Setta i listener per la validazione e fromattazione degli input e mostra
+     * gli errori di validazione, uno per volta.
+     *
+     * @see client.ClientContext
+     */
     public void initialize() {
 
         TextField[] requiredFields = {firstNameText, lastNameText, cfText, usernameText, emailText, pwdText, pwdConfirmText};
@@ -101,55 +113,13 @@ public class SignupController {
 //            }
 //        }));
 
-
-        confirmRegistrationBtn.setOnAction(event -> {
-            UserDAO userDAO = ClientApp.getUserDAO();
-
-            String firstName = firstNameText.getText().trim();
-            String lastName = lastNameText.getText().trim();
-            String cf = cfText.getText().trim();
-            String address = addressText.getText().trim();
-            String username = usernameText.getText().trim();
-            String email = emailText.getText().trim();
-            String pwd = pwdText.getText().trim();
-            String pwdConfirm = pwdConfirmText.getText().trim();
-
-            try {
-                if (
-                        !firstName.isEmpty() &&
-                                !lastName.isEmpty() &&
-                                !cf.isEmpty() &&
-                                !address.isEmpty() &&
-                                !username.isEmpty() &&
-                                !email.isEmpty() &&
-                                !pwd.isEmpty() &&
-                                !pwdConfirm.isEmpty() &&
-                                pwd.trim().equals(pwdConfirm.trim())
-                ) {
-                    boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
-
-                    if (userAdded) {
-                        User user = userDAO.getUser(username, pwd);
-                        ClientContext context = ClientContext.getInstance();
-                        context.setUser(user);
-
-                        ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
-                    }
-                }
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
     }
 
-    boolean invalidRegExMatch(String regEx, String text) {
-        Pattern p = Pattern.compile(regEx);
-        Matcher m = p.matcher(text);
-
-        return !m.find();
-    }
-
+    /**
+     * Valida gli input forniti secondo i criteri scelti
+     *
+     * @return eventuali errori di validazione
+     */
     private Map<String, TextField> validateInputs() {
 
         Map<String, TextField> inputs = new LinkedHashMap<>();
@@ -175,11 +145,11 @@ public class SignupController {
 
                 switch (key) {
                     case "cf" -> {
-                        if (invalidRegExMatch("^[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]$", text))
+                        if (StringHelpers.invalidRegExMatch("^[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]$", text))
                             errors.put(key, field);
                     }
                     case "email" -> {
-                        if (invalidRegExMatch("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", text))
+                        if (StringHelpers.invalidRegExMatch("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", text))
                             errors.put(key, field);
                     }
                     case "password" -> {
@@ -188,7 +158,7 @@ public class SignupController {
 //                        At least one digit, (?=.*?[0-9])
 //                        At least one special character, (?=.*?[#?!@$%^&*-])
 //                        Minimum eight in length .{8,} (with the anchors)
-                        if (invalidRegExMatch("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", text))
+                        if (StringHelpers.invalidRegExMatch("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", text))
                             errors.put(key, field);
 
                         String pwd = pwdText.getText().trim();
@@ -206,5 +176,53 @@ public class SignupController {
         }
 
         return errors;
+    }
+
+    /**
+     * Effettua la registrazione a DB dell'utente inserito.
+     * Mostra un'alert se l'utente è già esistente.
+     */
+    @FXML
+    private void performSignup() {
+        UserDAO userDAO = ClientApp.getUserDAO();
+
+        String firstName = firstNameText.getText().trim();
+        String lastName = lastNameText.getText().trim();
+        String cf = cfText.getText().trim();
+        String address = addressText.getText().trim();
+        String username = usernameText.getText().trim();
+        String email = emailText.getText().trim();
+        String pwd = pwdText.getText().trim();
+//        String pwdConfirm = pwdConfirmText.getText().trim();
+
+//            if (
+//                    !firstName.isEmpty() &&
+//                            !lastName.isEmpty() &&
+//                            !cf.isEmpty() &&
+//                            !address.isEmpty() &&
+//                            !username.isEmpty() &&
+//                            !email.isEmpty() &&
+//                            !pwd.isEmpty() &&
+//                            !pwdConfirm.isEmpty() &&
+//                            pwd.trim().equals(pwdConfirm.trim())
+//            )
+//            {
+        boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
+
+        if (userAdded) {
+            User user = userDAO.getUser(username, pwd);
+            ClientContext context = ClientContext.getInstance();
+            context.setUser(user);
+
+            ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
+        } else {
+            NodeHelpers.createAlert(
+                    Alert.AlertType.WARNING,
+                    "Utente già esistente",
+                    "Esiste già un utente corrispondente ai dati immessi",
+                    "Controllare username, emai e codice fiscale e riprovare",
+                    true);
+        }
+//            }
     }
 }
