@@ -122,7 +122,7 @@ public class SongInfoController {
             viewNotesBtn.setOnAction(event -> getAndSetNotes(emoId));
 
             Label totalRatings = new Label();
-            totalRatings.setText(percentages.get(emoId) + "% | " + votesCount.get(emoId) + "/" + total);
+            totalRatings.setText(String.format("%.2f", percentages.get(emoId)) + "% | " + votesCount.get(emoId) + "/" + total);
 
             emoBox.add(emoLabel, 0, 1);
             emoBox.add(bar, 1, 1);
