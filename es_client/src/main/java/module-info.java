@@ -10,10 +10,9 @@ module es_client {
 
     opens emotionalsongs.client to javafx.fxml;
     exports emotionalsongs.client;
-    exports emotionalsongs.client_gui;
-    opens emotionalsongs.client_gui to javafx.fxml;
-    exports emotionalsongs.client.gui.components;
-    opens emotionalsongs.client.gui.components to javafx.fxml;
     exports emotionalsongs.client.gui;
     opens emotionalsongs.client.gui to javafx.fxml;
+    exports emotionalsongs.client.gui.components;
+    opens emotionalsongs.client.gui.components to javafx.fxml;
+
 }

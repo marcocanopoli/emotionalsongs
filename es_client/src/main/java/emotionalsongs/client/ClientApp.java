@@ -42,14 +42,14 @@ public class ClientApp extends Application {
     private static EmotionDAO emotionDAO;
     private static SongDAO songDAO;
     private static UserDAO userDAO;
-    public static final URL stylesheetURL = ClientApp.class.getResource("/emotionalsongs/client_gui/emotionalSongs.css");
-    public static final URL rootURL = ClientApp.class.getResource("/emotionalsongs/client_gui/rootLayout.fxml");
-    public static final URL playlistsViewURL = ClientApp.class.getResource("/emotionalsongs/client_gui/playlistsView.fxml");
-    public static final URL searchViewURL = ClientApp.class.getResource("/emotionalsongs/client_gui/searchView.fxml");
-    public static final URL signupURL = ClientApp.class.getResource("/emotionalsongs/client_gui/signupView.fxml");
-    public static final URL loginURL = ClientApp.class.getResource("/emotionalsongs/client_gui/loginView.fxml");
-    public static final URL songInfoURL = ClientApp.class.getResource("/emotionalsongs/client_gui/songInfoView.fxml");
-    public static final URL ratingURL = ClientApp.class.getResource("/emotionalsongs/client_gui/ratingView.fxml");
+    public static final URL stylesheetURL = ClientApp.class.getResource("/emotionalsongs/client/gui/emotionalSongs.css");
+    public static final URL rootURL = ClientApp.class.getResource("/emotionalsongs/client/gui/rootLayout.fxml");
+    public static final URL playlistsViewURL = ClientApp.class.getResource("/emotionalsongs/client/gui/playlistsView.fxml");
+    public static final URL searchViewURL = ClientApp.class.getResource("/emotionalsongs/client/gui/searchView.fxml");
+    public static final URL signupURL = ClientApp.class.getResource("/emotionalsongs/client/gui/signupView.fxml");
+    public static final URL loginURL = ClientApp.class.getResource("/emotionalsongs/client/gui/loginView.fxml");
+    public static final URL songInfoURL = ClientApp.class.getResource("/emotionalsongs/client/gui/songInfoView.fxml");
+    public static final URL ratingURL = ClientApp.class.getResource("/emotionalsongs/client/gui/ratingView.fxml");
 
     public enum ViewName {PLAYLISTS, SEARCH}
 
