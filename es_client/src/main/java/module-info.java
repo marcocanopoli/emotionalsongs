@@ -8,10 +8,12 @@ module es_client {
     requires es_common;
 
 
-    opens client to javafx.fxml;
-    exports client;
-    exports client_gui;
-    opens client_gui to javafx.fxml;
-    exports client_gui.components;
-    opens client_gui.components to javafx.fxml;
+    opens emotionalsongs.client to javafx.fxml;
+    exports emotionalsongs.client;
+    exports emotionalsongs.client_gui;
+    opens emotionalsongs.client_gui to javafx.fxml;
+    exports emotionalsongs.client.gui.components;
+    opens emotionalsongs.client.gui.components to javafx.fxml;
+    exports emotionalsongs.client.gui;
+    opens emotionalsongs.client.gui to javafx.fxml;
 }

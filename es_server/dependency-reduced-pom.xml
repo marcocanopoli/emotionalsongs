@@ -31,7 +31,7 @@
               <finalName>${project.name}-${project.version}</finalName>
               <transformers>
                 <transformer>
-                  <mainClass>server.ServerMain</mainClass>
+                  <mainClass>emotionalsongs.server.ServerMain</mainClass>
                 </transformer>
               </transformers>
             </configuration>

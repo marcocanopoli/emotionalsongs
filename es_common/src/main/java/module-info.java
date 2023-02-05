@@ -5,6 +5,6 @@ module es_common {
     requires javafx.controls;
     requires javafx.fxml;
 
-    exports common;
-    exports common.interfaces;
+    exports emotionalsongs.common;
+    exports emotionalsongs.common.interfaces;
 }
