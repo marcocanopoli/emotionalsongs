@@ -140,6 +140,8 @@ public class NodeHelpers {
 
                 if (width != null && height != null) {
                     scene = new Scene(fxmlLoader.load(), width, height);
+                    stage.setMinHeight(height);
+                    stage.setMinWidth(width);
                 } else {
                     scene = new Scene(fxmlLoader.load());
                 }

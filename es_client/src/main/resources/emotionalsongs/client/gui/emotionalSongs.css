@@ -62,8 +62,13 @@
 
 .sidebar-list  .list-cell,
 .sidebar-list  .list-cell:odd {
+        -fx-pref-height: 36.0;
         -fx-background-color: none;
         -fx-text-fill: -fx-text-base-color;
+}
+
+.sidebar-list .scroll-bar:horizontal {
+    -fx-scale-y: 0;
 }
 
 .sidebar-list .list-cell:filled:selected:focused:disabled,

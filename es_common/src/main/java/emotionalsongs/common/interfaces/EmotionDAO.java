@@ -20,7 +20,7 @@ import static java.util.Map.entry;
  * @author Marco Canopoli - Mat.731108 - Sede VA
  * @see Emotion
  * @see EmoSel
- * @see database
+ * @see emotionalsongs.database
  */
 public interface EmotionDAO extends Remote {
     enum EmoSel {ALL_EMO}

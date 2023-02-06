@@ -24,7 +24,7 @@ import static java.util.Map.entry;
  * @see PlaylistSel
  * @see PlaylistIns
  * @see PlaylistDel
- * @see database
+ * @see emotionalsongs.database
  */
 public interface PlaylistDAO extends Remote {
 

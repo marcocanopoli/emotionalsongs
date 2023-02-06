@@ -1,9 +1,7 @@
-package emotionalsongs.database;
+package emotionalsongs.server;
 
 import emotionalsongs.common.Emotion;
 import emotionalsongs.common.interfaces.EmotionDAO;
-import emotionalsongs.server.ServerApp;
-import emotionalsongs.server.ServerLogger;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -61,7 +59,7 @@ public class EmotionDAOImpl implements EmotionDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Emotion> getAllEmotions() {
+    public synchronized List<Emotion> getAllEmotions() {
         Connection conn = ServerApp.getConnection();
 
         final String query = EmotionDAO.emoSelQueries.get(EmoSel.ALL_EMO);

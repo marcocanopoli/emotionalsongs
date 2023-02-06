@@ -24,7 +24,7 @@ import static java.util.Map.entry;
  * @see SongSel
  * @see SongIns
  * @see SongDel
- * @see database
+ * @see emotionalsongs.database
  */
 public interface SongDAO extends Remote {
 

@@ -1,10 +1,8 @@
-package emotionalsongs.database;
+package emotionalsongs.server;
 
 import emotionalsongs.common.Playlist;
 import emotionalsongs.common.Song;
 import emotionalsongs.common.interfaces.PlaylistDAO;
-import emotionalsongs.server.ServerApp;
-import emotionalsongs.server.ServerLogger;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -58,7 +56,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Song> getPlaylistSongs(int playlistId) {
+    public synchronized List<Song> getPlaylistSongs(int playlistId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistSelQueries.get(PlaylistSel.PLAYLIST_SONGS);
@@ -95,7 +93,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Playlist> getUserPlaylists(int userId) {
+    public synchronized List<Playlist> getUserPlaylists(int userId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistSelQueries.get(PlaylistSel.USER_PLAYLISTS);
@@ -130,7 +128,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
      * {@inheritDoc}
      */
     @Override
-    public int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) {
+    public synchronized int[] addSongsToPlaylist(int playlistId, List<Integer> songIds) {
         Connection conn = ServerApp.getConnection();
         final String query = PlaylistDAO.playlistInsQueries.get(PlaylistIns.SONG_IN_PLAYLIST);
 
@@ -162,7 +160,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
      * {@inheritDoc}
      */
     @Override
-    public Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) {
+    public synchronized Playlist createNewPlaylist(int userId, String name, List<Integer> songIds) {
         Connection conn = ServerApp.getConnection();
         final String query = PlaylistDAO.playlistInsQueries.get(PlaylistIns.NEW_PLAYLIST);
 
@@ -200,7 +198,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
      * {@inheritDoc}
      */
     @Override
-    public int deletePlaylist(int playListId) {
+    public synchronized int deletePlaylist(int playListId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistDelQueries.get(PlaylistDel.PLAYLIST);
@@ -221,7 +219,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
      * {@inheritDoc}
      */
     @Override
-    public int deletePlaylistSong(int playListId, int songId) {
+    public synchronized int deletePlaylistSong(int playListId, int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = PlaylistDAO.playlistDelQueries.get(PlaylistDel.PLAYLIST_SONG);

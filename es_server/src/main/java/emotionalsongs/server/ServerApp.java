@@ -1,10 +1,6 @@
 package emotionalsongs.server;
 
 import emotionalsongs.common.NodeHelpers;
-import emotionalsongs.database.EmotionDAOImpl;
-import emotionalsongs.database.PlaylistDAOImpl;
-import emotionalsongs.database.SongDAOImpl;
-import emotionalsongs.database.UserDAOImpl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

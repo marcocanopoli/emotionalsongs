@@ -1,10 +1,8 @@
-package emotionalsongs.database;
+package emotionalsongs.server;
 
 import emotionalsongs.common.Song;
 import emotionalsongs.common.SongEmotion;
 import emotionalsongs.common.interfaces.SongDAO;
-import emotionalsongs.server.ServerApp;
-import emotionalsongs.server.ServerLogger;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -62,7 +60,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Song> getAlbums(String albumText) {
+    public synchronized List<Song> getAlbums(String albumText) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.ALBUMS);
@@ -95,7 +93,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<String> getAuthors(String author) {
+    public synchronized List<String> getAuthors(String author) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.AUTHORS);
@@ -126,7 +124,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Song> getSongsByAuthorAlbum(String authorText, String albumText) {
+    public synchronized List<Song> getSongsByAuthorAlbum(String authorText, String albumText) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONGS_BY_AUTHOR_ALBUM);
@@ -165,7 +163,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Song> getSongsByAuthorYear(String authorText, Integer yearText) {
+    public synchronized List<Song> getSongsByAuthorYear(String authorText, Integer yearText) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songSelQueries.get(
                 yearText == null ? SongSel.SONGS_BY_AUTHOR : SongSel.SONGS_BY_AUTHOR_YEAR);
@@ -204,7 +202,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Song> getSongsByTitle(String titleText) {
+    public synchronized List<Song> getSongsByTitle(String titleText) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songSelQueries.get(SongSel.SONGS_BY_TITLE);
 
@@ -241,7 +239,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public HashMap<Integer, Integer> getSongEmotionsCount(int songId) {
+    public synchronized HashMap<Integer, Integer> getSongEmotionsCount(int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS);
@@ -273,7 +271,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public int getSongEmotionsCountTotal(int songId) {
+    public synchronized int getSongEmotionsCountTotal(int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS_COUNT);
@@ -304,7 +302,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<String> getSongEmotionNotes(int songId, int emotionId) {
+    public synchronized List<String> getSongEmotionNotes(int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTION_NOTES);
@@ -334,7 +332,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<SongEmotion> getUserSongEmotionsCountRating(int userId, int songId) {
+    public synchronized List<SongEmotion> getUserSongEmotionsCountRating(int userId, int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS_RATING);
@@ -373,7 +371,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public void setSongEmotion(int userId, int songId, int emotionId, int rating) {
+    public synchronized void setSongEmotion(int userId, int songId, int emotionId, int rating) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songInsQueries.get(SongIns.SONG_EMOTION);
 
@@ -394,7 +392,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) {
+    public synchronized void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songInsQueries.get(SongIns.SONG_EMOTION_NOTES);
 
@@ -419,7 +417,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public int deleteSongEmotion(int userId, int songId, int emotionId) {
+    public synchronized int deleteSongEmotion(int userId, int songId, int emotionId) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songDelQueries.get(SongDel.SONG_EMOTION);
 

@@ -20,7 +20,7 @@ import static java.util.Map.entry;
  * @see User
  * @see UserSel
  * @see UserIns
- * @see database
+ * @see emotionalsongs.database
  */
 public interface UserDAO extends Remote {
 

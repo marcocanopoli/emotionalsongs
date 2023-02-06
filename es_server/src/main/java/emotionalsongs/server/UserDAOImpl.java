@@ -1,9 +1,7 @@
-package emotionalsongs.database;
+package emotionalsongs.server;
 
 import emotionalsongs.common.User;
 import emotionalsongs.common.interfaces.UserDAO;
-import emotionalsongs.server.ServerApp;
-import emotionalsongs.server.ServerLogger;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -60,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
      * {@inheritDoc}
      */
     @Override
-    public User getUser(String username, String pwd) {
+    public synchronized User getUser(String username, String pwd) {
         Connection conn = ServerApp.getConnection();
 
         final String query = UserDAO.userSelQueries.get(UserSel.USER);
@@ -103,7 +101,7 @@ public class UserDAOImpl implements UserDAO {
      * {@inheritDoc}
      */
     @Override
-    public boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
+    public synchronized boolean addUser(String firstName, String lastName, String cf, String address, String username, String email, String password) {
         Connection conn = ServerApp.getConnection();
         final String query = UserDAO.userInsQueries.get(UserIns.USER);
 

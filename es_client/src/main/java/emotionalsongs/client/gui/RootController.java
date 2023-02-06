@@ -9,7 +9,6 @@ import emotionalsongs.common.User;
 import emotionalsongs.common.interfaces.EmotionDAO;
 import emotionalsongs.common.interfaces.PlaylistDAO;
 import emotionalsongs.exceptions.RMIStubException;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -141,8 +140,6 @@ public class RootController {
                 setText(empty ? "" : playlist.getName());
             }
         });
-
-        playlistsList.prefHeightProperty().bind(Bindings.size(userPlaylists).multiply(36).add(2));
 
         playlistsList.setItems(FXCollections.observableArrayList(userPlaylists));
 
