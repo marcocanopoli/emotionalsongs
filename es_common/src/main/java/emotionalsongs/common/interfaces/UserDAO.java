@@ -33,7 +33,6 @@ public interface UserDAO extends Remote {
                             SELECT *
                             FROM users
                             WHERE username = ?
-                            AND password = ?
                             LIMIT 1
                             """
             )
@@ -60,11 +59,11 @@ public interface UserDAO extends Remote {
      * Getter dell'utente secondo username e password
      *
      * @param username lo username
-     * @param password la password
+     * @param pwd      la password
      * @return l'utente, se trovato
      * @throws RemoteException se lo stub non è raggiungibile
      */
-    User getUser(String username, String password) throws RemoteException;
+    User getUser(String username, String pwd) throws RemoteException;
 
     //================================================================================
     // INSERT

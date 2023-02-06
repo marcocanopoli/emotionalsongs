@@ -1,6 +1,5 @@
 package emotionalsongs.exceptions;
 
-
 import emotionalsongs.client.ClientLogger;
 import emotionalsongs.common.NodeHelpers;
 import javafx.scene.control.Alert;
@@ -18,7 +17,7 @@ public class RMIRegistryNotFoundException extends RuntimeException {
     public RMIRegistryNotFoundException(Throwable err) {
         ClientLogger.error("Registo RMI non trovato: " + Arrays.toString(err.getStackTrace()));
 
-        NodeHelpers.createAlert(
+        NodeHelpers.createAlert(null,
                 Alert.AlertType.ERROR,
                 "RMI registry not found",
                 "Si è verificato un errore di comunicazione con il registro del server: ",

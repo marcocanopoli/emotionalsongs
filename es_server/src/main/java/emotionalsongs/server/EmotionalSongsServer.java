@@ -10,7 +10,7 @@ package emotionalsongs.server;
  * @author Marco Canopoli - Mat.731108 - Sede VA
  * @see ServerApp
  */
-public class ServerMain {
+public class EmotionalSongsServer {
 
     /**
      * Wrapper del main dell'applicazione

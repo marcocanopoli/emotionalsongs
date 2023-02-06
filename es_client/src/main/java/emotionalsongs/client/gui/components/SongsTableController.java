@@ -189,10 +189,10 @@ public class SongsTableController {
 
                             if (deleted > 0) {
                                 msg = "'" + song.getTitle() + "' è stata rimossa dalla playlist '" + playlist.getName() + "'";
-                                NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
+                                NodeHelpers.createAlert(null, Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
                             } else {
                                 msg = "Non è stato possibile rimuovere '" + song.getTitle() + "' dalla playlist '" + playlist.getName() + "'";
-                                NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione", null, msg, false);
+                                NodeHelpers.createAlert(null, Alert.AlertType.WARNING, "Attenzione", null, msg, false);
                             }
                         } catch (RemoteException e) {
                             throw new RMIStubException(e);
@@ -245,10 +245,10 @@ public class SongsTableController {
                                     String msg;
                                     if (rows.length > 0) {
                                         msg = "'" + song.getTitle() + "' è stata aggiunta alla playlist '" + p.getName() + "'";
-                                        NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
+                                        NodeHelpers.createAlert(null, Alert.AlertType.CONFIRMATION, "Conferma", null, msg, false);
                                     } else {
                                         msg = "'" + song.getTitle() + "' è già presente in '" + p.getName() + "'";
-                                        NodeHelpers.createAlert(Alert.AlertType.INFORMATION, "Info", null, msg, false);
+                                        NodeHelpers.createAlert(null, Alert.AlertType.INFORMATION, "Info", null, msg, false);
                                     }
                                 } catch (RemoteException e) {
                                     throw new RMIStubException(e);

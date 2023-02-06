@@ -48,7 +48,6 @@ public class RootController {
 
     private final ClientContext context = ClientContext.getInstance();
 
-
     /**
      * Metodo di inizializzazione chiamato alla creazione del layout.
      * Setta il pannello principale in cui inserire le viste,
@@ -107,7 +106,7 @@ public class RootController {
 
         logoutBtn.setOnAction(event -> {
             final String msg = "Sei sicuro di voler uscire dal tuo account?";
-            final boolean res = NodeHelpers.createAlert(Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true);
+            final boolean res = NodeHelpers.createAlert(null, Alert.AlertType.CONFIRMATION, "Conferma", null, msg, true);
             if (res) context.setUser(null);
 
         });

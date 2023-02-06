@@ -25,7 +25,7 @@ public class RMIStubException extends RuntimeException {
     public RMIStubException(Throwable err) {
         ClientLogger.error("Bind dello stub non presente: " + Arrays.toString(err.getStackTrace()));
 
-        NodeHelpers.createAlert(
+        NodeHelpers.createAlert(null,
                 Alert.AlertType.ERROR,
                 "RMI stub not found",
                 "Si è verificato un errore di comunicazione con il server",

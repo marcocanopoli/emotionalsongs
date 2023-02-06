@@ -140,7 +140,7 @@ public class NewPlaylistController {
                 newPlaylistSongs.clear();
             } else {
                 String msg = "La playlist '" + newPlaylistName.getText() + "' esiste già!";
-                NodeHelpers.createAlert(Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
+                NodeHelpers.createAlert(null, Alert.AlertType.WARNING, "Attenzione!", null, msg, false);
             }
         } catch (RemoteException e) {
             throw new RMIStubException(e);

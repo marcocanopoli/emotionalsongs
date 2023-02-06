@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -195,40 +197,32 @@ public class SignupController {
         String username = usernameText.getText().trim();
         String email = emailText.getText().trim();
         String pwd = pwdText.getText().trim();
-//        String pwdConfirm = pwdConfirmText.getText().trim();
 
-//            if (
-//                    !firstName.isEmpty() &&
-//                            !lastName.isEmpty() &&
-//                            !cf.isEmpty() &&
-//                            !address.isEmpty() &&
-//                            !username.isEmpty() &&
-//                            !email.isEmpty() &&
-//                            !pwd.isEmpty() &&
-//                            !pwdConfirm.isEmpty() &&
-//                            pwd.trim().equals(pwdConfirm.trim())
-//            )
-//            {
+        Stage owner = (Stage) confirmRegistrationBtn.getScene().getWindow();
+
         try {
-            boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, pwd);
+            String hashedPwd = StringHelpers.encryptPassword(pwd);
+            boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, hashedPwd);
 
             if (userAdded) {
                 User user = userDAO.getUser(username, pwd);
                 ClientContext context = ClientContext.getInstance();
                 context.setUser(user);
 
-                ((Stage) confirmRegistrationBtn.getScene().getWindow()).close();
+                owner.close();
             } else {
-                NodeHelpers.createAlert(
+                NodeHelpers.createAlert(owner,
                         Alert.AlertType.WARNING,
                         "Utente già esistente",
                         "Esiste già un utente corrispondente ai dati immessi",
-                        "Controllare username, emai e codice fiscale e riprovare",
+                        "Controllare username, email e codice fiscale e riprovare",
                         true);
             }
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            //
         } catch (RemoteException e) {
             throw new RMIStubException(e);
         }
-//            }
+
     }
 }

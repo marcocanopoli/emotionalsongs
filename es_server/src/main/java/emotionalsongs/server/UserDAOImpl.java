@@ -1,5 +1,6 @@
 package emotionalsongs.server;
 
+import emotionalsongs.common.StringHelpers;
 import emotionalsongs.common.User;
 import emotionalsongs.common.interfaces.UserDAO;
 
@@ -7,6 +8,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +36,6 @@ public class UserDAOImpl implements UserDAO {
                 UnicastRemoteObject.exportObject(this, 3939);
         registry.rebind(REMOTE_NAME, userDAOStub);
     }
-
 
     /**
      * Esegue l'unbind dal registro e l'unexport del remote object
@@ -63,34 +65,41 @@ public class UserDAOImpl implements UserDAO {
 
         final String query = UserDAO.userSelQueries.get(UserSel.USER);
 
+        User user = null;
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, username);
-            stmt.setString(2, pwd);
 
             ResultSet rs = stmt.executeQuery();
 
-            User user = null;
 
             if (rs.next()) {
-                int id = rs.getInt("id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                String cf = rs.getString("cf");
-                String address = rs.getString("address");
-                String email = rs.getString("email");
-//                String password = rs.getString("password");
+                String encryptedPwd = rs.getString("password");
+                boolean validated = StringHelpers.validatePassword(pwd, encryptedPwd);
 
-                user = new User(id, firstName, lastName, cf, address, email, username);
+                if (validated) {
+                    int id = rs.getInt("id");
+                    String firstName = rs.getString("first_name");
+                    String lastName = rs.getString("last_name");
+                    String cf = rs.getString("cf");
+                    String address = rs.getString("address");
+                    String email = rs.getString("email");
+                    user = new User(id, firstName, lastName, cf, address, email, username);
+                } else {
+                    ServerLogger.error("Invalid credentials for user: " + username);
+                }
+            } else {
+                ServerLogger.error("User " + username + " not found");
             }
-
-            return user;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
-            return null;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            //
         }
 
+        return user;
     }
 
     //================================================================================

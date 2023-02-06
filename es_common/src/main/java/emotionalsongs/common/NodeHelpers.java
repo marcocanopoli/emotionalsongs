@@ -55,14 +55,17 @@ public class NodeHelpers {
      * @see Alert
      * @see javafx.scene.control.Alert.AlertType
      */
-    public static boolean createAlert(
-            Alert.AlertType type,
-            String title,
-            String headerText,
-            String message,
-            boolean wait) {
+    public static boolean createAlert(Stage owner,
+                                      Alert.AlertType type,
+                                      String title,
+                                      String headerText,
+                                      String message,
+                                      boolean wait) {
 
         Alert alert = new Alert(type);
+        if (owner != null) {
+            alert.initOwner(owner);
+        }
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(message);

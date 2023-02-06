@@ -11,12 +11,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.*;
 
 import static java.util.Map.entry;
-
 
 /**
  * La classe si occupa di gestire il database <code>PostGreSQL</code>.
@@ -31,7 +32,6 @@ public class DBManager {
     public DBManager() {
 
     }
-
 
     /**
      * Apre una connessione verso il database tramite driver JDBC
@@ -55,7 +55,7 @@ public class DBManager {
             return DriverManager.getConnection(url, connProps);
         } catch (SQLException e) {
             ServerLogger.error("Server not connected: " + e);
-            NodeHelpers.createAlert(
+            NodeHelpers.createAlert(null,
                     Alert.AlertType.ERROR,
                     "Errore di connessione",
                     """
@@ -99,7 +99,7 @@ public class DBManager {
             return true;
         } catch (SQLException e) {
             ServerLogger.error("Database creation error: " + e);
-            NodeHelpers.createAlert(
+            NodeHelpers.createAlert(null,
                     Alert.AlertType.ERROR,
                     "Errore di creazione database",
                     "Impossibile creare il database",
@@ -128,7 +128,7 @@ public class DBManager {
                                 address VARCHAR(200),
                                 username VARCHAR(20) UNIQUE NOT NULL,
                                 email VARCHAR(60) UNIQUE NOT NULL,
-                                password VARCHAR(50) NOT NULL)
+                                password VARCHAR NOT NULL)
                                 """
 //                        "street_name VARCHAR(100), " +
 //                        "street_number VARCHAR(15), " +
@@ -254,7 +254,7 @@ public class DBManager {
                 stmt.setString(4, u.getAddress());
                 stmt.setString(5, u.getUsername());
                 stmt.setString(6, u.getEmail());
-                stmt.setString(7, u.getUsername());
+                stmt.setString(7, StringHelpers.encryptPassword(u.getUsername()));
                 stmt.addBatch();
             }
 
@@ -264,8 +264,9 @@ public class DBManager {
             ServerLogger.debug("Users seeder executed");
         } catch (SQLException e) {
             ServerLogger.error("Users seeder error: " + e);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            //
         }
-
     }
 
     /**

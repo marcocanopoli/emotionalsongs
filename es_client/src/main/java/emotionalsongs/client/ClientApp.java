@@ -29,7 +29,7 @@ import java.rmi.registry.Registry;
  * RMI con i quali avviene la comunicazione verso l'applicazione server
  *
  * @author Marco Canopoli - Mat.731108 - Sede VA
- * @see ClientMain
+ * @see EmotionalSongs
  */
 public class ClientApp extends Application {
 
@@ -143,6 +143,7 @@ public class ClientApp extends Application {
 
         createViews();
         showView(ViewName.SEARCH);
+        ClientLogger.debug("Client EmotionalSongs avviato");
     }
 
     /**
@@ -183,11 +184,9 @@ public class ClientApp extends Application {
      * E' chiamato dalla classe wrapper <code>ClientMain</code>
      *
      * @param args argomenti di avvio
-     * @see ClientMain
+     * @see EmotionalSongs
      */
     public static void appStart(String[] args) {
-
-        ClientLogger.debug("Client main");
         String host = args.length >= 1 ? args[0] : null;
 
         try {

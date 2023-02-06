@@ -3,7 +3,6 @@ package emotionalsongs.common;
 import java.io.Serial;
 import java.io.Serializable;
 
-
 /**
  * Contiene l'entità <code>User</code> salvata sul DB.
  * Implementa <code>Serializable</code> per lo scambio tramite RMI

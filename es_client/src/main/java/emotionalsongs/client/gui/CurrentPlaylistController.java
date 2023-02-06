@@ -99,7 +99,7 @@ public class CurrentPlaylistController {
     private void deletePlaylist() {
         String msg = "Sei sicuro di voler eliminare la playlist '" + currentPlaylist.getName() + "' ?";
 
-        boolean res = NodeHelpers.createAlert(
+        boolean res = NodeHelpers.createAlert(null,
                 Alert.AlertType.CONFIRMATION, "Conferma eliminazione playlist", null, msg, true);
 
         if (res) {

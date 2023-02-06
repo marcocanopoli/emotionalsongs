@@ -3,10 +3,12 @@ package emotionalsongs.client.gui;
 import emotionalsongs.client.ClientApp;
 import emotionalsongs.client.ClientContext;
 import emotionalsongs.client.ClientLogger;
+import emotionalsongs.common.NodeHelpers;
 import emotionalsongs.common.User;
 import emotionalsongs.common.interfaces.UserDAO;
 import emotionalsongs.exceptions.RMIStubException;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -55,11 +57,25 @@ public class LoginController {
         UserDAO userDAO = ClientApp.getUserDAO();
         try {
             User user = userDAO.getUser(username.getText(), pwd.getText());
-            context.setUser(user);
+            Stage owner = (Stage) confirmLoginBtn.getScene().getWindow();
 
-            ClientLogger.info("Utente '" + user.getUsername() + "': accesso effettuato");
+            if (user != null) {
+                context.setUser(user);
+                ClientLogger.debug("Utente '" + user.getUsername() + "': accesso effettuato");
+                owner.close();
+            } else {
+                ClientLogger.error("Invalid credentials");
+                NodeHelpers.createAlert(owner,
+                        Alert.AlertType.ERROR,
+                        "Credenziali non corrette",
+                        "Utente non trovato",
+                        """
+                                L'utente non esiste o le credenziali inserite non sono valide.
+                                Controllare username e password e riprovare""",
+                        true);
+            }
 
-            ((Stage) confirmLoginBtn.getScene().getWindow()).close();
+
         } catch (RemoteException e) {
             throw new RMIStubException(e);
         }

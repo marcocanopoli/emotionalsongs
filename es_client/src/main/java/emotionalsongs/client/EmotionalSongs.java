@@ -10,7 +10,7 @@ package emotionalsongs.client;
  * @author Marco Canopoli - Mat.731108 - Sede VA
  * @see ClientApp
  */
-public class ClientMain {
+public class EmotionalSongs {
 
     /**
      * Wrapper del main dell'applicazione

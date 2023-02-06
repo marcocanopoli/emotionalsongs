@@ -17,7 +17,7 @@ import java.sql.Connection;
  * la creazione degli stub RMI per la comunicazione con i client
  *
  * @author Marco Canopoli - Mat.731108 - Sede VA
- * @see ServerMain
+ * @see EmotionalSongsServer
  */
 public class ServerApp extends Application {
 
@@ -85,7 +85,7 @@ public class ServerApp extends Application {
      * E' chiamato dalla classe wrapper <code>ServerMain</code>
      *
      * @param args argomenti di avvio
-     * @see ServerMain
+     * @see EmotionalSongsServer
      */
     public static void appStart(String[] args) {
         try {
