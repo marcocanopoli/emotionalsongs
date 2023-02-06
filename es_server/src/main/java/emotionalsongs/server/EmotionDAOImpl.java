@@ -35,18 +35,16 @@ public class EmotionDAOImpl implements EmotionDAO {
         registry.rebind(REMOTE_NAME, emotionDAOStub);
     }
 
-
     /**
      * Esegue l'unbind dal registro e l'unexport del remote object
      *
      * @param registry il registro RMI
      */
-    public void unexport(Registry registry) {
+    public void unbind(Registry registry) {
         try {
             registry.unbind(REMOTE_NAME);
-            UnicastRemoteObject.unexportObject(this, false);
         } catch (NotBoundException | RemoteException e) {
-            ServerLogger.error(REMOTE_NAME + " unexport failed");
+            ServerLogger.error(REMOTE_NAME + " unbinding failed");
         }
 
     }

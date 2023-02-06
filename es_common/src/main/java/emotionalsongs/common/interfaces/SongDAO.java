@@ -5,7 +5,6 @@ import emotionalsongs.common.SongEmotion;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,22 +97,9 @@ public interface SongDAO extends Remote {
             entry(
                     SongSel.SONG_EMOTIONS,
                     """
-                            SELECT E.id, COUNT(E.id)
+                            SELECT *
                             FROM song_emotions SE
-                            JOIN emotions E ON SE.emotion_id = E.id
-                            JOIN songs S ON S.id = SE.song_id
-                            WHERE S.id = ?
-                            GROUP BY E.id
-                            """
-            ),
-            entry(
-                    SongSel.SONG_EMOTIONS_COUNT,
-                    """
-                            SELECT COUNT(E.id)
-                            FROM song_emotions SE
-                            JOIN emotions E ON SE.emotion_id = E.id
-                            JOIN songs S ON S.id = SE.song_id
-                            WHERE S.id = ?
+                            WHERE SE.song_id = ?
                             """
             ),
             entry(
@@ -228,22 +214,13 @@ public interface SongDAO extends Remote {
     List<Song> getSongsByTitle(String titleText) throws RemoteException;
 
     /**
-     * Getter del totale per ogni emozione di tutte le emozioni associate ad una canzone
+     * Getter delle emozioni associate ad una canzone
      *
      * @param songId l'id della canzone
      * @return una mappa di id canzone -> count del totale
      * @throws RemoteException se lo stub non è raggiungibile
      */
-    HashMap<Integer, Integer> getSongEmotionsCount(int songId) throws RemoteException;
-
-    /**
-     * Getter del totale di voti per le emozioni di una singola canzone
-     *
-     * @param songId l'id della canzone
-     * @return il conteggio totale
-     * @throws RemoteException se lo stub non è raggiungibile
-     */
-    int getSongEmotionsCountTotal(int songId) throws RemoteException;
+    List<SongEmotion> getSongEmotions(int songId) throws RemoteException;
 
     /**
      * Getter delle note di una singola emozione di una canzone

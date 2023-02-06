@@ -61,10 +61,10 @@ public class ServerApp extends Application {
      */
     public static void shutdown() {
 
-        emotionDAO.unexport(registry);
-        playlistDAO.unexport(registry);
-        songDAO.unexport(registry);
-        userDAO.unexport(registry);
+        emotionDAO.unbind(registry);
+        playlistDAO.unbind(registry);
+        songDAO.unbind(registry);
+        userDAO.unbind(registry);
 
         new Thread(() -> {
             ServerLogger.info("Shutting down...");

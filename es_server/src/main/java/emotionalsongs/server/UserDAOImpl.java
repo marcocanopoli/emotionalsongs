@@ -1,7 +1,8 @@
 package emotionalsongs.server;
 
-import emotionalsongs.common.StringHelpers;
+import emotionalsongs.common.PasswordEncrypter;
 import emotionalsongs.common.User;
+import emotionalsongs.common.exceptions.EncryptionException;
 import emotionalsongs.common.interfaces.UserDAO;
 
 import java.rmi.NotBoundException;
@@ -42,12 +43,11 @@ public class UserDAOImpl implements UserDAO {
      *
      * @param registry il registro RMI
      */
-    public void unexport(Registry registry) {
+    public void unbind(Registry registry) {
         try {
             registry.unbind(REMOTE_NAME);
-            UnicastRemoteObject.unexportObject(this, false);
         } catch (NotBoundException | RemoteException e) {
-            ServerLogger.error(REMOTE_NAME + " unexport failed");
+            ServerLogger.error(REMOTE_NAME + " unbinding failed");
         }
 
     }
@@ -76,7 +76,7 @@ public class UserDAOImpl implements UserDAO {
 
             if (rs.next()) {
                 String encryptedPwd = rs.getString("password");
-                boolean validated = StringHelpers.validatePassword(pwd, encryptedPwd);
+                boolean validated = PasswordEncrypter.validatePassword(pwd, encryptedPwd);
 
                 if (validated) {
                     int id = rs.getInt("id");
@@ -96,7 +96,7 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            //
+            throw new EncryptionException(null, e);
         }
 
         return user;

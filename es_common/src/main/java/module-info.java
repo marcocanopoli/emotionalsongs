@@ -7,4 +7,5 @@ module es_common {
 
     exports emotionalsongs.common;
     exports emotionalsongs.common.interfaces;
+    exports emotionalsongs.common.exceptions;
 }

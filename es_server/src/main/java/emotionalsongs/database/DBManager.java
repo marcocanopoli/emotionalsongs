@@ -1,8 +1,10 @@
 package emotionalsongs.database;
 
 import emotionalsongs.common.NodeHelpers;
+import emotionalsongs.common.PasswordEncrypter;
 import emotionalsongs.common.StringHelpers;
 import emotionalsongs.common.User;
+import emotionalsongs.common.exceptions.EncryptionException;
 import emotionalsongs.server.ServerApp;
 import emotionalsongs.server.ServerLogger;
 import javafx.scene.control.Alert;
@@ -254,7 +256,7 @@ public class DBManager {
                 stmt.setString(4, u.getAddress());
                 stmt.setString(5, u.getUsername());
                 stmt.setString(6, u.getEmail());
-                stmt.setString(7, StringHelpers.encryptPassword(u.getUsername()));
+                stmt.setString(7, PasswordEncrypter.encryptPassword(u.getUsername() + "123"));
                 stmt.addBatch();
             }
 
@@ -265,7 +267,7 @@ public class DBManager {
         } catch (SQLException e) {
             ServerLogger.error("Users seeder error: " + e);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            //
+            throw new EncryptionException(null, e);
         }
     }
 

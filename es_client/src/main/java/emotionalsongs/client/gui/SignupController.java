@@ -3,8 +3,10 @@ package emotionalsongs.client.gui;
 import emotionalsongs.client.ClientApp;
 import emotionalsongs.client.ClientContext;
 import emotionalsongs.common.NodeHelpers;
+import emotionalsongs.common.PasswordEncrypter;
 import emotionalsongs.common.StringHelpers;
 import emotionalsongs.common.User;
+import emotionalsongs.common.exceptions.EncryptionException;
 import emotionalsongs.common.interfaces.UserDAO;
 import emotionalsongs.exceptions.RMIStubException;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ import javafx.stage.Stage;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,19 +64,15 @@ public class SignupController {
             {
 
                 Map<String, TextField> validationErrors = validateInputs();
-                if (newValue.isEmpty()) validationErrors.put("blank_required", field);
+//                if (newValue.isEmpty()) validationErrors.put("blank_required", field);
 
                 if (!validationErrors.isEmpty()) {
-//                    ClientLogger.debug(validationErrors.toString());
-//                    Map.Entry<String, TextField> firstEntry = validationErrors.entrySet().iterator().next();
-//                    String error = firstEntry.getKey();
-//                    TextField invalidField = firstEntry.getValue();
+                    errorLabel.setVisible(true);
 
                     if (validationErrors.containsValue(field)) {
                         if (!field.getStyleClass().contains("border-error")) {
                             field.getStyleClass().add("border-error");
                         }
-
 
                         for (Map.Entry<String, TextField> fieldError :
                                 validationErrors.entrySet()) {
@@ -84,13 +83,14 @@ public class SignupController {
                             }
                         }
                     } else {
+                        errorLabel.setText((String) validationErrors.keySet().toArray()[0]);
                         field.getStyleClass().removeIf(style -> style.equals("border-error"));
                     }
 
                 } else {
                     field.getStyleClass().removeIf(style -> style.equals("border-error"));
+                    errorLabel.setVisible(false);
                 }
-
 
                 confirmRegistrationBtn.setDisable(!validationErrors.isEmpty() || newValue.isEmpty());
 
@@ -107,16 +107,6 @@ public class SignupController {
             return change;
         }));
 
-
-//        cfText.setTextFormatter(new TextFormatter<>(change ->
-//        {
-//            if (change.getControlNewText().matches("([1-9][0-9]*)?")) {
-//                return change;
-//            } else {
-//                return null;
-//            }
-//        }));
-
     }
 
     /**
@@ -126,14 +116,8 @@ public class SignupController {
      */
     private Map<String, TextField> validateInputs() {
 
-        Map<String, TextField> inputs = new LinkedHashMap<>();
-        inputs.put("first_name", firstNameText);
-        inputs.put("last_name", lastNameText);
-        inputs.put("cf", cfText);
-        inputs.put("username", usernameText);
-        inputs.put("email", emailText);
-        inputs.put("password", pwdText);
-        inputs.put("password_confirm", pwdConfirmText);
+        Map<String, TextField> inputs = setValidationFields();
+        Map<String, String> errorMessages = setValidationMessages();
 
         Map<String, TextField> errors = new LinkedHashMap<>();
 
@@ -144,32 +128,32 @@ public class SignupController {
             String key = entry.getKey();
 
             if (text.isBlank()) {
-                errors.put("blank_" + key, field);
+                errors.put("Il campo '" + key + "' non può essere vuoto", field);
             } else {
 
                 switch (key) {
-                    case "cf" -> {
+                    case "Codice Fiscale" -> {
                         if (StringHelpers.invalidRegExMatch("^[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]$", text))
-                            errors.put(key, field);
+                            errors.put(errorMessages.get(key), field);
                     }
-                    case "email" -> {
+                    case "Email" -> {
                         if (StringHelpers.invalidRegExMatch("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", text))
-                            errors.put(key, field);
+                            errors.put(errorMessages.get(key), field);
                     }
-                    case "password" -> {
+                    case "Password" -> {
 //                    At least one upper case English letter, (?=.*?[A-Z])
 //                        At least one lower case English letter, (?=.*?[a-z])
 //                        At least one digit, (?=.*?[0-9])
 //                        At least one special character, (?=.*?[#?!@$%^&*-])
 //                        Minimum eight in length .{8,} (with the anchors)
                         if (StringHelpers.invalidRegExMatch("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", text))
-                            errors.put(key, field);
+                            errors.put(errorMessages.get(key), field);
 
                         String pwd = pwdText.getText().trim();
                         String pwdConfirm = pwdConfirmText.getText().trim();
 
                         if (!pwd.equals(pwdConfirm)) {
-                            errors.put(key + "_confirm", pwdConfirmText);
+                            errors.put(errorMessages.get("Conferma Password"), pwdConfirmText);
                         }
 
                     }
@@ -180,6 +164,43 @@ public class SignupController {
         }
 
         return errors;
+    }
+
+    /**
+     * Definisce gli input da validare
+     *
+     * @return una mappa di input
+     */
+    private Map<String, TextField> setValidationFields() {
+        Map<String, TextField> inputs = new LinkedHashMap<>();
+        inputs.put("Nome", firstNameText);
+        inputs.put("Cognome", lastNameText);
+        inputs.put("Codice Fiscale", cfText);
+        inputs.put("Username", usernameText);
+        inputs.put("Email", emailText);
+        inputs.put("Password", pwdText);
+        inputs.put("Conferma Password", pwdConfirmText);
+
+        return inputs;
+    }
+
+    /**
+     * Definisce i messaggi di validazione da mostrare nel form
+     *
+     * @return una mappa di mesaggi di errore
+     */
+    private Map<String, String> setValidationMessages() {
+        Map<String, String> errorMessages = new HashMap<>();
+        errorMessages.put("Codice Fiscale", "Il codice fiscale non è valido");
+        errorMessages.put("Email", "L'indirizzo email non è valido");
+        errorMessages.put("Conferma Password", "Le password non coincidono");
+        errorMessages.put("Password",
+                """
+                        La password deve essere lunga almeno 8 caratteri.
+                        Deve contenere almeno una lettera maiuscola, una
+                        minuscola, una cifra ed un simbolo tra #?!@$%^&*-
+                        """);
+        return errorMessages;
     }
 
     /**
@@ -201,7 +222,7 @@ public class SignupController {
         Stage owner = (Stage) confirmRegistrationBtn.getScene().getWindow();
 
         try {
-            String hashedPwd = StringHelpers.encryptPassword(pwd);
+            String hashedPwd = PasswordEncrypter.encryptPassword(pwd);
             boolean userAdded = userDAO.addUser(firstName, lastName, cf, address, username, email, hashedPwd);
 
             if (userAdded) {
@@ -219,7 +240,7 @@ public class SignupController {
                         true);
             }
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            //
+            throw new EncryptionException(owner, e);
         } catch (RemoteException e) {
             throw new RMIStubException(e);
         }

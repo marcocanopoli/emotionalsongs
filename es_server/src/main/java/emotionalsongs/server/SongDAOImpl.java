@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,12 +41,11 @@ public class SongDAOImpl implements SongDAO {
      *
      * @param registry il registro RMI
      */
-    public void unexport(Registry registry) {
+    public void unbind(Registry registry) {
         try {
             registry.unbind(REMOTE_NAME);
-            UnicastRemoteObject.unexportObject(this, false);
         } catch (NotBoundException | RemoteException e) {
-            ServerLogger.error(REMOTE_NAME + " unexport failed");
+            ServerLogger.error(REMOTE_NAME + " unbinding failed");
         }
 
     }
@@ -239,7 +237,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public synchronized HashMap<Integer, Integer> getSongEmotionsCount(int songId) {
+    public synchronized List<SongEmotion> getSongEmotions(int songId) {
         Connection conn = ServerApp.getConnection();
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS);
@@ -248,15 +246,16 @@ public class SongDAOImpl implements SongDAO {
 
             stmt.setInt(1, songId);
 
-            HashMap<Integer, Integer> results = new HashMap<>();
+            List<SongEmotion> results = new ArrayList<>();
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int emoId = rs.getInt("id");
-                int count = rs.getInt("count");
+                int emoId = rs.getInt("emotion_id");
+                int userId = rs.getInt("user_id");
+                int rating = rs.getInt("rating");
+                String notes = rs.getString("notes");
 
-                results.put(emoId, count);
-
+                results.add(new SongEmotion(emoId, songId, userId, rating, notes));
             }
             return results;
 
@@ -264,38 +263,7 @@ public class SongDAOImpl implements SongDAO {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new HashMap<>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized int getSongEmotionsCountTotal(int songId) {
-        Connection conn = ServerApp.getConnection();
-
-        final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS_COUNT);
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, songId);
-
-            ResultSet rs = stmt.executeQuery();
-
-            int count = 0;
-
-            while (rs.next()) {
-
-                count = rs.getInt("count");
-
-            }
-
-            return count;
-
-        } catch (SQLException ex) {
-            ServerLogger.error("Error: " + ex);
-        }
-
-        return 0;
+        return new ArrayList<>();
     }
 
     /**

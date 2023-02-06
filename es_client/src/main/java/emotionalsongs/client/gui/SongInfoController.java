@@ -4,7 +4,7 @@ import emotionalsongs.client.ClientApp;
 import emotionalsongs.client.ClientContext;
 import emotionalsongs.common.Emotion;
 import emotionalsongs.common.Song;
-import emotionalsongs.common.User;
+import emotionalsongs.common.SongEmotion;
 import emotionalsongs.common.interfaces.SongDAO;
 import emotionalsongs.exceptions.RMIStubException;
 import javafx.beans.property.Property;
@@ -19,9 +19,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Controller per FXML dela vista di dettaglio di una singola canzone.
@@ -51,14 +50,16 @@ public class SongInfoController {
     private TextArea currentNote;
     private final ClientContext context = ClientContext.getInstance();
     private final SongDAO songDAO = ClientApp.getSongDAO();
-    private final User user = context.getUser();
     private final Song song = context.getCurrentSong();
     private final List<Emotion> emotions = context.getEmotions();
     private final ObservableList<String> emotionNotes = FXCollections.observableArrayList();
     private Integer total = 0;
-    private final HashMap<Integer, Integer> songEmotions = new HashMap<>();
-    private final HashMap<Integer, Float> percentages = new HashMap<>();
-    private final HashMap<Integer, Integer> votesCount = new HashMap<>();
+    private Integer ratingTotal = 0;
+    private final List<SongEmotion> songEmotions = new ArrayList<>();
+    private final Float[] percentages = new Float[emotions.size()];
+    private final int[] votesCount = new int[emotions.size()];
+    private final int[] ratingTotals = new int[emotions.size()];
+    private final Float[] ratingAvg = new Float[emotions.size()];
 
     /**
      * Metodo di inizializzazione chiamato alla creazione della finestra.
@@ -94,16 +95,18 @@ public class SongInfoController {
         for (Emotion emo : emotions) {
 
             int emoId = emo.id();
+            int emoIdx = emoId - 1;
 
             GridPane emoBox = new GridPane();
             emoBox.setMinHeight(30);
 
             ColumnConstraints column1 = new ColumnConstraints(100);
             ColumnConstraints column2 = new ColumnConstraints(210);
-            ColumnConstraints column3 = new ColumnConstraints(120);
+            ColumnConstraints column3 = new ColumnConstraints();
             ColumnConstraints column4 = new ColumnConstraints(120);
             column1.setHalignment(HPos.LEFT);
             column3.setHalignment(HPos.CENTER);
+            column3.setMinWidth(300);
             column4.setHalignment(HPos.RIGHT);
             emoBox.getColumnConstraints().add(column1);
             emoBox.getColumnConstraints().add(column2);
@@ -116,13 +119,17 @@ public class SongInfoController {
 
             ProgressBar bar = new ProgressBar(0.0);
             bar.setMinWidth(200);
-            bar.setProgress(percentages.get(emoId));
+            bar.setProgress(percentages[emoIdx]);
 
             Button viewNotesBtn = new Button("Vedi note");
             viewNotesBtn.setOnAction(event -> getAndSetNotes(emoId));
 
             Label totalRatings = new Label();
-            totalRatings.setText(String.format("%.2f", percentages.get(emoId)) + "% | " + votesCount.get(emoId) + "/" + total);
+            String percentage = String.format("%.2f", percentages[emoIdx]) + "%  |  ";
+            String partial = votesCount[emoIdx] + " voti / " + total + " totali  |  ";
+            String avg = "Media rating: " + String.format("%.2f", ratingAvg[emoIdx]);
+
+            totalRatings.setText(percentage + partial + avg);
 
             emoBox.add(emoLabel, 0, 1);
             emoBox.add(bar, 1, 1);
@@ -142,7 +149,10 @@ public class SongInfoController {
      */
     private void getAndSetNotes(int emotionId) {
         try {
-            emotionNotes.setAll(songDAO.getSongEmotionNotes(song.id, emotionId));
+            List<String> notes = songDAO.getSongEmotionNotes(song.id, emotionId);
+            if (!notes.isEmpty()) {
+                emotionNotes.setAll();
+            }
         } catch (RemoteException e) {
             throw new RMIStubException(e);
         }
@@ -158,15 +168,27 @@ public class SongInfoController {
      */
     private void getRatingTotals() {
         try {
-            songEmotions.putAll(songDAO.getSongEmotionsCount(song.id));
-            total = songDAO.getSongEmotionsCountTotal(song.id);
+            songEmotions.addAll(songDAO.getSongEmotions(song.id));
+            int[] emotionVotes = new int[emotions.size()];
 
-            for (int i = 1; i < 10; i++) {
-                int count = songEmotions.get(i) != null ? songEmotions.get(i) : 0;
-                float percentage = total > 0 ? (float) count / total : 0;
-                votesCount.put(i, count);
-                percentages.put(i, percentage);
+            for (SongEmotion se : songEmotions) {
+                total++;
+                int emoId = se.emotionId() - 1;
+                int rating = se.rating();
+                ratingTotal += rating;
+                ratingTotals[emoId] += rating;
+                emotionVotes[emoId] += 1;
             }
+
+            for (Emotion emo : emotions) {
+                int id = emo.id() - 1;
+                int count = emotionVotes[id];
+                float percentage = ratingTotal > 0 ? (float) ratingTotals[id] / ratingTotal : 0;
+                votesCount[id] = count;
+                percentages[id] = percentage;
+                ratingAvg[id] = ratingTotals[id] > 0 ? (float) ratingTotals[id] / count : 0;
+            }
+
         } catch (RemoteException e) {
             throw new RMIStubException(e);
         }

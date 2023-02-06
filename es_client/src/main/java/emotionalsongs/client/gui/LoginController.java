@@ -35,16 +35,15 @@ public class LoginController {
 
     /**
      * Metodo di inizializzazione chiamato alla creazione del dialog.
-     * Aggiunge i listener per la validazione della password e i campi vuoti
+     * Aggiunge i binding per la validazione dei campi
      */
     public void initialize() {
 
-
-//        if (ClientContext.getUser() != null) {
-//            username.setDisable(true);
-//            pwd.setDisable(true);
-//            confirmLoginBtn.setText("Logout");
-//        }
+        confirmLoginBtn.disableProperty().bind(
+                username.textProperty().isEmpty().or(
+                        pwd.textProperty().isEmpty()).or(
+                        pwd.textProperty().length().lessThan(8)
+                ));
     }
 
     /**

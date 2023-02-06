@@ -68,7 +68,9 @@ public class CurrentPlaylistController {
 
                 if (currentPlaylist != null) {
                     initCurrentPlaylist();
+                    deletePlaylistBtn.setDisable(false);
                 } else {
+                    deletePlaylistBtn.setDisable(true);
                     playlistName.setText("");
                     playlistDuration.setText("0");
                 }
