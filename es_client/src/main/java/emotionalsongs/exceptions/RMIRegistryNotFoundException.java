@@ -20,7 +20,9 @@ public class RMIRegistryNotFoundException extends RuntimeException {
         NodeHelpers.createAlert(null,
                 Alert.AlertType.ERROR,
                 "RMI registry not found",
-                "Si è verificato un errore di comunicazione con il registro del server: ",
+                """
+                        Si è verificato un errore di comunicazione con il server.
+                        Controllare l'indirizzo e riprovare""",
                 err.getMessage(),
                 true);
     }

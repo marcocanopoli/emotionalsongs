@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox alignment="CENTER" spacing="30.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="emotionalsongs.client.gui.ServerHostController">
+    <padding>
+        <Insets bottom="28.0" left="33.0" right="33.0" top="28.0"/>
+    </padding>
+    <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="250.0" text="Benvenuto in EmotionalSongs"
+           textAlignment="CENTER" wrapText="true">
+        <font>
+            <Font size="24.0"/>
+        </font>
+    </Label>
+    <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="250.0"
+           text="Inserisci l'indirizzo del server per accedere" textAlignment="CENTER" wrapText="true">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+    <GridPane hgap="20.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308"/>
+            <ColumnConstraints hgrow="NEVER"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <children>
+            <Label text="Host"/>
+            <TextField fx:id="dbHost" prefHeight="24.0" prefWidth="182.0" promptText="Inserisci l'host"
+                       text="localhost" GridPane.columnIndex="1"/>
+        </children>
+    </GridPane>
+    <Button fx:id="connectBtn" defaultButton="true" mnemonicParsing="false" onAction="#connect" text="Connetti"/>
+</VBox>

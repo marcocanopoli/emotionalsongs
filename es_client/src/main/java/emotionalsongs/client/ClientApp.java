@@ -5,8 +5,6 @@ import emotionalsongs.common.interfaces.EmotionDAO;
 import emotionalsongs.common.interfaces.PlaylistDAO;
 import emotionalsongs.common.interfaces.SongDAO;
 import emotionalsongs.common.interfaces.UserDAO;
-import emotionalsongs.exceptions.RMIRegistryNotFoundException;
-import emotionalsongs.exceptions.RMIStubException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TabPane;
@@ -50,6 +48,7 @@ public class ClientApp extends Application {
     public static final URL loginURL = ClientApp.class.getResource("/emotionalsongs/client/gui/loginView.fxml");
     public static final URL songInfoURL = ClientApp.class.getResource("/emotionalsongs/client/gui/songInfoView.fxml");
     public static final URL ratingURL = ClientApp.class.getResource("/emotionalsongs/client/gui/ratingView.fxml");
+    public static final URL serverHostURL = ClientApp.class.getResource("/emotionalsongs/client/gui/serverHostView.fxml");
 
     public enum ViewName {PLAYLISTS, SEARCH}
 
@@ -136,14 +135,10 @@ public class ClientApp extends Application {
     public void start(Stage stage) {
 
         setWindow(stage.getOwner());
+        setMainStage(stage);
 
-        setMainStage(NodeHelpers.createMainStage(stage, rootURL, "Emotional Songs", 1280, 800));
+        NodeHelpers.createStage(window, ClientApp.serverHostURL, "Connessione al server", false);
 
-        if (stylesheetURL != null) mainStage.getScene().getStylesheets().add((stylesheetURL).toExternalForm());
-
-        createViews();
-        showView(ViewName.SEARCH);
-        ClientLogger.debug("Client EmotionalSongs avviato");
     }
 
     /**
@@ -178,30 +173,34 @@ public class ClientApp extends Application {
         }
     }
 
+    public static void init(String serverHost) throws RemoteException, NotBoundException {
+
+        Registry registry = LocateRegistry.getRegistry(serverHost);
+        playlistDAO = (PlaylistDAO) registry.lookup("PlaylistService");
+        emotionDAO = (EmotionDAO) registry.lookup("EmotionService");
+        songDAO = (SongDAO) registry.lookup("SongService");
+        userDAO = (UserDAO) registry.lookup("UserService");
+
+        setMainStage(NodeHelpers.createMainStage(mainStage, rootURL, "Emotional Songs", 1280, 800));
+
+        if (stylesheetURL != null) mainStage.getScene().getStylesheets().add((stylesheetURL).toExternalForm());
+
+        createViews();
+        showView(ViewName.SEARCH);
+        ClientLogger.debug("Client EmotionalSongs avviato");
+    }
+
+
     /**
      * Classe main dell'applicazione che lancia il thread Application.
      * Rinominata in <code>appStart</code> per mantenere univoco il metodo main.
      * E' chiamato dalla classe wrapper <code>ClientMain</code>
      *
-     * @param args argomenti di avvio
      * @see EmotionalSongs
      */
-    public static void appStart(String[] args) {
-        String host = args.length >= 1 ? args[0] : null;
-
-        try {
-            Registry registry = LocateRegistry.getRegistry(host);
-            playlistDAO = (PlaylistDAO) registry.lookup("PlaylistService");
-            emotionDAO = (EmotionDAO) registry.lookup("EmotionService");
-            songDAO = (SongDAO) registry.lookup("SongService");
-            userDAO = (UserDAO) registry.lookup("UserService");
-        } catch (RemoteException e) {
-            throw new RMIRegistryNotFoundException(e);
-        } catch (NotBoundException e) {
-            throw new RMIStubException(e);
-        }
-
+    public static void appStart() {
 
         launch();
+
     }
 }
