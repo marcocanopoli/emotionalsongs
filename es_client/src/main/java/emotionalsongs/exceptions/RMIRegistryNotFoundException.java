@@ -24,7 +24,7 @@ public class RMIRegistryNotFoundException extends RuntimeException {
                         Si è verificato un errore di comunicazione con il server.
                         Controllare l'indirizzo e riprovare""",
                 err.getMessage(),
-                true);
+                false);
     }
 
 }

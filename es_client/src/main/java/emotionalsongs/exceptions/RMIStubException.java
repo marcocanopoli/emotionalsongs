@@ -30,7 +30,7 @@ public class RMIStubException extends RuntimeException {
                 "RMI stub not found",
                 "Si è verificato un errore di comunicazione con il server",
                 err.getMessage(),
-                true);
+                false);
     }
 
 }
