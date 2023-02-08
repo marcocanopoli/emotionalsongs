@@ -29,7 +29,7 @@ public interface SongDAO extends Remote {
 
     enum SongSel {
         ALBUMS, AUTHORS, SONGS_BY_AUTHOR_ALBUM, SONGS_BY_AUTHOR, SONGS_BY_AUTHOR_YEAR, SONGS_BY_TITLE,
-        SONG_EMOTIONS, SONG_EMOTIONS_COUNT, SONG_EMOTION_NOTES, SONG_EMOTIONS_RATING
+        SONG_EMOTIONS, SONG_EMOTION_NOTES, SONG_EMOTIONS_RATING
     }
 
     Map<SongSel, String> songSelQueries = Map.ofEntries(
@@ -125,25 +125,16 @@ public interface SongDAO extends Remote {
             )
     );
 
-    enum SongIns {SONG_EMOTION, SONG_EMOTION_NOTES}
+    enum SongIns {SONG_EMOTION}
 
     Map<SongIns, String> songInsQueries = Map.ofEntries(
             entry(
                     SongIns.SONG_EMOTION,
                     """
                             INSERT INTO song_emotions
-                            (user_id, song_id, emotion_id, rating) VALUES (?,?,?,?)
+                            (user_id, song_id, emotion_id, rating, notes) VALUES (?,?,?,?,?)
                             ON CONFLICT ON CONSTRAINT user_song_emotion DO UPDATE
-                            SET rating = excluded.rating
-                            """
-            ),
-            entry(
-                    SongIns.SONG_EMOTION_NOTES,
-                    """
-                            INSERT INTO song_emotions
-                            (user_id, song_id, emotion_id, notes) VALUES (?,?,?,?)
-                            ON CONFLICT ON CONSTRAINT user_song_emotion DO UPDATE
-                            SET notes = excluded.notes
+                            SET rating = excluded.rating, notes = excluded.notes
                             """
             )
     );
@@ -254,20 +245,10 @@ public interface SongDAO extends Remote {
      * @param songId    l'id della canzone
      * @param emotionId l'id dell'emozione
      * @param rating    il rating da 1 a 5
+     * @param notes     le eventuali note
      * @throws RemoteException se lo stub non è raggiungibile
      */
-    void setSongEmotion(int userId, int songId, int emotionId, int rating) throws RemoteException;
-
-    /**
-     * Inserisce le note per una emozione di una canzone da parte di un utente definito
-     *
-     * @param userId    l'id dell'utente
-     * @param songId    l'id della canzone
-     * @param emotionId l'id dell'emozione
-     * @param notes     le note fino a 256 caratteri
-     * @throws RemoteException se lo stub non è raggiungibile
-     */
-    void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) throws RemoteException;
+    void setSongEmotion(int userId, int songId, int emotionId, int rating, String notes) throws RemoteException;
 
     //================================================================================
     // DELETE

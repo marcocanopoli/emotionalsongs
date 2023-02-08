@@ -62,9 +62,10 @@ public class EmotionDAOImpl implements EmotionDAO {
 
         final String query = EmotionDAO.emoSelQueries.get(EmoSel.ALL_EMO);
 
+        List<Emotion> results = new ArrayList<>();
+
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-            List<Emotion> results = new ArrayList<>();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -73,12 +74,12 @@ public class EmotionDAOImpl implements EmotionDAO {
 
                 results.add(new Emotion(id, name, description));
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
-            return null;
         }
+
+        return results;
 
     }
 }

@@ -63,11 +63,12 @@ public class SongDAOImpl implements SongDAO {
 
         final String query = SongDAO.songSelQueries.get(SongSel.ALBUMS);
 
+        List<Song> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + albumText + "%");
 
-            List<Song> results = new ArrayList<>();
 
             ResultSet rs = stmt.executeQuery();
 
@@ -78,13 +79,12 @@ public class SongDAOImpl implements SongDAO {
                 results.add(new Song(author, album));
 
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new ArrayList<>();
+        return results;
     }
 
     /**
@@ -96,11 +96,12 @@ public class SongDAOImpl implements SongDAO {
 
         final String query = SongDAO.songSelQueries.get(SongSel.AUTHORS);
 
+        List<String> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + author + "%");
 
-            List<String> results = new ArrayList<>();
 
             ResultSet rs = stmt.executeQuery();
 
@@ -109,13 +110,13 @@ public class SongDAOImpl implements SongDAO {
                 results.add(rs.getString("author"));
 
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new ArrayList<>();
+        return results;
+
     }
 
     /**
@@ -127,12 +128,12 @@ public class SongDAOImpl implements SongDAO {
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONGS_BY_AUTHOR_ALBUM);
 
+        List<Song> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, albumText);
             stmt.setString(2, authorText);
-
-            List<Song> results = new ArrayList<>();
 
             ResultSet rs = stmt.executeQuery();
 
@@ -148,13 +149,11 @@ public class SongDAOImpl implements SongDAO {
                 results.add(new Song(id, title, author, year, album, genre, duration));
 
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
-
-        return new ArrayList<>();
+        return results;
     }
 
     /**
@@ -166,12 +165,13 @@ public class SongDAOImpl implements SongDAO {
         final String query = SongDAO.songSelQueries.get(
                 yearText == null ? SongSel.SONGS_BY_AUTHOR : SongSel.SONGS_BY_AUTHOR_YEAR);
 
+        List<Song> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + authorText + "%");
             if (yearText != null) stmt.setInt(2, yearText);
 
-            List<Song> results = new ArrayList<>();
 
             ResultSet rs = stmt.executeQuery();
 
@@ -187,13 +187,12 @@ public class SongDAOImpl implements SongDAO {
                 results.add(new Song(id, title, author, year, album, genre, duration));
 
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new ArrayList<>();
+        return results;
     }
 
     /**
@@ -203,12 +202,12 @@ public class SongDAOImpl implements SongDAO {
     public synchronized List<Song> getSongsByTitle(String titleText) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songSelQueries.get(SongSel.SONGS_BY_TITLE);
+        List<Song> results = new ArrayList<>();
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + titleText + "%");
 
-            List<Song> results = new ArrayList<>();
 
             ResultSet rs = stmt.executeQuery();
 
@@ -224,13 +223,12 @@ public class SongDAOImpl implements SongDAO {
                 results.add(new Song(id, title, author, year, album, genre, duration));
 
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new ArrayList<>();
+        return results;
     }
 
     /**
@@ -242,11 +240,12 @@ public class SongDAOImpl implements SongDAO {
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS);
 
+        List<SongEmotion> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, songId);
 
-            List<SongEmotion> results = new ArrayList<>();
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -257,13 +256,12 @@ public class SongDAOImpl implements SongDAO {
 
                 results.add(new SongEmotion(emoId, songId, userId, rating, notes));
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
-        return new ArrayList<>();
+        return results;
     }
 
     /**
@@ -275,24 +273,24 @@ public class SongDAOImpl implements SongDAO {
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTION_NOTES);
 
+        List<String> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, songId);
             stmt.setInt(2, emotionId);
 
             ResultSet rs = stmt.executeQuery();
-            List<String> results = new ArrayList<>();
 
             while (rs.next()) {
                 String notes = rs.getString("notes");
                 results.add(notes);
             }
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
-            return new ArrayList<>();
         }
+        return results;
 
     }
 
@@ -305,12 +303,13 @@ public class SongDAOImpl implements SongDAO {
 
         final String query = SongDAO.songSelQueries.get(SongSel.SONG_EMOTIONS_RATING);
 
+        List<SongEmotion> results = new ArrayList<>();
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, songId);
             stmt.setInt(2, userId);
 
-            List<SongEmotion> results = new ArrayList<>();
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -323,12 +322,11 @@ public class SongDAOImpl implements SongDAO {
                 results.add(songEmotion);
             }
 
-            return results;
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
-            return new ArrayList<>();
         }
+        return results;
     }
 
     //================================================================================
@@ -339,7 +337,7 @@ public class SongDAOImpl implements SongDAO {
      * {@inheritDoc}
      */
     @Override
-    public synchronized void setSongEmotion(int userId, int songId, int emotionId, int rating) {
+    public synchronized void setSongEmotion(int userId, int songId, int emotionId, int rating, String notes) {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songInsQueries.get(SongIns.SONG_EMOTION);
 
@@ -349,27 +347,7 @@ public class SongDAOImpl implements SongDAO {
             stmt.setInt(2, songId);
             stmt.setInt(3, emotionId);
             stmt.setInt(4, rating);
-            stmt.execute();
-
-        } catch (SQLException ex) {
-            ServerLogger.error("Error: " + ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void setSongEmotionNotes(int userId, int songId, int emotionId, String notes) {
-        Connection conn = ServerApp.getConnection();
-        final String query = SongDAO.songInsQueries.get(SongIns.SONG_EMOTION_NOTES);
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, userId);
-            stmt.setInt(2, songId);
-            stmt.setInt(3, emotionId);
-            stmt.setString(4, notes);
+            stmt.setString(5, notes);
             stmt.execute();
 
         } catch (SQLException ex) {
@@ -389,18 +367,20 @@ public class SongDAOImpl implements SongDAO {
         Connection conn = ServerApp.getConnection();
         final String query = SongDAO.songDelQueries.get(SongDel.SONG_EMOTION);
 
+        int affectedRows = 0;
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.setInt(2, songId);
             stmt.setInt(3, emotionId);
 
-            return stmt.executeUpdate();
+            affectedRows = stmt.executeUpdate();
 
         } catch (SQLException ex) {
             ServerLogger.error("Error: " + ex);
         }
 
-        return 0;
+        return affectedRows;
     }
 
 }

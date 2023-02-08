@@ -150,8 +150,9 @@ public class SongInfoController {
     private void getAndSetNotes(int emotionId) {
         try {
             List<String> notes = songDAO.getSongEmotionNotes(song.id, emotionId);
+        
             if (!notes.isEmpty()) {
-                emotionNotes.setAll();
+                emotionNotes.setAll(notes);
             }
         } catch (RemoteException e) {
             throw new RMIStubException(e);

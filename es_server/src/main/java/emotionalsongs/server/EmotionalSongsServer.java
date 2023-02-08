@@ -8,7 +8,6 @@ package emotionalsongs.server;
  * {@link <a href="https://maven.apache.org/plugins/maven-shade-plugin/" >maven-shade-plugin</a>}
  *
  * @author Marco Canopoli - Mat.731108 - Sede VA
- * @see ServerApp
  */
 public class EmotionalSongsServer {
 

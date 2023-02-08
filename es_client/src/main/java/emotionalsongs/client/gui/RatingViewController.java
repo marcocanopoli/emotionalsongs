@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,8 +46,11 @@ public class RatingViewController {
     SongDAO songDAO = ClientApp.getSongDAO();
     User user = context.getUser();
     Song song = context.getCurrentSong();
-
     List<Emotion> emotions = context.getEmotions();
+    HashMap<Integer, Button> notesInsertBtns = new HashMap<>();
+    HashMap<Integer, Integer> emotionsRatings = new HashMap<>();
+    HashMap<Integer, String> emotionsNotes = new HashMap<>();
+
 
     /**
      * Metodo di inizializzazione chiamato alla creazione della vista.
@@ -107,11 +111,13 @@ public class RatingViewController {
                     notes = se.notes() == null ? "" : se.notes();
                 }
             }
+            emotionsRatings.put(emo.id(), rating);
+            emotionsNotes.put(emo.id(), notes);
 
             ToggleGroup group = new ToggleGroup();
 
-            addRatingSection(group, emoBox, emo.id(), rating);
             addCommentSection(emoBox, emo.id(), notes);
+            addRatingSection(group, emoBox, emo.id(), rating);
 
             TitledPane emoPane = new TitledPane(emo.name(), emoBox);
             emoPane.setMinWidth(400);
@@ -157,15 +163,16 @@ public class RatingViewController {
 
             group.selectedToggleProperty().addListener((observable, oldVal, newVal) ->
                     {
-
                         if (newVal != null) {
                             int newRating = (int) newVal.getUserData();
                             try {
-                                songDAO.setSongEmotion(user.getId(), song.id, emotionId, newRating);
+                                songDAO.setSongEmotion(user.getId(), song.id, emotionId, newRating, emotionsNotes.get(emotionId));
+                                emotionsRatings.replace(emotionId, rating);
                             } catch (RemoteException e) {
                                 throw new RMIStubException(e);
                             }
                         }
+                        notesInsertBtns.get(emotionId).setDisable(newVal == null);
                     }
             );
 
@@ -196,6 +203,7 @@ public class RatingViewController {
         Button commentBtn = new Button();
         commentBtn.setMaxWidth(Double.MAX_VALUE);
         commentBtn.setText(notes.isBlank() ? "Reset commento" : "Inserisci commento");
+        commentBtn.setDisable(emotionsRatings.get(emotionId) == 0);
 
         TextArea comment = new TextArea();
         comment.setText(notes);
@@ -209,14 +217,17 @@ public class RatingViewController {
             return change.getControlNewText().length() <= 256 ? change : null;
         }));
 
-
         commentBtn.setOnAction(event -> {
             try {
-                songDAO.setSongEmotionNotes(user.getId(), song.id, emotionId, comment.getText());
+                String newComment = comment.getText() != null ? comment.getText() : "";
+                songDAO.setSongEmotion(user.getId(), song.id, emotionId, emotionsRatings.get(emotionId), newComment);
+                emotionsNotes.replace(emotionId, newComment);
             } catch (RemoteException e) {
                 throw new RMIStubException(e);
             }
         });
+
+        notesInsertBtns.put(emotionId, commentBtn);
 
         emoBox.add(commentBtn, 1, 1);
         emoBox.add(comment, 0, 1);

@@ -185,8 +185,8 @@ public class PlaylistDAOImpl implements PlaylistDAO {
 
         } catch (SQLException ex) {
             ServerLogger.error("PLAYLIST NOT FOUND: " + ex);
-            return null;
         }
+        return null;
     }
 
     //================================================================================

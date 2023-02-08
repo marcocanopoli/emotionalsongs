@@ -7,8 +7,8 @@ module es_server {
     requires es_common;
 
 
-    opens emotionalsongs.server to javafx.fxml;
     exports emotionalsongs.server;
     exports emotionalsongs.server.gui;
+    opens emotionalsongs.server to javafx.fxml;
     opens emotionalsongs.server.gui to javafx.fxml;
 }
