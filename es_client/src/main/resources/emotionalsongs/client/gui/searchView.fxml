@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<VBox alignment="TOP_CENTER" minWidth="-Infinity" spacing="20.0" AnchorPane.bottomAnchor="0.0"
+      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="emotionalsongs.client.gui.SearchViewController" stylesheets="@emotionalSongs.css">
+    <children>
+        <fx:include fx:id="searchSongsPane"
+                    source="components/searchSongPane.fxml" VBox.vgrow="NEVER"/>
+        <fx:include fx:id="searchSongsTable"
+                    source="components/songsTable.fxml" VBox.vgrow="ALWAYS"/>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+</VBox>
