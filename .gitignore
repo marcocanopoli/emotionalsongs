@@ -2,6 +2,7 @@ logs/
 target/
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/dependency-reduced-pom.xml
 
 ### IntelliJ IDEA ###
 /.idea/
@@ -14,3 +15,4 @@ target/
 
 /es_server/src/main/resources/database/songsData2.csv
 /out/
+/javadoc/
