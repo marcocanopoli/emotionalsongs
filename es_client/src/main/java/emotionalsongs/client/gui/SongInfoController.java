@@ -16,6 +16,7 @@ import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
@@ -30,6 +31,8 @@ import java.util.List;
  * @author Marco Canopoli - Mat.731108 - Sede VA
  */
 public class SongInfoController {
+    @FXML
+    public TitledPane titledEmoPane;
     @FXML
     private VBox emotionsBox;
     @FXML
@@ -79,6 +82,8 @@ public class SongInfoController {
 
         getRatingTotals();
 
+        titledEmoPane.setText("Emozioni registrate (" + total + " totali)");
+
         Property<ObservableList<String>> notesProperty = new SimpleObjectProperty<>(emotionNotes);
         notesList.itemsProperty().bind(notesProperty);
 
@@ -99,19 +104,29 @@ public class SongInfoController {
 
             GridPane emoBox = new GridPane();
             emoBox.setMinHeight(30);
+            emoBox.setHgap(10);
 
             ColumnConstraints column1 = new ColumnConstraints(100);
             ColumnConstraints column2 = new ColumnConstraints(210);
             ColumnConstraints column3 = new ColumnConstraints();
-            ColumnConstraints column4 = new ColumnConstraints(120);
+            ColumnConstraints column4 = new ColumnConstraints();
+            ColumnConstraints column5 = new ColumnConstraints();
+            ColumnConstraints column6 = new ColumnConstraints(90);
             column1.setHalignment(HPos.LEFT);
-            column3.setHalignment(HPos.CENTER);
-            column3.setMinWidth(300);
+            column3.setHalignment(HPos.RIGHT);
             column4.setHalignment(HPos.RIGHT);
+            column5.setHalignment(HPos.RIGHT);
+            column6.setHalignment(HPos.RIGHT);
+            column3.setMinWidth(50);
+            column4.setMinWidth(80);
+            column5.setMinWidth(130);
+            column6.setHgrow(Priority.NEVER);
             emoBox.getColumnConstraints().add(column1);
             emoBox.getColumnConstraints().add(column2);
             emoBox.getColumnConstraints().add(column3);
             emoBox.getColumnConstraints().add(column4);
+            emoBox.getColumnConstraints().add(column5);
+            emoBox.getColumnConstraints().add(column6);
 
             Label emoLabel = new Label(emo.name());
             emoLabel.setPrefHeight(16);
@@ -124,17 +139,24 @@ public class SongInfoController {
             Button viewNotesBtn = new Button("Vedi note");
             viewNotesBtn.setOnAction(event -> getAndSetNotes(emoId));
 
-            Label totalRatings = new Label();
-            String percentage = String.format("%.2f", percentages[emoIdx]) + "%  |  ";
-            String partial = votesCount[emoIdx] + " voti / " + total + " totali  |  ";
+            Label percLabel = new Label();
+            Label partialLabel = new Label();
+            Label avgLabel = new Label();
+
+            String percentage = String.format("%.2f", percentages[emoIdx] * 100) + "%";
+            String partial = votesCount[emoIdx] + " voti";
             String avg = "Media rating: " + String.format("%.2f", ratingAvg[emoIdx]);
 
-            totalRatings.setText(percentage + partial + avg);
+            percLabel.setText(percentage);
+            partialLabel.setText(partial);
+            avgLabel.setText(avg);
 
             emoBox.add(emoLabel, 0, 1);
             emoBox.add(bar, 1, 1);
-            emoBox.add(totalRatings, 2, 1);
-            emoBox.add(viewNotesBtn, 3, 1);
+            emoBox.add(percLabel, 2, 1);
+            emoBox.add(partialLabel, 3, 1);
+            emoBox.add(avgLabel, 4, 1);
+            emoBox.add(viewNotesBtn, 5, 1);
 
             emotionsBox.getChildren().add(emoBox);
         }
@@ -150,7 +172,7 @@ public class SongInfoController {
     private void getAndSetNotes(int emotionId) {
         try {
             List<String> notes = songDAO.getSongEmotionNotes(song.id, emotionId);
-        
+
             if (!notes.isEmpty()) {
                 emotionNotes.setAll(notes);
             }

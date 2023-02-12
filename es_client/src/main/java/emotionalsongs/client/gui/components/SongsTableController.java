@@ -7,6 +7,7 @@ import emotionalsongs.common.Playlist;
 import emotionalsongs.common.Song;
 import emotionalsongs.common.interfaces.PlaylistDAO;
 import emotionalsongs.exceptions.RMIStubException;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -256,6 +257,8 @@ public class SongsTableController {
                             });
                             playlistChoice.getItems().add(item);
                         }
+
+                        playlistChoice.disableProperty().bind(Bindings.isEmpty(userPlaylists));
 
                         btnBox.getChildren().add(playlistChoice);
                         btnBox.setAlignment(Pos.CENTER);

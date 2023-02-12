@@ -1,13 +1,16 @@
 package emotionalsongs.client.gui;
 
+import emotionalsongs.client.ClientApp;
 import emotionalsongs.client.ClientContext;
 import emotionalsongs.client.gui.components.SongsTableController;
+import emotionalsongs.common.NodeHelpers;
 import emotionalsongs.common.Song;
 import emotionalsongs.common.User;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 
@@ -23,6 +26,8 @@ import java.beans.PropertyChangeEvent;
 public class SearchViewController {
     @FXML
     public GridPane searchSongsPane;
+    @FXML
+    private Button newSongBtn;
     @FXML
     private TableView<Song> searchSongsTable;
     @FXML
@@ -51,7 +56,6 @@ public class SearchViewController {
             searchSongsTableController.addPlaylistDropdown();
         }
 
-
         context.addPropertyChangeListener(e -> {
             if (e.getNewValue() != null &&
                     (e.getPropertyName().equals("newPlaylist") ||
@@ -60,6 +64,7 @@ public class SearchViewController {
                 searchSongsTableController.addPlaylistDropdown();
             }
         });
+
 
     }
 
@@ -78,11 +83,20 @@ public class SearchViewController {
 
             if (newUser != null) {
                 searchSongsTableController.addPlaylistDropdown();
+                newSongBtn.setDisable(false);
             } else {
                 searchSongsTable.getColumns().remove(1);
+                newSongBtn.setDisable(true);
             }
         }
     }
 
+    /**
+     * Apre la vista di creazione di una nuova canzone
+     */
+    public void newSong() {
 
+        NodeHelpers.createStage(
+                ClientApp.getWindow(), ClientApp.newSongURL, "Aggiunta canzone", true);
+    }
 }

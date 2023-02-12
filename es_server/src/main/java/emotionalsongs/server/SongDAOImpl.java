@@ -336,6 +336,33 @@ public class SongDAOImpl implements SongDAO {
     /**
      * {@inheritDoc}
      */
+    public synchronized boolean addSong(String title, String author, String album, Integer year, String genre, Integer duration) throws RemoteException {
+        Connection conn = ServerApp.getConnection();
+        final String query = SongDAO.songInsQueries.get(SongIns.SONG);
+
+        int affectedRows = 0;
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, title);
+            stmt.setString(2, author);
+            stmt.setString(3, album);
+            stmt.setInt(4, year);
+            stmt.setString(5, genre);
+            stmt.setInt(6, duration);
+
+            affectedRows = stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ServerLogger.error("Error: " + ex);
+        }
+
+        return affectedRows > 0;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void setSongEmotion(int userId, int songId, int emotionId, int rating, String notes) {
         Connection conn = ServerApp.getConnection();

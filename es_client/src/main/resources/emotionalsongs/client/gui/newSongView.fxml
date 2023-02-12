@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox alignment="CENTER" maxWidth="400.0" prefWidth="400.0" stylesheets="@emotionalSongs.css"
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="emotionalsongs.client.gui.NewSongController">
+    <children>
+        <GridPane alignment="CENTER" prefHeight="274.0" prefWidth="591.0" VBox.vgrow="NEVER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="15.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label text="Titolo*"/>
+                <Label text="Autore*" GridPane.rowIndex="1"/>
+                <Label text="Album" GridPane.rowIndex="2"/>
+                <Label text="Anno" GridPane.rowIndex="3"/>
+                <Label text="Genere" GridPane.rowIndex="4"/>
+                <Label text="Durata (in secondi)" GridPane.rowIndex="5"/>
+                <TextField fx:id="titleText" GridPane.columnIndex="1"/>
+                <TextField fx:id="authorText" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <TextField fx:id="albumText" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <TextField fx:id="yearText" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <TextField fx:id="genreText" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <TextField fx:id="durationText" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            </children>
+        </GridPane>
+        <Button fx:id="confirmRegistrationBtn" disable="true" mnemonicParsing="false"
+                onAction="#performSongRegistration" text="Conferma">
+            <VBox.margin>
+                <Insets top="20.0"/>
+            </VBox.margin>
+        </Button>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="40.0" right="40.0" top="20.0"/>
+    </padding>
+</VBox>

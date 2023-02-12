@@ -49,6 +49,7 @@ public class ClientApp extends Application {
     public static final URL songInfoURL = ClientApp.class.getResource("/emotionalsongs/client/gui/songInfoView.fxml");
     public static final URL ratingURL = ClientApp.class.getResource("/emotionalsongs/client/gui/ratingView.fxml");
     public static final URL serverHostURL = ClientApp.class.getResource("/emotionalsongs/client/gui/serverHostView.fxml");
+    public static final URL newSongURL = ClientApp.class.getResource("/emotionalsongs/client/gui/newSongView.fxml");
 
     public enum ViewName {PLAYLISTS, SEARCH}
 

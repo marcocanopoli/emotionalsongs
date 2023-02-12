@@ -27,6 +27,7 @@ import static java.util.Map.entry;
  */
 public interface SongDAO extends Remote {
 
+
     enum SongSel {
         ALBUMS, AUTHORS, SONGS_BY_AUTHOR_ALBUM, SONGS_BY_AUTHOR, SONGS_BY_AUTHOR_YEAR, SONGS_BY_TITLE,
         SONG_EMOTIONS, SONG_EMOTION_NOTES, SONG_EMOTIONS_RATING
@@ -125,9 +126,16 @@ public interface SongDAO extends Remote {
             )
     );
 
-    enum SongIns {SONG_EMOTION}
+    enum SongIns {SONG, SONG_EMOTION}
 
     Map<SongIns, String> songInsQueries = Map.ofEntries(
+            entry(
+                    SongIns.SONG,
+                    """
+                            INSERT INTO songs
+                            (title, author, album, year, genre, duration) VALUES (?,?,?,?,?,?)
+                            """
+            ),
             entry(
                     SongIns.SONG_EMOTION,
                     """
@@ -237,6 +245,19 @@ public interface SongDAO extends Remote {
     //================================================================================
     // INSERT
     //================================================================================
+
+    /**
+     * Inserisce una nuova canzone nel catalogo
+     *
+     * @param title    titolo
+     * @param author   autore
+     * @param album    album
+     * @param year     anno
+     * @param genre    genere
+     * @param duration durata in secondi
+     * @return true se la canzone è stata aggiunta, false altrimenti
+     */
+    boolean addSong(String title, String author, String album, Integer year, String genre, Integer duration) throws RemoteException;
 
     /**
      * Inserisce il rating per una emozione di una canzone da parte di un utente definito

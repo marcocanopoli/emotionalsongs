@@ -116,6 +116,8 @@ public class RootController {
             ServerLogger.debug("Songs catalog initialized");
         }
 
+//        DBManager.seedTestSongEmotions();
+
         boolean ready = (
                 (initDB.isSelected() && dbCreated) ||
                         (!initDB.isSelected() && !dbCreated)) &&

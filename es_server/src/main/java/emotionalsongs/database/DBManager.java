@@ -235,13 +235,24 @@ public class DBManager {
                 "admin"));
 
         users.add(new User(
-                1,
+                2,
                 "Marco",
                 "Canopoli",
                 "CNPMRC91M25A290J",
                 "Via Brebbia 333, Cadrezzate con Osmate (VA)",
                 "marco.canopoli@emotionalsongs.com",
                 "canos"));
+
+        for (int i = 0; i < 20; i++) {
+            users.add(new User(
+                    i + 3,
+                    "TestUser",
+                    "TestUser",
+                    "TESTUSER" + i,
+                    null,
+                    "testuser" + i + "@emotionalsongs.com",
+                    "testuser" + i));
+        }
 
         Connection conn = ServerApp.getConnection();
 
@@ -408,6 +419,82 @@ public class DBManager {
 
         } else {
             ServerLogger.error("Songs data file not found");
+        }
+    }
+
+    public static void seedTestSongEmotions() {
+
+
+        final String SEED_SONG_EMOTIONS_QUERY =
+                """
+                        INSERT INTO song_emotions
+                        (song_id,emotion_id,user_id,rating,notes) VALUES (?,?,?,?,?)
+                        """;
+        Connection conn = ServerApp.getConnection();
+
+        List<Integer> songIds = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM songs")) {
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                songIds.add(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(SEED_SONG_EMOTIONS_QUERY)) {
+
+            conn.setAutoCommit(false);
+
+            ServerLogger.info("Processing test songs emotions...");
+
+            Random random = new Random();
+            final int batchSize = 1000;
+            int count = 0;
+            int batchCount = 0;
+
+            for (int id : songIds) {
+
+                for (int u = 1; u < 23; u++) {
+                    List<Integer> ignored = new ArrayList<>();
+
+                    while (ignored.size() < 6) {
+                        int i = random.nextInt((9 - 1) + 1) + 1;
+
+                        if (!ignored.contains(i)) {
+                            ignored.add(i);
+                        }
+
+                    }
+
+                    for (int e = 1; e < 10; e++) {
+                        if (!ignored.contains(e)) {
+
+                            stmt.setInt(1, id);
+                            stmt.setInt(2, e);
+                            stmt.setInt(3, u);
+                            stmt.setInt(4, random.nextInt((5 - 1) + 1) + 1);
+                            stmt.setString(5, "notes_example_" + id + "_" + u + "_" + e);
+                            stmt.addBatch();
+
+                            if (++count % batchSize == 0) {
+                                batchCount++;
+                                stmt.executeBatch();
+                                stmt.clearBatch();
+                                ServerLogger.info("Batch " + batchCount + " executed");
+                            }
+                        }
+                    }
+                }
+
+            }
+            stmt.executeBatch();
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
