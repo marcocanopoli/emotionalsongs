@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -116,7 +117,7 @@ public class RootController {
             ServerLogger.debug("Songs catalog initialized");
         }
 
-        DBManager.seedTestSongEmotions();
+//        DBManager.seedTestSongEmotions();
 
         boolean ready = (
                 (initDB.isSelected() && dbCreated) ||
@@ -129,8 +130,10 @@ public class RootController {
             loginBox.getChildren().remove(checkboxes);
             loginBox.getChildren().remove(connectBtn);
             loginBox.getScene().getWindow().setHeight(120);
+            loginBox.getScene().getWindow().setWidth(400);
             title.setText("Connesso al database");
             title.setTextFill(Color.GREEN);
+            title.setFont(new Font(24));
         } else {
             try {
                 conn.close();
