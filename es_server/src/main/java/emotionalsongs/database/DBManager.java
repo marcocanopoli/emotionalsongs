@@ -342,7 +342,7 @@ public class DBManager {
                         (author,title,year,album,genre,duration) VALUES (?,?,?,?,?,?)
                         """;
 
-        InputStream datasetStream = DBManager.class.getResourceAsStream("songsData.csv");
+        InputStream datasetStream = DBManager.class.getResourceAsStream("songsData2.csv");
 
         if (datasetStream != null) {
             Connection conn = ServerApp.getConnection();

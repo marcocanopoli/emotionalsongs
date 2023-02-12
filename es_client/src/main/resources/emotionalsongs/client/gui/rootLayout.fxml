@@ -7,6 +7,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -18,11 +20,20 @@
             <children>
                 <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="20.0" styleClass="toolbar">
                     <children>
-                        <Label fx:id="userLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Benvenuto, utente!" HBox.hgrow="ALWAYS">
+                        <Label fx:id="userLabel" alignment="CENTER" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Benvenuto, utente!">
                             <font>
                                 <Font size="24.0" />
                             </font>
                         </Label>
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fitHeight="39.0" fitWidth="226.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@es_logo.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
                         <ButtonBar HBox.hgrow="NEVER">
                             <buttons>
                                 <Button fx:id="signupBtn" mnemonicParsing="false" text="Registrati" />
